@@ -27,14 +27,14 @@ class SimpleGridBody extends LitElement {
     super()
 
     this.columns = []
-    this.data = []
+    this.items = []
     this.focused = {}
   }
 
   static get properties() {
     return {
       columns: Array,
-      data: Array,
+      items: Array,
       focused: Object
     }
   }
@@ -76,14 +76,12 @@ class SimpleGridBody extends LitElement {
   }
 
   render() {
-    var data = this.data || []
     var { row: focusedRow, column: focusedColumn } = this.focused
-    var columns = this.columns
 
     return html`
-      ${data.map(
+      ${this.items.map(
         (record, idxRow) => html`
-          ${columns.map(
+          ${this.columns.map(
             (column, idxColumn) =>
               html`
                 <span

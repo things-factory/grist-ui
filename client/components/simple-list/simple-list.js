@@ -4,13 +4,13 @@ class SimpleList extends LitElement {
   constructor() {
     super()
     this.columns = []
-    this.data = []
+    this.items = []
   }
 
   static get properties() {
     return {
       columns: Array,
-      data: Array,
+      items: Array,
       limit: Number,
       page: Number
     }
@@ -56,9 +56,9 @@ class SimpleList extends LitElement {
       )
     }
 
-    if (changes.has('data')) {
-      if (this.data && this.data.items) {
-        this._totalData = (this._totalData || []).concat(this.data.items)
+    if (changes.has('items')) {
+      if (this.items) {
+        this._totalData = (this._totalData || []).concat(this.items)
         this.requestUpdate()
       }
     }

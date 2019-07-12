@@ -6,7 +6,7 @@ class SimpleGridFooter extends LitElement {
   constructor() {
     super()
 
-    this.data = []
+    this.items = []
     this.total = 0
     this.page = 1
     this.limit = 50
@@ -14,7 +14,7 @@ class SimpleGridFooter extends LitElement {
 
   static get properties() {
     return {
-      data: Array,
+      itesm: Array,
       total: Number,
       page: Number,
       limit: Number
@@ -80,9 +80,8 @@ class SimpleGridFooter extends LitElement {
   }
 
   render() {
-    var data = this.data || []
     var begin = this.limit * (this.page - 1) + 1
-    var end = begin + data.length - 1
+    var end = begin + this.items.length - 1
     var totalPage = Math.ceil(this.total / this.limit)
 
     return html`

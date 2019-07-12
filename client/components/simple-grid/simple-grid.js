@@ -8,17 +8,20 @@ import './simple-grid-footer'
 class SimpleGrid extends LitElement {
   constructor() {
     super()
-
     this.columns = []
-    this.data = []
+    this.items = []
+    this.total = 0
+    this.page = 1
+    this.limit = 10
   }
 
   static get properties() {
     return {
       columns: Array,
-      data: Array,
-      limit: Number,
-      page: Number
+      items: Array,
+      total: Number,
+      page: Number,
+      limit: Number
     }
   }
 
@@ -75,16 +78,15 @@ class SimpleGrid extends LitElement {
   }
 
   render() {
-    var columns = this.columns
-    var data = (this.data && this.data.items) || []
-    var total = (this.data && this.data.total) || 0
-    var limit = this.limit || 50
-    var page = this.page || 1
-
     return html`
-      <simple-grid-header .columns=${columns}></simple-grid-header>
-      <simple-grid-body .columns=${columns} .data=${data}></simple-grid-body>
-      <simple-grid-footer .data=${data} .total=${total} .limit=${limit} .page=${page}></simple-grid-footer>
+      <simple-grid-header .columns=${this.columns}></simple-grid-header>
+      <simple-grid-body .columns=${this.columns} .items=${this.items}></simple-grid-body>
+      <simple-grid-footer
+        .items=${this.items}
+        .total=${this.total}
+        .limit=${this.limit}
+        .page=${this.page}
+      ></simple-grid-footer>
     `
   }
 }
