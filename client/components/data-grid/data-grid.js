@@ -17,11 +17,6 @@ class DataGrid extends LitElement {
     this.config = {}
     this.data = {}
 
-    this._records = []
-    this._total = 0
-    this._page = 0
-    this._limit = 10
-
     this._columns = []
   }
 
@@ -100,11 +95,6 @@ class DataGrid extends LitElement {
       config: Object,
       data: Object,
 
-      _records: Array,
-      _total: Number,
-      _page: Number,
-      _limit: Number,
-
       _columns: Array
     }
   }
@@ -173,20 +163,12 @@ class DataGrid extends LitElement {
         .concat(['auto'])
         .join(' ')
 
-      console.log('columns', gridTemplateColumns)
       this.style.setProperty('--grid-template-columns', gridTemplateColumns)
-    }
-
-    if (changes.has('data')) {
-      this._records = this.data.records
-      this._total = this.data.total
-      this._limit = this.data.limit
-      this._page = this.data.page
     }
   }
 
   render() {
-    var infinite = this.config.pagination && this.config.pagination.infinite
+    var infinite = this.config && this.config.pagination && this.config.pagination.infinite
 
     return html`
       <data-grid-header .config=${this.config} .columns=${this._columns} .data=${this.data}></data-grid-header>
