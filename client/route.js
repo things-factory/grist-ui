@@ -6,5 +6,9 @@ export default function route(page) {
     case 'grid-test':
       import('./pages/grid-test')
       return page
+
+    case 'list-test':
+      import('./pages/list-test')
+      return page
   }
 }

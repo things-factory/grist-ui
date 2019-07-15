@@ -7,6 +7,10 @@ export default {
     {
       tagname: 'grid-test',
       page: 'grid-test'
+    },
+    {
+      tagname: 'list-test',
+      page: 'list-test'
     }
   ],
   bootstrap
