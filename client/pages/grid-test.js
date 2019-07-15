@@ -97,7 +97,7 @@ class GridTest extends localize(i18next)(PageView) {
         }
       ],
       pagination: {
-        pages: [20, 30, 50, 100],
+        pages: [20, 30, 50, 100, 200],
         page: 30,
         limit: 100
       }
@@ -106,7 +106,7 @@ class GridTest extends localize(i18next)(PageView) {
     this.data = {
       total: 12098,
       page: 119,
-      limit: 100,
+      limit: 200,
       records: Array(200)
         .fill()
         .map((item, idx) => {
