@@ -6,6 +6,7 @@ export class GutterRowSelector {
       type: 'gutter',
       name: 'row-selector',
       width: 26,
+      resizable: false,
       sortable: false,
       header: {
         renderer: function(column) {

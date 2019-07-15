@@ -11,6 +11,7 @@ export class GutterButton {
       type: 'gutter',
       name: 'button',
       width: 26,
+      resizable: false,
       sortable: false,
       header: {
         renderer: function(column) {

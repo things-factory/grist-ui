@@ -2,22 +2,14 @@ import { LitElement, html, css } from 'lit-element'
 
 import '@material/mwc-icon'
 
+const DEFAULT_PAGES = [20, 30, 50, 100]
+const DEFAULT_LIMIT = 30
+
 class DataGridFooter extends LitElement {
-  constructor() {
-    super()
-
-    this.records = []
-    this.total = 0
-    this.page = 1
-    this.limit = 50
-  }
-
   static get properties() {
     return {
-      records: Array,
-      total: Number,
-      page: Number,
-      limit: Number
+      config: Object,
+      data: Object
     }
   }
 
@@ -69,7 +61,9 @@ class DataGridFooter extends LitElement {
   }
 
   _gotoPage(page) {
-    if (page > Math.ceil(this.total / this.limit) || page <= 0) {
+    var { limit = 20, total = 0 } = this.data || {}
+
+    if (page > Math.ceil(total / limit) || page <= 0) {
       return
     }
     this.dispatchEvent(new CustomEvent('page-changed', { bubbles: true, composed: true, detail: page }))
@@ -80,34 +74,34 @@ class DataGridFooter extends LitElement {
   }
 
   render() {
-    var begin = this.limit * (this.page - 1) + 1
-    var end = begin + this.records.length - 1
-    var totalPage = Math.ceil(this.total / this.limit)
+    var { records = [], page = 1, limit = DEFAULT_LIMIT, total = 0 } = this.data || {}
+    var { pages = DEFAULT_PAGES } = (this.config && this.config.pagination) || {}
+
+    var begin = limit * (page - 1) + 1
+    var end = begin + records.length - 1
+    var totalPage = Math.ceil(total / limit)
 
     return html`
-      <a ?inactive=${this.page <= 1} @click=${e => this._gotoPage(1)}><mwc-icon>skip_previous</mwc-icon></a>
-      <a ?inactive=${this.page <= 1} @click=${e => this._gotoPage(this.page - 1)}
-        ><mwc-icon>navigate_before</mwc-icon></a
-      >
-      <span>page ${this.page}&nbsp;/&nbsp;${totalPage}</span>
-      <a ?inactive=${this.page >= totalPage} @click=${e => this._gotoPage(this.page + 1)}
-        ><mwc-icon>navigate_next</mwc-icon></a
-      >
-      <a ?inactive=${this.page >= totalPage} @click=${e => this._gotoPage(totalPage)}><mwc-icon>skip_next</mwc-icon></a>
+      <a ?inactive=${page <= 1} @click=${e => this._gotoPage(1)}><mwc-icon>skip_previous</mwc-icon></a>
+      <a ?inactive=${page <= 1} @click=${e => this._gotoPage(page - 1)}><mwc-icon>navigate_before</mwc-icon></a>
+      <span>page ${page}&nbsp;/&nbsp;${totalPage}</span>
+      <a ?inactive=${page >= totalPage} @click=${e => this._gotoPage(page + 1)}><mwc-icon>navigate_next</mwc-icon></a>
+      <a ?inactive=${page >= totalPage} @click=${e => this._gotoPage(totalPage)}><mwc-icon>skip_next</mwc-icon></a>
 
       <span class="filler"></span>
 
       <span class="limit">
-        <a ?selected=${this.limit == 20} @click=${e => this._changeLimit(20)}>20</a>
-        <a ?selected=${this.limit == 30} @click=${e => this._changeLimit(30)}>30</a>
-        <a ?selected=${this.limit == 50} @click=${e => this._changeLimit(50)}>50</a>
-        <a ?selected=${this.limit == 100} @click=${e => this._changeLimit(100)}>100</a>
+        ${pages.map(
+          size => html`
+            <a ?selected=${limit == size} @click=${e => this._changeLimit(size)}>${size}</a>
+          `
+        )}
         records
       </span>
       <span>&nbsp;</span>
       <span>${begin} - ${end}</span>
       <span>&nbsp;/&nbsp;</span>
-      <span>total ${this.total || 0} records.</span>
+      <span>total ${total || 0} records.</span>
     `
   }
 }

@@ -5,11 +5,8 @@ const DEFAULT_TEXT_ALIGN = 'left'
 class DataGridField extends LitElement {
   static get properties() {
     return {
-      align: String,
-      row: { attribute: true },
-      column: { attribute: true },
-      odd: { attribute: true },
-      focused: { attribute: true }
+      align: { attribute: true },
+      odd: { attribute: true }
     }
   }
 

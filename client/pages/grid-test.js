@@ -22,21 +22,13 @@ class GridTest extends localize(i18next)(PageView) {
   static get properties() {
     return {
       config: Object,
-      columns: Array
+      data: Object
     }
   }
 
   render() {
     return html`
-      <data-grid
-        .config=${this.config}
-        .columns=${this.columns}
-        .sorters=${this.sorters}
-        .records=${this.records}
-        .total=${this.total}
-        .page=${this.page}
-        .limit=${this.limit}
-      ></data-grid>
+      <data-grid .config=${this.config} .data=${this.data}></data-grid>
     `
   }
 
@@ -45,82 +37,87 @@ class GridTest extends localize(i18next)(PageView) {
       return
     }
 
-    this.total = 12098
-    this.page = 119
-    this.limit = 100
-
     this.config = {
-      gutters: [
+      columns: [
         {
+          type: 'gutter',
           name: 'sequence'
         },
         {
+          type: 'gutter',
           name: 'row-selector'
         },
         {
+          type: 'gutter',
           name: 'button',
           icon: 'edit'
+        },
+        {
+          type: 'string',
+          name: 'id',
+          hidden: true
+        },
+        {
+          type: 'string',
+          name: 'name',
+          header: i18next.t('field.name'),
+          record: {
+            align: 'center'
+          },
+          sortable: true,
+          width: 120
+        },
+        {
+          type: 'string',
+          name: 'description',
+          header: i18next.t('field.description'),
+          record: {
+            align: 'left'
+          },
+          width: 200
+        },
+        {
+          type: 'string',
+          name: 'email',
+          header: i18next.t('field.email'),
+          record: {
+            align: 'left'
+          },
+          sortable: true,
+          width: 130
         }
-      ]
+      ],
+      sorters: [
+        {
+          name: 'name',
+          descending: true
+        },
+        {
+          name: 'email'
+        }
+      ],
+      pagination: {
+        pages: [20, 30, 50, 100],
+        page: 30,
+        limit: 100
+      }
     }
 
-    this.columns = [
-      {
-        type: 'string',
-        name: 'id',
-        hidden: true
-      },
-      {
-        type: 'string',
-        name: 'name',
-        header: i18next.t('field.name'),
-        record: {
-          align: 'center'
-        },
-        sortable: true,
-        width: 120
-      },
-      {
-        type: 'string',
-        name: 'description',
-        header: i18next.t('field.description'),
-        record: {
-          align: 'left'
-        },
-        width: 200
-      },
-      {
-        type: 'string',
-        name: 'email',
-        header: i18next.t('field.email'),
-        record: {
-          align: 'left'
-        },
-        sortable: true,
-        width: 130
-      }
-    ]
-
-    this.sorters = [
-      {
-        name: 'name',
-        descending: true
-      },
-      {
-        name: 'email'
-      }
-    ]
-
-    this.records = Array(200)
-      .fill()
-      .map((item, idx) => {
-        return {
-          id: idx,
-          name: idx % 2 ? 'shnam' : 'heartyoh',
-          description: idx % 2 ? 'hatiolab manager' : 'hatiosea manager',
-          email: idx % 2 ? 'shnam@gmail.com' : 'heartyoh@gmail.com'
-        }
-      })
+    this.data = {
+      total: 12098,
+      page: 119,
+      limit: 100,
+      records: Array(200)
+        .fill()
+        .map((item, idx) => {
+          return {
+            id: idx,
+            name: idx % 2 ? 'shnam' : 'heartyoh',
+            description: idx % 2 ? 'hatiolab manager' : 'hatiosea manager',
+            email: idx % 2 ? 'shnam@gmail.com' : 'heartyoh@gmail.com'
+          }
+        })
+    }
   }
 }
 

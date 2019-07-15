@@ -1,19 +1,11 @@
 import { LitElement, html, css } from 'lit-element'
 
 class DataGridHeader extends LitElement {
-  constructor() {
-    super()
-
-    this.columns = []
-    this.gutters = []
-  }
-
   static get properties() {
     return {
-      gutters: Array,
+      config: Object,
       columns: Array,
-      sorters: Array,
-      records: Array
+      _sorters: Array
     }
   }
 
@@ -83,31 +75,34 @@ class DataGridHeader extends LitElement {
     this.addEventListener('wheel', this._onWheelEvent.bind(this), false)
   }
 
+  updated(changed) {
+    if (changed.has('config')) {
+      this._sorters = this.config.sorters || []
+    }
+  }
+
   render() {
-    var sorters = this.sorters
     var columns = this.columns.filter(column => !column.hidden)
-    var gutters = (this.gutters || []).filter(gutter => !gutter.hidden)
 
     return html`
-      ${gutters.map(
-        (gutter, idx) =>
-          html`
-            <div>
-              <span title @click=${gutter.handler}>${this._renderHeader(gutter)} </span>
-            </div>
-          `
-      )}
       ${columns.map(
         (column, idx) =>
           html`
             <div>
               <span title @click=${e => this._changeSort(column)}>${this._renderHeader(column)} </span>
 
-              <span sorter @click=${e => this._changeSort(column)}>
-                ${this._renderSortHeader(column, sorters)}
-              </span>
-
-              <span splitter draggable="true" @dragstart=${e => this._dragStart(e, idx)}>&nbsp;</span>
+              ${column.sortable
+                ? html`
+                    <span sorter @click=${e => this._changeSort(column)}>
+                      ${this._renderSortHeader(column)}
+                    </span>
+                  `
+                : html``}
+              ${column.resizable !== false
+                ? html`
+                    <span splitter draggable="true" @dragstart=${e => this._dragStart(e, idx)}>&nbsp;</span>
+                  `
+                : html``}
             </div>
           `
       )}
@@ -134,10 +129,12 @@ class DataGridHeader extends LitElement {
     `
   }
 
-  _renderSortHeader(column, sorters) {
+  _renderSortHeader(column) {
     if (column.hidden) {
       return html``
     }
+
+    var sorters = this._sorters || []
 
     var sorter = sorters.find(sorter => column.type !== 'gutter' && column.name == sorter.name)
     if (!sorter) {
@@ -169,7 +166,7 @@ class DataGridHeader extends LitElement {
       return
     }
 
-    var sorters = [...this.sorters]
+    var sorters = [...(this._sorters || [])]
 
     var idx = sorters.findIndex(sorter => sorter.name == column.name)
     if (idx !== -1) {
@@ -187,13 +184,13 @@ class DataGridHeader extends LitElement {
       sorters.push(sorter)
     }
 
-    this.sorters = sorters
+    this._sorters = sorters
 
     this.dispatchEvent(
       new CustomEvent('sorters-changed', {
         bubbles: true,
         composed: true,
-        detail: this.sorters
+        detail: this._sorters
       })
     )
   }

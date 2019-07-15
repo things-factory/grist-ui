@@ -15,14 +15,14 @@ class DataGrid extends LitElement {
     super()
 
     this.config = {}
-    this.columns = []
-    this.records = []
-    this.total = 0
-    this.page = 1
-    this.limit = 10
-    this.sorters = []
+    this.data = {}
 
-    this._gutters = []
+    this._records = []
+    this._total = 0
+    this._page = 0
+    this._limit = 10
+
+    this._columns = []
   }
 
   static get properties() {
@@ -51,11 +51,32 @@ class DataGrid extends LitElement {
        *       handler: function(e)
        *     }
        *   ],
+       *   columns : [{
+       *     type: 'string' (default) | 'number' | 'boolean' | 'gutter',
+       *     name: 'column name',
+       *     width: sizeof column width as number,
+       *     resizable: true or undefined(default) | false,
+       *     hidden: true | false,
+       *     sortable: true | false or undefined (default),
+       *     header: {
+       *       renderer: 'column renderer' | function(column, records) | default function as undefined,
+       *       decorator: 'column renderer' | function(column, records) | default function as undefined,
+       *     },
+       *     record: {
+       *       renderer: 'column renderer' | function(column, records) | default function as undefined,
+       *       editor: {
+       *         type: 'string' (default) | 'number' | 'checkbox' | 'select' | 'tristate' | 'button' | 'user defined',
+       *         option: array | object | function(item, records, column)
+       *       },
+       *       decorators: ['stripe'],
+       *       align: 'left' | 'right' | 'center'
+       *     }
+       *   }],
        *   pagination: {
        *     infinite: true | false (default),
        *     pages: [20, 30, 50, 100] (default) | [...number],
        *     footer: true | false
-       *   },true (default) | false,
+       *   },
        *   sortable: true (default) | false,
        *   header: {
        *     renderer: 'column renderer' | function(column, records) | default function as undefined,
@@ -69,49 +90,22 @@ class DataGrid extends LitElement {
        *     },
        *     decorators: ['stripe'],
        *     align: 'left' | 'right' | 'center'
-       *   }
+       *   },
+       *   sorters : [{
+       *     name: 'column name',
+       *     descending: undefined or false (default) | true
+       *   }]
        * }
        */
       config: Object,
-      /**
-       * @property
-       *
-       * Column : {
-       *   type: 'string' (default) | 'number' | 'boolean',
-       *   name: 'column name',
-       *   width: sizeof column width as number,
-       *   hidden: true | false,
-       *   sortable: true | false or undefined (default),
-       *   header: {
-       *     renderer: 'column renderer' | function(column, records) | default function as undefined,
-       *     decorator: 'column renderer' | function(column, records) | default function as undefined,
-       *   },
-       *   record: {
-       *     renderer: 'column renderer' | function(column, records) | default function as undefined,
-       *     editor: {
-       *       type: 'string' (default) | 'number' | 'checkbox' | 'select' | 'tristate' | 'button' | 'user defined',
-       *       option: array | object | function(item, records, column)
-       *     },
-       *     decorators: ['stripe'],
-       *     align: 'left' | 'right' | 'center'
-       *   }
-       * }
-       */
-      columns: Array,
-      records: Array,
-      total: Number,
-      page: Number,
-      limit: Number,
-      /**
-       * @property
-       *
-       * Sorter : {
-       *   name: 'column name',
-       *   descending: undefined or false (default) | true
-       * }
-       */
-      sorters: Array,
-      _gutters: Array
+      data: Object,
+
+      _records: Array,
+      _total: Number,
+      _page: Number,
+      _limit: Number,
+
+      _columns: Array
     }
   }
 
@@ -156,15 +150,18 @@ class DataGrid extends LitElement {
   }
 
   updated(changes) {
-    if (changes.has('config') || changes.has('columns')) {
-      var gutters = this.config.gutters || []
+    if (changes.has('config')) {
+      this._columns = (this.config.columns || []).map(column => {
+        return column.type == 'gutter' ? generateGutterColumn(column) : column
+      })
 
-      this._gutters = gutters.map(config => generateGutterColumn(config))
+      console.log(this._columns)
 
       /* 설명. 컬럼 모델 마지막에 'auto' 템플릿을 추가하여, 자투리 영역을 꽉 채워서 표시한다. */
-      let gridTemplateColumns = [...this._gutters, ...this.columns]
+      let gridTemplateColumns = this._columns
         .filter(column => !column.hidden)
-        .map((column, i, arr) => {
+        .map(column => {
+          console.log('column', column, typeof column.width)
           switch (typeof column.width) {
             case 'number':
               return column.width + 'px'
@@ -179,36 +176,31 @@ class DataGrid extends LitElement {
         .concat(['auto'])
         .join(' ')
 
+      console.log('columns', gridTemplateColumns)
       this.style.setProperty('--grid-template-columns', gridTemplateColumns)
+    }
+
+    if (changes.has('data')) {
+      this._records = this.data.records
+      this._total = this.data.total
+      this._limit = this.data.limit
+      this._page = this.data.page
     }
   }
 
   render() {
+    var infinite = this.config.pagination && this.config.pagination.infinite
+
     return html`
-      <data-grid-header
-        .gutters=${this._gutters}
-        .config=${this.config}
-        .columns=${this.columns}
-        .sorters=${this.sorters}
-      ></data-grid-header>
+      <data-grid-header .config=${this.config} .columns=${this._columns} .data=${this.data}></data-grid-header>
 
-      <data-grid-body
-        .gutters=${this._gutters}
-        .config=${this.config}
-        .columns=${this.columns}
-        .records=${this.records}
-        .page=${this.page}
-        .limit=${this.limit}
-        .total=${this.total}
-      ></data-grid-body>
+      <data-grid-body .config=${this.config} .columns=${this._columns} .data=${this.data}></data-grid-body>
 
-      <data-grid-footer
-        .config=${this.config}
-        .records=${this.records}
-        .total=${this.total}
-        .limit=${this.limit}
-        .page=${this.page}
-      ></data-grid-footer>
+      ${!infinite
+        ? html`
+            <data-grid-footer .config=${this.config} .data=${this.data}></data-grid-footer>
+          `
+        : html``}
     `
   }
 }

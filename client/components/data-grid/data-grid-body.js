@@ -27,13 +27,10 @@ function calcScrollPos(parent, child) {
 class DataGridBody extends LitElement {
   static get properties() {
     return {
-      gutters: Array,
+      config: Object,
       columns: Array,
-      records: Array,
-      focused: Object,
-      page: Number,
-      limit: Number,
-      total: Number
+      data: Object,
+      focused: Object
     }
   }
 
@@ -55,10 +52,11 @@ class DataGridBody extends LitElement {
   render() {
     var { row: focusedRow, column: focusedColumn } = this.focused || {}
 
-    var columns = [...this.gutters.filter(gutter => !gutter.hidden), ...this.columns.filter(column => !column.hidden)]
+    var columns = this.columns.filter(column => !column.hidden)
+    var { records = [] } = this.data || {}
 
     return html`
-      ${this.records.map(
+      ${records.map(
         (record, idxRow) => html`
           ${columns.map(
             (column, idxColumn) =>
@@ -113,8 +111,9 @@ class DataGridBody extends LitElement {
           // arrow-key
           var keyCode = e.keyCode
           var { row, column } = this.focused
-          var maxrow = this.records.length - 1
-          var maxcolumn = [...this.gutters, ...this.columns].filter(column => !column.hidden).length - 1
+          var { records = [] } = this.data || {}
+          var maxrow = records.length - 1
+          var maxcolumn = this.columns.filter(column => !column.hidden).length - 1
 
           switch (keyCode) {
             case KEY_UP:
