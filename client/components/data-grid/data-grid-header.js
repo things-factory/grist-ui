@@ -229,7 +229,7 @@ class DataGridHeader extends LitElement {
       column.width = Math.max(0, Number(column.width) + e.offsetX - startX)
 
       this.dispatchEvent(
-        new CustomEvent('column-length-changed', {
+        new CustomEvent('column-width-changed', {
           bubbles: true,
           composed: true,
           detail: {

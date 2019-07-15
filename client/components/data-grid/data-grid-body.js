@@ -110,7 +110,7 @@ class DataGridBody extends LitElement {
         this._focusedListener = (async e => {
           // arrow-key
           var keyCode = e.keyCode
-          var { row, column } = this.focused
+          var { row, column } = this.focused || {}
           var { records = [] } = this.data || {}
           var maxrow = records.length - 1
           var maxcolumn = this.columns.filter(column => !column.hidden).length - 1
