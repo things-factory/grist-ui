@@ -137,8 +137,18 @@ class DataGrid extends LitElement {
       })
     }
 
-    /* 설명. 컬럼 모델 마지막에 'auto' 템플릿을 추가하여, 자투리 영역을 꽉 채워서 표시한다. */
-    let gridTemplateColumns = (this._columns || [])
+    /*
+     * 데이타 내용에 따라 동적으로 컬럼의 폭이 달라지는 경우(예를 들면, sequence field)가 있으므로,
+     * data의 변동에 대해서도 다시 계산되어야 한다.
+     */
+    this.calculateWidths()
+  }
+
+  calculateWidths() {
+    /*
+     * 컬럼 모델 마지막에 'auto' cell을 추가하여, 자투리 영역을 꽉 채워서 표시한다.
+     */
+    this._widths = (this._columns || [])
       .filter(column => !column.hidden)
       .map(column => {
         switch (typeof column.width) {
@@ -155,14 +165,24 @@ class DataGrid extends LitElement {
       .concat(['auto'])
       .join(' ')
 
-    this.style.setProperty('--grid-template-columns', gridTemplateColumns)
+    this.style.setProperty('--grid-template-columns', this._widths)
   }
 
   render() {
     var infinite = this.config && this.config.pagination && this.config.pagination.infinite
 
     return html`
-      <data-grid-header .config=${this.config} .columns=${this._columns} .data=${this.data}></data-grid-header>
+      <data-grid-header
+        .config=${this.config}
+        .columns=${this._columns}
+        .data=${this.data}
+        @column-width-changed=${e => {
+          let { idx, width } = e.detail
+          this._columns[idx].width = width
+          this.calculateWidths()
+          this._columns = [...this._columns]
+        }}
+      ></data-grid-header>
 
       <data-grid-body .config=${this.config} .columns=${this._columns} .data=${this.data}></data-grid-body>
 

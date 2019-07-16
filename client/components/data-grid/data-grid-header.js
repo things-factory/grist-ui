@@ -88,7 +88,7 @@ class DataGridHeader extends LitElement {
       ${columns.map(
         (column, idx) =>
           html`
-            <div>
+            <div @dragstart=${e => this._dragStart(e, idx)}>
               <span title @click=${e => this._changeSort(column)}>${this._renderHeader(column)} </span>
 
               ${column.sortable
@@ -100,7 +100,7 @@ class DataGridHeader extends LitElement {
                 : html``}
               ${column.resizable !== false
                 ? html`
-                    <span splitter draggable="true" @dragstart=${e => this._dragStart(e, idx)}>&nbsp;</span>
+                    <span splitter draggable="true">&nbsp;</span>
                   `
                 : html``}
             </div>
@@ -196,37 +196,17 @@ class DataGridHeader extends LitElement {
   }
 
   _dragStart(e, idx) {
-    var target = e.target
+    var target = e.currentTarget
     var startX = e.offsetX
 
-    // var dragHandler = (e => {
-    //   let column = {
-    //     ...this.columns[idx]
-    //   }
+    var dragHandler = (e => {
+      let column = this.columns[idx]
 
-    //   column.width = Math.max(0, Number(column.width) + e.offsetX - startX)
-
-    //   this.dispatchEvent(
-    //     new CustomEvent('column-sort-changed', {
-    //       bubbles: true,
-    //       composed: true,
-    //       detail: {
-    //         idx,
-    //         column
-    //       }
-    //     })
-    //   )
-    // }).bind(this)
-
-    var dragEndHandler = (e => {
-      // target.removeEventListener('drag', dragHandler)
-      target.removeEventListener('dragend', dragEndHandler)
-
-      let column = {
-        ...this.columns[idx]
+      let width = Math.max(0, Number(column.width) + e.offsetX - startX)
+      if (width == 0) {
+        /* CLARIFY-ME 왜 마지막 이벤트의 offsetX로 음수 값이 오는가 */
+        return
       }
-
-      column.width = Math.max(0, Number(column.width) + e.offsetX - startX)
 
       this.dispatchEvent(
         new CustomEvent('column-width-changed', {
@@ -234,13 +214,20 @@ class DataGridHeader extends LitElement {
           composed: true,
           detail: {
             idx,
-            column
+            width
           }
         })
       )
     }).bind(this)
 
-    // target.addEventListener('drag', dragHandler)
+    var dragEndHandler = (e => {
+      target.removeEventListener('drag', dragHandler)
+      target.removeEventListener('dragend', dragEndHandler)
+
+      dragHandler(e)
+    }).bind(this)
+
+    target.addEventListener('drag', dragHandler)
     target.addEventListener('dragend', dragEndHandler)
   }
 }
