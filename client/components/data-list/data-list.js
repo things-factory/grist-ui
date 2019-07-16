@@ -5,7 +5,6 @@ class DataList extends LitElement {
     return {
       config: Object,
       data: Object,
-      page: Number,
       _records: Array
     }
   }
@@ -40,14 +39,35 @@ class DataList extends LitElement {
     ]
   }
 
+  firstUpdated() {
+    /* infinite scrolling */
+    this.addEventListener('scroll', e => {
+      const totalScrollHeight = this.scrollHeight
+      const screenHeight = this.offsetHeight
+      const currentScrollTop = this.scrollTop
+
+      if (totalScrollHeight == screenHeight + currentScrollTop) {
+        /* 마지막 페이지까지 계속 페이지를 증가시킨다. */
+        var lastPage = Math.ceil(this._total / this._limit)
+
+        if (this.page < lastPage) {
+          this.dispatchEvent(new CustomEvent('page-changed', { bubbles: true, composed: true, detail: this.page + 1 }))
+        }
+      }
+    })
+  }
+
   updated(changes) {
     if (changes.has('config')) {
       this._records = []
+      this.page = 1
     }
 
     if (changes.has('data')) {
       this._records = (this._records || []).concat((this.data && this.data.records) || [])
       this._total = this.data.total
+      this._limit = this.data.limit
+      this.page = this.data.page
     }
   }
 
