@@ -68,4 +68,4 @@ export class DataGlister extends LitElement {
   }
 }
 
-customElements.define('data-glister', DataGlister)
+customElements.define('data-grist', DataGlister)

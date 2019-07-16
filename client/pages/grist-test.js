@@ -3,7 +3,7 @@ import { html, css } from 'lit-element'
 import { PageView, isMobileDevice, sleep } from '@things-factory/shell'
 import { localize, i18next } from '@things-factory/i18n-base'
 
-import '../components/data-glister'
+import '../components/data-grist'
 
 class GlisterTest extends localize(i18next)(PageView) {
   static get styles() {
@@ -13,7 +13,7 @@ class GlisterTest extends localize(i18next)(PageView) {
         flex-direction: rows;
       }
 
-      data-glister {
+      data-grist {
         flex: 1;
       }
     `
@@ -28,7 +28,7 @@ class GlisterTest extends localize(i18next)(PageView) {
 
   render() {
     return html`
-      <data-glister
+      <data-grist
         .mode=${isMobileDevice() ? 'LIST' : 'GRID'}
         .config=${this.config}
         .data=${this.data}
@@ -40,7 +40,7 @@ class GlisterTest extends localize(i18next)(PageView) {
           this.limit = e.detail
           this.buildData()
         }}
-      ></data-glister>
+      ></data-grist>
     `
   }
 
@@ -145,4 +145,4 @@ class GlisterTest extends localize(i18next)(PageView) {
   }
 }
 
-window.customElements.define('glister-test', GlisterTest)
+window.customElements.define('grist-test', GlisterTest)

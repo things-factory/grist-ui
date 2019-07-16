@@ -133,7 +133,7 @@ class DataGridBody extends LitElement {
           var { row, column } = this.focused || {}
           var { records = [] } = this.data || {}
           var maxrow = records.length - 1
-          var maxcolumn = this.columns.filter(column => !column.hidden).length - 1
+          var maxcolumn = (this.columns || []).filter(column => !column.hidden).length - 1
 
           switch (keyCode) {
             case KEY_UP:

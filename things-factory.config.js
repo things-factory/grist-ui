@@ -13,8 +13,8 @@ export default {
       page: 'list-test'
     },
     {
-      tagname: 'glister-test',
-      page: 'glister-test'
+      tagname: 'grist-test',
+      page: 'grist-test'
     }
   ],
   bootstrap
