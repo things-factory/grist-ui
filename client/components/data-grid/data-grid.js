@@ -138,7 +138,7 @@ class DataGrid extends LitElement {
     }
 
     /* 설명. 컬럼 모델 마지막에 'auto' 템플릿을 추가하여, 자투리 영역을 꽉 채워서 표시한다. */
-    let gridTemplateColumns = this._columns
+    let gridTemplateColumns = (this._columns || [])
       .filter(column => !column.hidden)
       .map(column => {
         switch (typeof column.width) {
