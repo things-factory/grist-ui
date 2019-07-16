@@ -1,5 +1,8 @@
 import { LitElement, html, css } from 'lit-element'
 
+import '../renderes/boolean-renderer'
+import '../renderes/list-renderer'
+
 import './data-grid-field'
 
 const KEY_LEFT = 37
@@ -40,7 +43,7 @@ class DataGridBody extends LitElement {
         :host {
           display: grid;
           grid-template-columns: var(--grid-template-columns);
-          grid-auto-rows: var(--grid-record-height, 32px);
+          grid-auto-rows: var(--grid-record-height, min-content);
 
           overflow: auto;
           outline: none;
@@ -87,6 +90,23 @@ class DataGridBody extends LitElement {
           value = renderer.call(this, column, row)
           break
         default:
+          // {
+          //   console.log(column.type, value)
+          //   switch (column.type) {
+          //     case 'string':
+          //       value = html`
+          //         <boolean-renderer .value=${!!value}></boolean-renderer>
+          //       `
+          //       break
+          //     case 'boolean':
+          //       value = html`
+          //         <list-renderer .value=${value}></list-renderer>
+          //       `
+          //       break
+          //     default:
+          //       break
+          //   }
+          // }
           break
       }
     }
