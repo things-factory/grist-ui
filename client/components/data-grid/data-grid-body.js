@@ -52,7 +52,7 @@ class DataGridBody extends LitElement {
   render() {
     var { row: focusedRow, column: focusedColumn } = this.focused || {}
 
-    var columns = this.columns.filter(column => !column.hidden)
+    var columns = (this.columns || []).filter(column => !column.hidden)
     var { records = [] } = this.data || {}
 
     return html`

@@ -82,7 +82,7 @@ class DataGridHeader extends LitElement {
   }
 
   render() {
-    var columns = this.columns.filter(column => !column.hidden)
+    var columns = (this.columns || []).filter(column => !column.hidden)
 
     return html`
       ${columns.map(

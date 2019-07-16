@@ -5,21 +5,12 @@ import './data-grid-header'
 import './data-grid-body'
 import './data-grid-footer'
 
-import { generateGutterColumn } from './gutters'
+import { generateGutterColumn } from '../gutters'
 
 /**
  * DataGrid
  */
 class DataGrid extends LitElement {
-  constructor() {
-    super()
-
-    this.config = {}
-    this.data = {}
-
-    this._columns = []
-  }
-
   static get properties() {
     return {
       /**
@@ -144,27 +135,27 @@ class DataGrid extends LitElement {
       this._columns = (this.config.columns || []).map(column => {
         return column.type == 'gutter' ? generateGutterColumn(column) : column
       })
-
-      /* 설명. 컬럼 모델 마지막에 'auto' 템플릿을 추가하여, 자투리 영역을 꽉 채워서 표시한다. */
-      let gridTemplateColumns = this._columns
-        .filter(column => !column.hidden)
-        .map(column => {
-          switch (typeof column.width) {
-            case 'number':
-              return column.width + 'px'
-            case 'string':
-              return column.width
-            case 'function':
-              return column.width.call(this, column)
-            default:
-              return 'auto'
-          }
-        })
-        .concat(['auto'])
-        .join(' ')
-
-      this.style.setProperty('--grid-template-columns', gridTemplateColumns)
     }
+
+    /* 설명. 컬럼 모델 마지막에 'auto' 템플릿을 추가하여, 자투리 영역을 꽉 채워서 표시한다. */
+    let gridTemplateColumns = this._columns
+      .filter(column => !column.hidden)
+      .map(column => {
+        switch (typeof column.width) {
+          case 'number':
+            return column.width + 'px'
+          case 'string':
+            return column.width
+          case 'function':
+            return column.width.call(this, column)
+          default:
+            return 'auto'
+        }
+      })
+      .concat(['auto'])
+      .join(' ')
+
+    this.style.setProperty('--grid-template-columns', gridTemplateColumns)
   }
 
   render() {

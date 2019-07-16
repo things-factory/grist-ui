@@ -11,6 +11,10 @@ export default {
     {
       tagname: 'list-test',
       page: 'list-test'
+    },
+    {
+      tagname: 'glister-test',
+      page: 'glister-test'
     }
   ],
   bootstrap

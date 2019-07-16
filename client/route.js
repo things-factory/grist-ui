@@ -1,7 +1,7 @@
 export default function route(page) {
   switch (page) {
     case 'index':
-      return 'grid-test'
+      return 'glister-test'
 
     case 'grid-test':
       import('./pages/grid-test')
@@ -9,6 +9,10 @@ export default function route(page) {
 
     case 'list-test':
       import('./pages/list-test')
+      return page
+
+    case 'glister-test':
+      import('./pages/glister-test')
       return page
   }
 }
