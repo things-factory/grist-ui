@@ -13,6 +13,8 @@ class DataList extends LitElement {
     return [
       css`
         :host {
+          background-color: var(--data-list-background-color, white);
+
           overflow: auto;
         }
 
