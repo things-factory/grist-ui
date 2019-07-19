@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit-element'
 
-export class ListRenderer extends LitElement {
+export class TextRenderer extends LitElement {
   static get properties() {
     return {
       value: String
@@ -23,12 +23,20 @@ export class ListRenderer extends LitElement {
 
   render() {
     return html`
-      <select>
-        <option value="Whatever">One</option>
-        <option value="Other" selected>Two</option>
-      </select>
+      ${this.value}
     `
+  }
+
+  format(value) {
+    var { options } = this.column.renderer || {}
+    if (!options) {
+      return value
+    }
+
+    var { format } = options
+    // TODO format here...
+    return value
   }
 }
 
-customElements.define('list-renderer', ListRenderer)
+customElements.define('text-renderer', TextRenderer)

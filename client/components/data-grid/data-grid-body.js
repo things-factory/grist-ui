@@ -1,7 +1,7 @@
 import { LitElement, html, css } from 'lit-element'
 
 import '../renderes/boolean-renderer'
-import '../renderes/list-renderer'
+import '../renderes/text-renderer'
 
 import './data-grid-field'
 
@@ -91,21 +91,31 @@ class DataGridBody extends LitElement {
           break
         default:
           // {
-          //   console.log(column.type, value)
-          //   switch (column.type) {
-          //     case 'string':
-          //       value = html`
-          //         <boolean-renderer .value=${!!value}></boolean-renderer>
-          //       `
-          //       break
-          //     case 'boolean':
-          //       value = html`
-          //         <list-renderer .value=${value}></list-renderer>
-          //       `
-          //       break
-          //     default:
-          //       break
-          //   }
+          // console.log(column.type, value)
+          // switch (column.type) {
+          //   case 'boolean':
+          //     value = html`
+          //       <input
+          //         style="width:100%;border:0;background-color:transparent;"
+          //         type="text"
+          //         .value=${value}
+          //         @keydown=${e => e.stopPropagation()}
+          //       />
+          //     `
+          //     break
+          //   case 'string':
+          //     value = html`
+          //       <boolean-renderer .value=${!!value}></boolean-renderer>
+          //     `
+          //     break
+          //   case 'select':
+          //     value = html`
+          //       <list-renderer .value=${value}></list-renderer>
+          //     `
+          //     break
+          //   default:
+          //     break
+          // }
           // }
           break
       }

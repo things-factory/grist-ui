@@ -186,7 +186,15 @@ class DataGrid extends LitElement {
         }}
       ></data-grid-header>
 
-      <data-grid-body .config=${this.config} .columns=${this._columns} .data=${this.data}></data-grid-body>
+      <data-grid-body
+        .config=${this.config}
+        .columns=${this._columns}
+        .data=${this.data}
+        @change=${e => {
+          let target = e.target
+          console.log('changed....xxxxx', target.row, target.column)
+        }}
+      ></data-grid-body>
 
       ${!infinite
         ? html`

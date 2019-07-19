@@ -18,6 +18,7 @@ class DataGridField extends LitElement {
           overflow: hidden;
           background-color: var(--grid-record-background-color, white);
           padding: 7px 5px;
+          border: 1px solid transparent;
           border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
           box-sizing: border-box;
