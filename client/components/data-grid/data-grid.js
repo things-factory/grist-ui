@@ -171,7 +171,7 @@ class DataGrid extends LitElement {
   }
 
   render() {
-    var infinite = this.config && this.config.pagination && this.config.pagination.infinite
+    var paginatable = this.config && this.config.pagination && !this.config.pagination.infinite
 
     return html`
       <data-grid-header
@@ -188,7 +188,7 @@ class DataGrid extends LitElement {
 
       <data-grid-body .config=${this.config} .columns=${this._columns} .data=${this.data}></data-grid-body>
 
-      ${!infinite
+      ${paginatable
         ? html`
             <data-grid-footer .config=${this.config} .data=${this.data}></data-grid-footer>
           `
