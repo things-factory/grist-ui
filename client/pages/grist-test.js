@@ -40,6 +40,10 @@ class GlisterTest extends localize(i18next)(PageView) {
           this.limit = e.detail
           this.buildData()
         }}
+        @sorters-changed=${e => {
+          this.sorters = e.detail
+          this.buildData()
+        }}
       ></data-grist>
     `
   }
@@ -49,6 +53,7 @@ class GlisterTest extends localize(i18next)(PageView) {
 
     var page = this.page
     var limit = this.limit
+    var sorters = this.sorters
     var total = 120993
     var start = (page - 1) * limit
 
@@ -63,7 +68,9 @@ class GlisterTest extends localize(i18next)(PageView) {
             id: idx,
             name: idx % 2 ? `shnam-${start + idx + 1}` : `heartyoh-${start + idx + 1}`,
             description: idx % 2 ? 'hatiolab manager' : 'hatiosea manager',
-            email: idx % 2 ? 'shnam@gmail.com' : 'heartyoh@gmail.com'
+            email: idx % 2 ? 'shnam@gmail.com' : 'heartyoh@gmail.com',
+            active: idx % 2 ? true : false,
+            role: idx % 2 ? 'admin' : 'worker'
           }
         })
     }
@@ -122,6 +129,29 @@ class GlisterTest extends localize(i18next)(PageView) {
           },
           sortable: true,
           width: 130
+        },
+        {
+          type: 'boolean',
+          name: 'active',
+          header: i18next.t('field.active'),
+          record: {
+            align: 'center'
+          },
+          sortable: true,
+          width: 60
+        },
+        {
+          type: 'select',
+          name: 'role',
+          header: i18next.t('field.active'),
+          record: {
+            align: 'center'
+          },
+          editor: {
+            options: ['admin', 'worker', 'tester']
+          },
+          sortable: true,
+          width: 120
         }
       ],
       sorters: [
@@ -139,7 +169,7 @@ class GlisterTest extends localize(i18next)(PageView) {
     }
 
     this.page = 1
-    this.limit = 10
+    this.limit = 50
 
     this.buildData(1)
   }

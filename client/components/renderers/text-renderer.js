@@ -11,12 +11,19 @@ export class TextRenderer extends LitElement {
     return css`
       :host {
         display: block;
-        margin: 0;
-      }
 
-      select {
         width: 100%;
         height: 100%;
+        background-color: transparent;
+        overflow: hidden;
+
+        box-sizing: border-box;
+
+        text-align: inherit;
+        font-size: inherit;
+        font-family: inherit;
+
+        text-overflow: ellipsis;
       }
     `
   }

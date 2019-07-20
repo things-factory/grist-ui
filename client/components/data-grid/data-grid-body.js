@@ -1,8 +1,5 @@
 import { LitElement, html, css } from 'lit-element'
 
-import '../renderes/boolean-renderer'
-import '../renderes/text-renderer'
-
 import './data-grid-field'
 
 const KEY_LEFT = 37
@@ -33,7 +30,8 @@ class DataGridBody extends LitElement {
       config: Object,
       columns: Array,
       data: Object,
-      focused: Object
+      focused: Object,
+      editTarget: Object
     }
   }
 
@@ -48,12 +46,21 @@ class DataGridBody extends LitElement {
           overflow: auto;
           outline: none;
         }
+
+        :host > [odd] {
+          background-color: var(--grid-record-odd-background-color, #eee);
+        }
+
+        :host > [focused] {
+          border: 1px dotted rgba(0, 0, 0, 0.5);
+        }
       `
     ]
   }
 
   render() {
     var { row: focusedRow, column: focusedColumn } = this.focused || {}
+    var { row: editingRow, column: editingColumn } = this.editTarget || {}
 
     var columns = (this.columns || []).filter(column => !column.hidden)
     var { records = [] } = this.data || {}
@@ -65,63 +72,21 @@ class DataGridBody extends LitElement {
             (column, idxColumn) =>
               html`
                 <data-grid-field
-                  .align=${column.record && column.record.align}
-                  .row=${idxRow}
-                  .column=${idxColumn}
+                  .data=${this.data}
+                  .rowIndex=${idxRow}
+                  .columnIndex=${idxColumn}
+                  .column=${column}
+                  .record=${record}
                   ?odd=${idxRow % 2}
                   ?focused=${idxRow === focusedRow && idxColumn === focusedColumn}
-                  >${this.renderField(record, column, idxRow)}</data-grid-field
-                >
+                  .editing=${idxRow === editingRow && idxColumn === editingColumn}
+                ></data-grid-field>
               `
           )}
           <data-grid-field ?odd=${idxRow % 2}></data-grid-field>
         `
       )}
     `
-  }
-
-  renderField(record, column, row) {
-    var value = record[column.name]
-    if (column.record) {
-      var { renderer } = column.record
-
-      switch (typeof renderer) {
-        case 'function':
-          value = renderer.call(this, column, row)
-          break
-        default:
-          // {
-          // console.log(column.type, value)
-          // switch (column.type) {
-          //   case 'boolean':
-          //     value = html`
-          //       <input
-          //         style="width:100%;border:0;background-color:transparent;"
-          //         type="text"
-          //         .value=${value}
-          //         @keydown=${e => e.stopPropagation()}
-          //       />
-          //     `
-          //     break
-          //   case 'string':
-          //     value = html`
-          //       <boolean-renderer .value=${!!value}></boolean-renderer>
-          //     `
-          //     break
-          //   case 'select':
-          //     value = html`
-          //       <list-renderer .value=${value}></list-renderer>
-          //     `
-          //     break
-          //   default:
-          //     break
-          // }
-          // }
-          break
-      }
-    }
-
-    return value
   }
 
   firstUpdated() {
@@ -138,6 +103,9 @@ class DataGridBody extends LitElement {
     this.addEventListener('focusin', e => {
       if (!this._focusedListener) {
         this._focusedListener = (async e => {
+          if (this.editTarget) {
+            return
+          }
           // arrow-key
           var keyCode = e.keyCode
           var { row, column } = this.focused || {}
@@ -180,10 +148,14 @@ class DataGridBody extends LitElement {
       }
     })
 
-    this.shadowRoot.addEventListener('click', async e => {
-      let { row, column } = e.target
+    this.shadowRoot.addEventListener('cell-click', async e => {
+      let { row, column } = e.detail
 
       if (isNaN(row) || isNaN(column)) {
+        return
+      }
+
+      if (this.focused && row == this.focused.row && column == this.focused.column) {
         return
       }
 
@@ -192,9 +164,28 @@ class DataGridBody extends LitElement {
         column
       }
 
+      this.editTarget = null
+
       await this.updateComplete
 
       this.showFocused()
+    })
+
+    this.shadowRoot.addEventListener('cell-dblclick', e => {
+      let { row, column } = e.detail
+
+      if (isNaN(row) || isNaN(column)) {
+        return
+      }
+
+      if (this.editTarget && row == this.editTarget.row && column == this.editTarget.column) {
+        return
+      }
+
+      this.editTarget = {
+        row,
+        column
+      }
     })
   }
 

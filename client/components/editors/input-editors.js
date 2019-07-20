@@ -1,7 +1,30 @@
 import { LitElement, html, css } from 'lit-element'
-import { registerEditor } from './registry'
 
-class InputEditor extends LitElement {
+const STYLE = css`
+  :host {
+    width: 100%;
+    height: 100%;
+
+    border: 0;
+    background-color: transparent;
+  }
+
+  :host > * {
+    width: 100%;
+    height: 100%;
+
+    border: 0;
+    background-color: transparent;
+
+    box-sizing: border-box;
+
+    text-align: inherit;
+    font-size: inherit;
+    font-family: inherit;
+  }
+`
+
+export class InputEditor extends LitElement {
   static get properties() {
     return {
       value: { attribute: true },
@@ -12,27 +35,23 @@ class InputEditor extends LitElement {
   }
 
   static get styles() {
-    css`
-      :host {
-        width: 100%;
-        height: 100%;
-
-        border: 0;
-        background-color: transparent;
-      }
-    `
+    return STYLE
   }
 
   render() {
-    return this.template
+    return this.editorTemplate
   }
 
-  firstupdated() {
-    this.addEventListener('change', this.onchange.bind(this))
+  get editor() {
+    return this.shadowRoot.firstElementChild
+  }
+
+  firstUpdated() {
+    this.shadowRoot.addEventListener('change', this.onchange.bind(this))
   }
 
   extractValue(e) {
-    return value
+    return e.target.value
   }
 
   touchRecord(value) {
@@ -58,21 +77,23 @@ class InputEditor extends LitElement {
     )
   }
 
-  get template() {
+  get editorTemplate() {
     return html``
   }
 }
 
-class TextInput extends InputEditor {
-  get template() {
+customElements.define('input-editor', InputEditor)
+
+export class TextInput extends InputEditor {
+  get editorTemplate() {
     return html`
       <input type="text" .value=${this.value} />
     `
   }
 }
-registerEditor('integer', TextInput)
+customElements.define('text-input', TextInput)
 
-class NumberInput extends InputEditor {
+export class NumberInput extends InputEditor {
   touchValue(e) {
     let value = e.target.value
 
@@ -86,30 +107,29 @@ class NumberInput extends InputEditor {
     }
   }
 
-  get template() {
+  get editorTemplate() {
     return html`
       <input type="number" .value=${this.value} />
     `
   }
 }
-registerEditor('integer', NumberInput)
-registerEditor('float', NumberInput)
+customElements.define('number-input', NumberInput)
 
-class CheckboxInput extends InputEditor {
+export class CheckboxInput extends InputEditor {
   extractValue(e) {
     return e.target.checked
   }
 
-  get template() {
+  get editorTemplate() {
     return html`
       <input type="checkbox" .checked=${!!this.value} />
     `
   }
 }
-registerEditor('boolean', CheckboxInput)
+customElements.define('checkbox-input', CheckboxInput)
 
-class Select extends InputEditor {
-  get template() {
+export class Select extends InputEditor {
+  get editorTemplate() {
     var { options = [] } = this.column.editor || {}
     options = options.map(option => {
       if (typeof option == 'string') {
@@ -125,11 +145,11 @@ class Select extends InputEditor {
       <select>
         ${options.map(
           option => html`
-            <option value="Whatever" ?selected=${option.value == this.value}>${option.display}</option>
+            <option ?selected=${option.value == this.value}>${option.display}</option>
           `
         )}
       </select>
     `
   }
 }
-registerEditor('select', Select)
+customElements.define('select-input', Select)

@@ -11,6 +11,14 @@ export class BooleanRenderer extends LitElement {
     return css`
       :host {
         display: block;
+
+        width: 100%;
+        height: 100%;
+
+        border: 0;
+
+        background-color: transparent;
+
         text-align: center;
       }
     `

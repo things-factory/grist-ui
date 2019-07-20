@@ -190,9 +190,15 @@ class DataGrid extends LitElement {
         .config=${this.config}
         .columns=${this._columns}
         .data=${this.data}
-        @change=${e => {
-          let target = e.target
-          console.log('changed....xxxxx', target.row, target.column)
+        @record-changed=${e => {
+          var { after, before, column, row } = e.detail
+          console.log('record-changed', e.detail)
+          var records = [...this.data.records]
+          records.splice(row, 1, after)
+          this.data = {
+            ...this.data,
+            records
+          }
         }}
       ></data-grid-body>
 

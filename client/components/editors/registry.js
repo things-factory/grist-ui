@@ -1,4 +1,12 @@
-var editors = {}
+import { TextInput, NumberInput, Select, CheckboxInput } from './input-editors'
+
+var editors = {
+  string: TextInput,
+  integer: NumberInput,
+  float: NumberInput,
+  select: Select,
+  boolean: CheckboxInput
+}
 
 export function registerEditor(type, editor) {
   editors[type] = editor

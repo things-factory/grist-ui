@@ -1,6 +1,29 @@
 import { html } from 'lit-element'
-
 import '@material/mwc-icon'
+
+import { openPopup } from '@things-factory/layout-base'
+
+function open() {
+  openPopup(
+    html`
+      <button value="이름..." @click=${e => open2()}>NAME</button>
+    `,
+    {
+      backdrop: false
+    }
+  )
+}
+
+function open2() {
+  openPopup(
+    html`
+      <input type="text" value="hahaha" />
+    `,
+    {
+      backdrop: true
+    }
+  )
+}
 
 export class GutterButton {
   static instance(config = {}) {
@@ -23,7 +46,7 @@ export class GutterButton {
       record: {
         renderer: function(column, idx) {
           return html`
-            <mwc-icon style=${inlineStyle}>${icon}</mwc-icon>
+            <mwc-icon style=${inlineStyle} @click=${open}>${icon}</mwc-icon>
           `
         },
         align: 'center'

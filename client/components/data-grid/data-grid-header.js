@@ -82,29 +82,30 @@ class DataGridHeader extends LitElement {
   }
 
   render() {
-    var columns = (this.columns || []).filter(column => !column.hidden)
+    var columns = this.columns || []
 
     return html`
-      ${columns.map(
-        (column, idx) =>
-          html`
-            <div @dragstart=${e => this._dragStart(e, idx)}>
-              <span title @click=${e => this._changeSort(column)}>${this._renderHeader(column)} </span>
+      ${columns.map((column, idx) =>
+        !column.hidden
+          ? html`
+              <div @dragstart=${e => this._dragStart(e, idx)}>
+                <span title @click=${e => this._changeSort(column)}>${this._renderHeader(column)} </span>
 
-              ${column.sortable
-                ? html`
-                    <span sorter @click=${e => this._changeSort(column)}>
-                      ${this._renderSortHeader(column)}
-                    </span>
-                  `
-                : html``}
-              ${column.resizable !== false
-                ? html`
-                    <span splitter draggable="true">&nbsp;</span>
-                  `
-                : html``}
-            </div>
-          `
+                ${column.sortable
+                  ? html`
+                      <span sorter @click=${e => this._changeSort(column)}>
+                        ${this._renderSortHeader(column)}
+                      </span>
+                    `
+                  : html``}
+                ${column.resizable !== false
+                  ? html`
+                      <span splitter draggable="true">&nbsp;</span>
+                    `
+                  : html``}
+              </div>
+            `
+          : html``
       )}
 
       <div></div>
