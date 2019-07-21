@@ -3,6 +3,7 @@ import { LitElement, html, css } from 'lit-element'
 import '@material/mwc-icon'
 
 import { openPopup } from '@things-factory/layout-base'
+import './object-selector'
 
 export class ObjectEditor extends LitElement {
   static get properties() {
@@ -85,10 +86,33 @@ export class ObjectEditor extends LitElement {
       delete this.popup
     }
 
+    const confirmCallback = selected => {
+      var after = Object.assign({}, this.record, {
+        [this.column.name]: selected
+      })
+
+      this.dispatchEvent(
+        new CustomEvent('record-change', {
+          bubbles: true,
+          composed: true,
+          detail: {
+            before: this.record,
+            after,
+            row: this.row,
+            column: this.column
+          }
+        })
+      )
+    }
+
     var template =
       this.template ||
       html`
-        <input type="datetime-local" />
+        <object-selector
+          .value=${this.value.id}
+          style="width: 50vw;height: 50vh;"
+          .confirmCallback=${confirmCallback.bind(this)}
+        ></object-selector>
       `
 
     this.popup = openPopup(template, {

@@ -74,8 +74,10 @@ export class InputEditor extends LitElement {
   onchange(e) {
     e.stopPropagation()
 
+    console.log('edddddddd', this)
+
     this.dispatchEvent(
-      new CustomEvent('record-changed', {
+      new CustomEvent('record-change', {
         bubbles: true,
         composed: true,
         detail: {

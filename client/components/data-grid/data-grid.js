@@ -218,9 +218,9 @@ class DataGrid extends LitElement {
         .columns=${columns}
         .data=${this.data}
         .selectedRecords=${this.selectedRecords}
-        @record-changed=${e => {
+        @record-change=${e => {
           var { after, before, column, row } = e.detail
-          console.log('record-changed', e.detail)
+          console.log('record-change', e.detail)
           var records = [...this.data.records]
           records.splice(row, 1, after)
           this.data = {

@@ -5,33 +5,6 @@ import { buildConfig } from './configure/config-builder'
 import './data-grid/data-grid'
 import './data-list/data-list'
 
-// const GRID_GUTTERS = [
-//   {
-//     type: 'gutter',
-//     name: 'sequence'
-//   },
-//   {
-//     type: 'gutter',
-//     name: 'row-selector'
-//   },
-//   {
-//     type: 'gutter',
-//     name: 'button',
-//     icon: 'edit'
-//   }
-// ]
-
-// const LIST_GUTTERS = [
-//   {
-//     type: 'gutter',
-//     name: 'row-selector'
-//   }
-// ]
-
-const PAGINATION = {
-  pages: [20, 30, 50, 100, 200]
-}
-
 export class DataGlister extends LitElement {
   static get styles() {
     return css`
@@ -52,9 +25,8 @@ export class DataGlister extends LitElement {
     return {
       mode: String,
       config: Object,
-      _config: Object,
       data: Object,
-      page: Number
+      _config: Object
     }
   }
 
@@ -62,10 +34,10 @@ export class DataGlister extends LitElement {
     return html`
       ${this.mode == 'GRID'
         ? html`
-            <data-grid .config=${this._config} .data=${this.data}> </data-grid>
+            <data-grid id="grist" .config=${this._config} .data=${this.data}> </data-grid>
           `
         : html`
-            <data-list .config=${this._config} .data=${this.data}> </data-list>
+            <data-list id="grist" .config=${this._config} .data=${this.data}> </data-list>
           `}
     `
   }
@@ -73,6 +45,22 @@ export class DataGlister extends LitElement {
   updated(changes) {
     if (changes.has('config')) {
       this._config = buildConfig(this.config)
+    }
+  }
+
+  get grist() {
+    return this.shadowRoot.querySelector('#grist')
+  }
+
+  get selectedRecords() {
+    var grist = this.grist
+    return grist && grist.selectedRecords
+  }
+
+  set selectedRecords(selectedRecords) {
+    var grist = this.grist
+    if (grist) {
+      grist.selectedRecords = selectedRecords
     }
   }
 }

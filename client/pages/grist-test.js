@@ -81,12 +81,12 @@ class GristTest extends localize(i18next)(PageView) {
             company:
               idx % 2
                 ? {
-                    id: '100',
+                    id: '2',
                     name: 'HatioLAB',
                     description: '경기도 성남시'
                   }
                 : {
-                    id: '101',
+                    id: '3',
                     name: 'HatioSEA',
                     description: '말레이시아 세티아알람'
                   },

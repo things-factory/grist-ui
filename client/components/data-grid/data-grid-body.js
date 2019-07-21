@@ -116,11 +116,15 @@ class DataGridBody extends LitElement {
   firstUpdated() {
     this.setAttribute('tabindex', '-1')
 
+    /*
+     * focusout 으로 property를 변경시키는 경우, focusout에 의해 update가 발생하는 경우에는,
+     * 그리드 내부의 컴포넌트가 갱신되는 현상을 초래하게 된다.
+     * 따라서, focusout 핸들러에서 update를 유발하는 코드는 강력하게 금지시킨다.
+     */
     this.addEventListener('focusout', e => {
       if (this._focusedListener) {
         window.removeEventListener('keydown', this._focusedListener)
         delete this._focusedListener
-        this.focused = {}
       }
     })
 
