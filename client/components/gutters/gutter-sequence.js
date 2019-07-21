@@ -10,7 +10,7 @@ export class GutterSequence {
         } else {
           var lastIndex = 100
         }
-        return `minmax(20px, ${String(lastIndex).length * 11}px)`
+        return `${Math.max(20, String(lastIndex).length * 11)}px`
       },
       resizable: false,
       sortable: false,

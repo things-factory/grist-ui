@@ -91,10 +91,10 @@ class DataGridField extends LitElement {
       if (this.isEditing) {
         await this.updateComplete
 
-        let editor = this.shadowRoot.querySelector('#editor').editor
+        let editor = this.shadowRoot.querySelector('#editor')
 
         editor.focus()
-        editor.select && editor.select()
+        editor.select()
       }
     }
   }

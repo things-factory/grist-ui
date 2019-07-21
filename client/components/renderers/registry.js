@@ -2,6 +2,8 @@ import { BooleanRenderer } from './boolean-renderer'
 import { TextRenderer } from './text-renderer'
 import { DateRenderer } from './date-renderer'
 import { ColorRenderer } from './color-renderer'
+import { ProgressRenderer } from './progress-render'
+import { ObjectRenderer } from './object-renderer'
 
 var renderer = {
   string: TextRenderer,
@@ -13,7 +15,9 @@ var renderer = {
   date: DateRenderer,
   time: DateRenderer,
   datetime: DateRenderer,
-  color: ColorRenderer
+  color: ColorRenderer,
+  progress: ProgressRenderer,
+  object: ObjectRenderer
 }
 
 export function registerRenderer(type, renderer) {

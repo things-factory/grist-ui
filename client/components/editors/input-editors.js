@@ -53,6 +53,14 @@ export class InputEditor extends LitElement {
     this.value = value === undefined ? '' : value
   }
 
+  select() {
+    this.editor.select && this.editor.select()
+  }
+
+  focus() {
+    this.editor.focus()
+  }
+
   extractValue(e) {
     return e.target.value
   }
@@ -169,7 +177,7 @@ customElements.define('checkbox-input', CheckboxInput)
 
 export class Select extends InputEditor {
   get editorTemplate() {
-    var { options = [] } = this.column.editor || {}
+    var { options = [] } = this.column.record || {}
     options = options.map(option => {
       if (typeof option == 'string') {
         return {

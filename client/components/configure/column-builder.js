@@ -15,8 +15,13 @@ export const buildColumn = column => {
   if (!renderer) {
     renderer = getRenderer(column.type)
   }
-  if (!editor && editable) {
-    editor = getEditor(column.type)
+
+  if (editable && typeof editor !== 'function') {
+    if (!editor) {
+      editor = getEditor(column.type)
+    } else {
+      editor = getEditor(editor)
+    }
   }
 
   compiled.record = {

@@ -28,7 +28,8 @@ function open2() {
 export class GutterButton {
   static instance(config = {}) {
     var { icon = 'edit' } = config
-    var inlineStyle = 'font-size: var(--grid-header-fontsize, 13px);vertical-align: middle;'
+    var inlineHeaderStyle = 'font-size: var(--grid-header-fontsize, 13px);vertical-align: middle;'
+    var inlineRecordStyle = 'font-size: var(--grid-record-fontsize, 13px);vertical-align: middle;'
 
     return Object.assign({}, config, {
       type: 'gutter',
@@ -39,14 +40,14 @@ export class GutterButton {
       header: {
         renderer: function(column) {
           return html`
-            <mwc-icon style=${inlineStyle}>${icon}</mwc-icon>
+            <mwc-icon style=${inlineHeaderStyle}>${icon}</mwc-icon>
           `
         }
       },
       record: {
         renderer: function(column, record, idx) {
           return html`
-            <mwc-icon style=${inlineStyle} @click=${open}>${icon}</mwc-icon>
+            <mwc-icon style=${inlineRecordStyle} @click=${open}>${icon}</mwc-icon>
           `
         },
         align: 'center'

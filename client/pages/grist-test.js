@@ -78,7 +78,21 @@ class GristTest extends localize(i18next)(PageView) {
             description: idx % 2 ? 'hatiolab manager' : 'hatiosea manager',
             email: idx % 2 ? 'shnam@gmail.com' : 'heartyoh@gmail.com',
             active: idx % 2 ? true : false,
+            company:
+              idx % 2
+                ? {
+                    id: '100',
+                    name: 'HatioLAB',
+                    description: '경기도 성남시'
+                  }
+                : {
+                    id: '101',
+                    name: 'HatioSEA',
+                    description: '말레이시아 세티아알람'
+                  },
             role: idx % 2 ? 'admin' : 'worker',
+            color: idx % 2 ? '#87f018' : '#180f87',
+            rate: Math.round(Math.random() * 100),
             createdAt: Date.now(),
             updatedAt: Date.now()
           }
@@ -145,6 +159,17 @@ class GristTest extends localize(i18next)(PageView) {
           width: 130
         },
         {
+          type: 'object',
+          name: 'company',
+          header: i18next.t('field.company'),
+          record: {
+            align: 'left',
+            editable: true
+          },
+          sortable: true,
+          width: 240
+        },
+        {
           type: 'boolean',
           name: 'active',
           header: i18next.t('field.active'),
@@ -161,13 +186,45 @@ class GristTest extends localize(i18next)(PageView) {
           header: i18next.t('field.active'),
           record: {
             align: 'center',
+            options: ['admin', 'worker', 'tester'],
             editable: true
-          },
-          editor: {
-            options: ['admin', 'worker', 'tester']
           },
           sortable: true,
           width: 120
+        },
+        {
+          type: 'color',
+          name: 'color',
+          header: i18next.t('field.color'),
+          record: {
+            align: 'center',
+            editable: true
+          },
+          sortable: true,
+          width: 50
+        },
+        {
+          type: 'float',
+          name: 'rate',
+          header: i18next.t('field.rate'),
+          record: {
+            align: 'center',
+            editable: true
+          },
+          sortable: true,
+          width: 50
+        },
+        {
+          type: 'progress',
+          name: 'rate',
+          header: i18next.t('field.rate'),
+          record: {
+            align: 'center',
+            editor: 'float',
+            editable: true
+          },
+          sortable: true,
+          width: 50
         },
         {
           type: 'datetime',

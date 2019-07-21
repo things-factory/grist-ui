@@ -162,7 +162,7 @@ class DataGrid extends LitElement {
   }
 
   updated(changes) {
-    if (changes.has('config')) {
+    if (changes.has('config') || changes.has('data')) {
       /*
        * 데이타 내용에 따라 동적으로 컬럼의 폭이 달라지는 경우(예를 들면, sequence field)가 있으므로,
        * data의 변동에 대해서도 다시 계산되어야 한다.
