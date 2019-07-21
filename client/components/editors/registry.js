@@ -1,11 +1,24 @@
-import { TextInput, NumberInput, Select, CheckboxInput } from './input-editors'
+import {
+  TextInput,
+  NumberInput,
+  Select,
+  CheckboxInput,
+  DateInput,
+  TimeInput,
+  DateTimeInput,
+  ColorInput
+} from './input-editors'
 
 var editors = {
   string: TextInput,
   integer: NumberInput,
   float: NumberInput,
   select: Select,
-  boolean: CheckboxInput
+  boolean: CheckboxInput,
+  date: DateInput,
+  time: TimeInput,
+  datetime: DateTimeInput,
+  color: ColorInput
 }
 
 export function registerEditor(type, editor) {
@@ -25,7 +38,6 @@ export function getEditor(type) {
     element.row = row
     element.record = record
     element.column = column
-    element.value = record[column.name]
 
     return element
   }

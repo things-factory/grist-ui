@@ -117,7 +117,7 @@ class DataGridField extends LitElement {
     this.addEventListener('dblclick', async e => {
       let { rowIndex: row, columnIndex: column } = this
 
-      if (this.column.record.editor)
+      if (this.column.record.editable)
         this.dispatchEvent(
           new CustomEvent('cell-dblclick', {
             bubbles: true,

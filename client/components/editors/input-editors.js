@@ -27,7 +27,7 @@ const STYLE = css`
 export class InputEditor extends LitElement {
   static get properties() {
     return {
-      value: { attribute: true },
+      value: Object,
       column: Object,
       record: Object,
       row: Number
@@ -48,6 +48,9 @@ export class InputEditor extends LitElement {
 
   firstUpdated() {
     this.shadowRoot.addEventListener('change', this.onchange.bind(this))
+
+    var value = this.record[this.column.name]
+    this.value = value === undefined ? '' : value
   }
 
   extractValue(e) {
@@ -114,6 +117,42 @@ export class NumberInput extends InputEditor {
   }
 }
 customElements.define('number-input', NumberInput)
+
+export class DateInput extends InputEditor {
+  get editorTemplate() {
+    return html`
+      <input type="date" .value=${this.value} />
+    `
+  }
+}
+customElements.define('date-input', DateInput)
+
+export class TimeInput extends InputEditor {
+  get editorTemplate() {
+    return html`
+      <input type="time" .value=${this.value} />
+    `
+  }
+}
+customElements.define('time-input', TimeInput)
+
+export class DateTimeInput extends InputEditor {
+  get editorTemplate() {
+    return html`
+      <input type="datetime-local" .value=${this.value} />
+    `
+  }
+}
+customElements.define('datetime-input', DateTimeInput)
+
+export class ColorInput extends InputEditor {
+  get editorTemplate() {
+    return html`
+      <input type="color" .value=${this.value} />
+    `
+  }
+}
+customElements.define('color-input', ColorInput)
 
 export class CheckboxInput extends InputEditor {
   extractValue(e) {

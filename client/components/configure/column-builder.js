@@ -10,12 +10,12 @@ export const buildColumn = column => {
   }
 
   var { record = {} } = compiled
-  var { renderer, editor } = record
+  var { renderer, editor, editable } = record
 
   if (!renderer) {
     renderer = getRenderer(column.type)
   }
-  if (!editor) {
+  if (!editor && editable) {
     editor = getEditor(column.type)
   }
 

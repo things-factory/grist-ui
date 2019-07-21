@@ -117,7 +117,8 @@ class GristTest extends localize(i18next)(PageView) {
           name: 'name',
           header: i18next.t('field.name'),
           record: {
-            align: 'center'
+            align: 'center',
+            editable: true
           },
           sortable: true,
           width: 120
@@ -127,7 +128,8 @@ class GristTest extends localize(i18next)(PageView) {
           name: 'description',
           header: i18next.t('field.description'),
           record: {
-            align: 'left'
+            align: 'left',
+            editable: true
           },
           width: 200
         },
@@ -136,7 +138,8 @@ class GristTest extends localize(i18next)(PageView) {
           name: 'email',
           header: i18next.t('field.email'),
           record: {
-            align: 'left'
+            align: 'left',
+            editable: true
           },
           sortable: true,
           width: 130
@@ -146,7 +149,8 @@ class GristTest extends localize(i18next)(PageView) {
           name: 'active',
           header: i18next.t('field.active'),
           record: {
-            align: 'center'
+            align: 'center',
+            editable: true
           },
           sortable: true,
           width: 60
@@ -156,7 +160,8 @@ class GristTest extends localize(i18next)(PageView) {
           name: 'role',
           header: i18next.t('field.active'),
           record: {
-            align: 'center'
+            align: 'center',
+            editable: true
           },
           editor: {
             options: ['admin', 'worker', 'tester']
@@ -165,21 +170,23 @@ class GristTest extends localize(i18next)(PageView) {
           width: 120
         },
         {
-          type: 'date',
+          type: 'datetime',
           name: 'updatedAt',
           header: i18next.t('field.updated-at'),
           record: {
-            align: 'center'
+            align: 'center',
+            editable: true
           },
           sortable: true,
           width: 180
         },
         {
-          type: 'date',
+          type: 'datetime',
           name: 'createdAt',
           header: i18next.t('field.created-at'),
           record: {
-            align: 'center'
+            align: 'center',
+            editable: true
           },
           sortable: true,
           width: 180
