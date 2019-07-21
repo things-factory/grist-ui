@@ -17,15 +17,6 @@ export function unregisterRenderer(type) {
   delete renderer[type]
 }
 
-export function getRenderer(column, record, row) {
-  var clazz = renderer[column.type]
-
-  var element = new clazz()
-
-  element.row = row
-  element.record = record
-  element.column = column
-  element.value = record[column.name]
-
-  return element
+export function getRenderer(type) {
+  return renderer[type]
 }

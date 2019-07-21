@@ -1,5 +1,7 @@
 import { LitElement, html, css } from 'lit-element'
 
+import { buildConfig } from './configure/config-builder'
+
 import './data-grid/data-grid'
 import './data-list/data-list'
 
@@ -50,6 +52,7 @@ export class DataGlister extends LitElement {
     return {
       mode: String,
       config: Object,
+      _config: Object,
       data: Object,
       page: Number
     }
@@ -59,12 +62,18 @@ export class DataGlister extends LitElement {
     return html`
       ${this.mode == 'GRID'
         ? html`
-            <data-grid .config=${this.config} .data=${this.data}> </data-grid>
+            <data-grid .config=${this._config} .data=${this.data}> </data-grid>
           `
         : html`
-            <data-list .config=${this.config} .data=${this.data}> </data-list>
+            <data-list .config=${this._config} .data=${this.data}> </data-list>
           `}
     `
+  }
+
+  updated(changes) {
+    if (changes.has('config')) {
+      this._config = buildConfig(this.config)
+    }
   }
 }
 

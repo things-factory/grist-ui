@@ -6,6 +6,7 @@ import './data-grid-body'
 import './data-grid-footer'
 
 import { generateGutterColumn } from '../gutters'
+import { getRenderer } from '../renderers'
 
 /**
  * DataGrid
@@ -84,9 +85,7 @@ class DataGrid extends LitElement {
        * }
        */
       config: Object,
-      data: Object,
-
-      _columns: Array
+      data: Object
     }
   }
 
@@ -134,23 +133,19 @@ class DataGrid extends LitElement {
 
   updated(changes) {
     if (changes.has('config')) {
-      this._columns = (this.config.columns || []).map(column => {
-        return column.type == 'gutter' ? generateGutterColumn(column) : column
-      })
+      /*
+       * 데이타 내용에 따라 동적으로 컬럼의 폭이 달라지는 경우(예를 들면, sequence field)가 있으므로,
+       * data의 변동에 대해서도 다시 계산되어야 한다.
+       */
+      this.calculateWidths(this.config.columns)
     }
-
-    /*
-     * 데이타 내용에 따라 동적으로 컬럼의 폭이 달라지는 경우(예를 들면, sequence field)가 있으므로,
-     * data의 변동에 대해서도 다시 계산되어야 한다.
-     */
-    this.calculateWidths()
   }
 
-  calculateWidths() {
+  calculateWidths(columns) {
     /*
      * 컬럼 모델 마지막에 'auto' cell을 추가하여, 자투리 영역을 꽉 채워서 표시한다.
      */
-    this._widths = (this._columns || [])
+    this._widths = (columns || [])
       .filter(column => !column.hidden)
       .map(column => {
         switch (typeof column.width) {
@@ -172,23 +167,23 @@ class DataGrid extends LitElement {
 
   render() {
     var paginatable = this.config && this.config.pagination && !this.config.pagination.infinite
+    var columns = this.config.columns
 
     return html`
       <data-grid-header
         .config=${this.config}
-        .columns=${this._columns}
+        .columns=${columns}
         .data=${this.data}
         @column-width-changed=${e => {
           let { idx, width } = e.detail
-          this._columns[idx].width = width
-          this.calculateWidths()
-          this._columns = [...this._columns]
+          columns[idx].width = width
+          this.calculateWidths(columns)
         }}
       ></data-grid-header>
 
       <data-grid-body
         .config=${this.config}
-        .columns=${this._columns}
+        .columns=${columns}
         .data=${this.data}
         @record-changed=${e => {
           var { after, before, column, row } = e.detail

@@ -16,7 +16,7 @@ export class GutterRowSelector {
         }
       },
       record: {
-        renderer: function(column, idx) {
+        renderer: function(column, record, idx) {
           return html`
             <input type="checkbox" />
           `

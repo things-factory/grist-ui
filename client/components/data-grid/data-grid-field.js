@@ -73,14 +73,9 @@ class DataGridField extends LitElement {
         value = getEditor(column, record, rowIndex)
         value.id = 'editor'
       }
-    } else if (column.record) {
+    } else {
       var { renderer } = column.record
-
-      if (typeof renderer == 'function') {
-        value = renderer.call(this, column, rowIndex)
-      } else {
-        value = getRenderer(column, record, rowIndex)
-      }
+      value = renderer.call(this, column, record, rowIndex)
     }
 
     return html`

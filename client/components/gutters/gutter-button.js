@@ -44,7 +44,7 @@ export class GutterButton {
         }
       },
       record: {
-        renderer: function(column, idx) {
+        renderer: function(column, record, idx) {
           return html`
             <mwc-icon style=${inlineStyle} @click=${open}>${icon}</mwc-icon>
           `

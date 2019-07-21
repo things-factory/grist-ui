@@ -26,6 +26,12 @@ class GlisterTest extends localize(i18next)(PageView) {
     }
   }
 
+  get context() {
+    return {
+      title: 'Grist Test'
+    }
+  }
+
   render() {
     return html`
       <data-grist
