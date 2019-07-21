@@ -31,7 +31,8 @@ class DataGridBody extends LitElement {
       columns: Array,
       data: Object,
       focused: Object,
-      editTarget: Object
+      editTarget: Object,
+      selectedRecords: Array
     }
   }
 
@@ -54,6 +55,18 @@ class DataGridBody extends LitElement {
         :host > [focused] {
           border: 1px dotted rgba(0, 0, 0, 0.5);
         }
+
+        :host > [selected-row] {
+          background-color: var(--grid-record-selected-background-color, orange);
+        }
+
+        :host > [focused-row] {
+          background-color: var(--grid-record-focused-background-color, tomato);
+        }
+
+        :host > [editing] {
+          background-color: var(--grid-record-editor-background-color, transparent);
+        }
       `
     ]
   }
@@ -64,28 +77,39 @@ class DataGridBody extends LitElement {
 
     var columns = (this.columns || []).filter(column => !column.hidden)
     var { records = [] } = this.data || {}
+    var selectedRecords = this.selectedRecords
 
     return html`
-      ${records.map(
-        (record, idxRow) => html`
+      ${records.map((record, idxRow) => {
+        var attrSelectedRow = (selectedRecords || []).indexOf(record) != -1
+        var attrFocusedRow = idxRow === focusedRow
+        var attrOdd = idxRow % 2
+
+        return html`
           ${columns.map(
-            (column, idxColumn) =>
-              html`
-                <data-grid-field
-                  .data=${this.data}
-                  .rowIndex=${idxRow}
-                  .columnIndex=${idxColumn}
-                  .column=${column}
-                  .record=${record}
-                  ?odd=${idxRow % 2}
-                  ?focused=${idxRow === focusedRow && idxColumn === focusedColumn}
-                  .editing=${idxRow === editingRow && idxColumn === editingColumn}
-                ></data-grid-field>
-              `
+            (column, idxColumn) => html`
+              <data-grid-field
+                .data=${this.data}
+                .rowIndex=${idxRow}
+                .columnIndex=${idxColumn}
+                .column=${column}
+                .record=${record}
+                .selectedRecords=${selectedRecords}
+                ?odd=${attrOdd}
+                ?focused-row=${attrFocusedRow}
+                ?selected-row=${attrSelectedRow}
+                ?focused=${idxRow === focusedRow && idxColumn === focusedColumn}
+                ?editing=${idxRow === editingRow && idxColumn === editingColumn}
+              ></data-grid-field>
+            `
           )}
-          <data-grid-field ?odd=${idxRow % 2}></data-grid-field>
+          <data-grid-field
+            ?odd=${attrOdd}
+            ?focused-row=${attrFocusedRow}
+            ?selected-row=${attrSelectedRow}
+          ></data-grid-field>
         `
-      )}
+      })}
     `
   }
 

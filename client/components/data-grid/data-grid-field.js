@@ -1,8 +1,5 @@
 import { LitElement, html, css } from 'lit-element'
 
-import { getRenderer } from '../renderers'
-import { getEditor } from '../editors'
-
 const DEFAULT_TEXT_ALIGN = 'left'
 
 class DataGridField extends LitElement {
@@ -14,7 +11,11 @@ class DataGridField extends LitElement {
       column: Object,
       rowIndex: Number,
       columnIndex: Number,
-      editing: Boolean
+      data: Object,
+      selectedRecords: Array,
+      editing: { attribute: 'editing' },
+      focusedRow: { attribute: 'focused-row' },
+      selectedRow: { attribute: 'selected-row' }
     }
   }
 
@@ -37,7 +38,7 @@ class DataGridField extends LitElement {
           text-align: var(--data-grid-field-text-align, left);
         }
 
-        :host([edit]) {
+        :host([editing]) {
           padding: 0;
         }
 
@@ -46,6 +47,10 @@ class DataGridField extends LitElement {
         }
       `
     ]
+  }
+
+  get isEditing() {
+    return this.hasAttribute('editing')
   }
 
   render() {
@@ -62,40 +67,34 @@ class DataGridField extends LitElement {
     var record = this.record
     var rowIndex = this.rowIndex
 
-    var value = this.record[column.name]
+    if (this.isEditing) {
+      let { editor } = column.record
 
-    if (this.editing) {
-      var { editor } = column.record
+      let rendered = editor.call(this, column, record, rowIndex)
+      rendered.id = 'editor'
 
-      if (typeof editor == 'function') {
-        value = editor.call(this, column, rowIndex)
-      } else {
-        value = getEditor(column, record, rowIndex)
-        value.id = 'editor'
-      }
+      return html`
+        ${rendered}
+      `
     } else {
-      var { renderer } = column.record
-      value = renderer.call(this, column, record, rowIndex)
-    }
+      let { renderer } = column.record
+      let rendered = renderer.call(this, column, record, rowIndex)
 
-    return html`
-      ${value}
-    `
+      return html`
+        ${rendered}
+      `
+    }
   }
 
   async updated(changed) {
     if (changed.has('editing')) {
-      if (this.editing) {
-        this.setAttribute('edit', '')
-
+      if (this.isEditing) {
         await this.updateComplete
 
         let editor = this.shadowRoot.querySelector('#editor').editor
 
         editor.focus()
         editor.select && editor.select()
-      } else {
-        this.removeAttribute('edit')
       }
     }
   }
@@ -118,13 +117,14 @@ class DataGridField extends LitElement {
     this.addEventListener('dblclick', async e => {
       let { rowIndex: row, columnIndex: column } = this
 
-      this.dispatchEvent(
-        new CustomEvent('cell-dblclick', {
-          bubbles: true,
-          composed: true,
-          detail: { row, column }
-        })
-      )
+      if (this.column.record.editor)
+        this.dispatchEvent(
+          new CustomEvent('cell-dblclick', {
+            bubbles: true,
+            composed: true,
+            detail: { row, column }
+          })
+        )
 
       e.stopPropagation()
     })

@@ -5,9 +5,6 @@ import './data-grid-header'
 import './data-grid-body'
 import './data-grid-footer'
 
-import { generateGutterColumn } from '../gutters'
-import { getRenderer } from '../renderers'
-
 /**
  * DataGrid
  */
@@ -85,7 +82,8 @@ class DataGrid extends LitElement {
        * }
        */
       config: Object,
-      data: Object
+      data: Object,
+      selectedRecords: Array
     }
   }
 
@@ -129,6 +127,38 @@ class DataGrid extends LitElement {
         this.header.scrollLeft = this.body.scrollLeft
       }
     })
+
+    this.addEventListener('select-all-change', e => {
+      var { selected } = e.detail
+      this.selectedRecords = selected ? [...this.data.records] : []
+    })
+
+    this.addEventListener('select-record-change', e => {
+      var { records, added = [], removed = [] } = e.detail
+
+      if (records) {
+        /* 지정된 records 만으로 selectedRecords를 변경한다. */
+        this.selectedRecords = [...records]
+      } else {
+        var selectedRecords = [...(this.selectedRecords || [])]
+
+        removed.map(record => {
+          var idx = selectedRecords.indexOf(record)
+          if (idx != -1) {
+            selectedRecords.splice(idx, 1)
+          }
+        })
+
+        added.map(record => {
+          var idx = selectedRecords.indexOf(record)
+          if (idx == -1) {
+            selectedRecords.push(record)
+          }
+        })
+
+        this.selectedRecords = selectedRecords
+      }
+    })
   }
 
   updated(changes) {
@@ -166,14 +196,16 @@ class DataGrid extends LitElement {
   }
 
   render() {
-    var paginatable = this.config && this.config.pagination && !this.config.pagination.infinite
-    var columns = this.config.columns
+    var { pagination = {}, columns = [] } = this.config || {}
+
+    var paginatable = !pagination.infinite
 
     return html`
       <data-grid-header
         .config=${this.config}
         .columns=${columns}
         .data=${this.data}
+        .selectedRecords=${this.selectedRecords}
         @column-width-changed=${e => {
           let { idx, width } = e.detail
           columns[idx].width = width
@@ -185,6 +217,7 @@ class DataGrid extends LitElement {
         .config=${this.config}
         .columns=${columns}
         .data=${this.data}
+        .selectedRecords=${this.selectedRecords}
         @record-changed=${e => {
           var { after, before, column, row } = e.detail
           console.log('record-changed', e.detail)

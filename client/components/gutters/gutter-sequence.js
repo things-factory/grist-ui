@@ -1,6 +1,6 @@
 export class GutterSequence {
   static instance(config = {}) {
-    return {
+    return Object.assign({}, config, {
       type: 'gutter',
       name: 'sequence',
       width: function(column) {
@@ -17,11 +17,15 @@ export class GutterSequence {
       header: '#',
       record: {
         renderer: function(column, record, idx) {
+          if (this.hasAttribute('focused-row')) {
+            return '>'
+          }
+
           var { limit = 0, page = 1, total = 0, records = [] } = this.data || {}
           return (page - 1) * limit + idx + 1
         },
         align: 'center'
       }
-    }
+    })
   }
 }

@@ -5,16 +5,18 @@ import { localize, i18next } from '@things-factory/i18n-base'
 
 import '../components/data-grist'
 
-class GlisterTest extends localize(i18next)(PageView) {
+class GristTest extends localize(i18next)(PageView) {
   static get styles() {
     return css`
       :host {
-        display: flex;
-        flex-direction: rows;
+        display: block;
+
+        width: 100%;
       }
 
       data-grist {
-        flex: 1;
+        width: 100%;
+        height: 100%;
       }
     `
   }
@@ -76,7 +78,9 @@ class GlisterTest extends localize(i18next)(PageView) {
             description: idx % 2 ? 'hatiolab manager' : 'hatiosea manager',
             email: idx % 2 ? 'shnam@gmail.com' : 'heartyoh@gmail.com',
             active: idx % 2 ? true : false,
-            role: idx % 2 ? 'admin' : 'worker'
+            role: idx % 2 ? 'admin' : 'worker',
+            createdAt: Date.now(),
+            updatedAt: Date.now()
           }
         })
     }
@@ -95,7 +99,8 @@ class GlisterTest extends localize(i18next)(PageView) {
         },
         {
           type: 'gutter',
-          name: 'row-selector'
+          name: 'row-selector',
+          multiple: true
         },
         {
           type: 'gutter',
@@ -158,6 +163,26 @@ class GlisterTest extends localize(i18next)(PageView) {
           },
           sortable: true,
           width: 120
+        },
+        {
+          type: 'date',
+          name: 'updatedAt',
+          header: i18next.t('field.updated-at'),
+          record: {
+            align: 'center'
+          },
+          sortable: true,
+          width: 180
+        },
+        {
+          type: 'date',
+          name: 'createdAt',
+          header: i18next.t('field.created-at'),
+          record: {
+            align: 'center'
+          },
+          sortable: true,
+          width: 180
         }
       ],
       sorters: [
@@ -181,4 +206,4 @@ class GlisterTest extends localize(i18next)(PageView) {
   }
 }
 
-window.customElements.define('grist-test', GlisterTest)
+window.customElements.define('grist-test', GristTest)

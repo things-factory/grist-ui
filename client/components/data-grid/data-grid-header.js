@@ -1,11 +1,14 @@
 import { LitElement, html, css } from 'lit-element'
+import _ from 'lodash'
 
 class DataGridHeader extends LitElement {
   static get properties() {
     return {
       config: Object,
       columns: Array,
-      _sorters: Array
+      data: Object,
+      _sorters: Array,
+      selectedRecords: Array
     }
   }
 
@@ -196,6 +199,25 @@ class DataGridHeader extends LitElement {
     )
   }
 
+  _notifyWidthChange(idx, width) {
+    if (!this.throttledNotifier) {
+      this.throttledNotifier = _.throttle(function(idx, width) {
+        var idx = this.dispatchEvent(
+          new CustomEvent('column-width-changed', {
+            bubbles: true,
+            composed: true,
+            detail: {
+              idx,
+              width
+            }
+          })
+        )
+      }, 100)
+    }
+
+    this.throttledNotifier(idx, width)
+  }
+
   _dragStart(e, idx) {
     var target = e.currentTarget
     var startX = e.offsetX
@@ -209,16 +231,7 @@ class DataGridHeader extends LitElement {
         return
       }
 
-      this.dispatchEvent(
-        new CustomEvent('column-width-changed', {
-          bubbles: true,
-          composed: true,
-          detail: {
-            idx,
-            width
-          }
-        })
-      )
+      this._notifyWidthChange(idx, width)
     }).bind(this)
 
     var dragEndHandler = (e => {

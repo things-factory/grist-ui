@@ -30,7 +30,7 @@ export class GutterButton {
     var { icon = 'edit' } = config
     var inlineStyle = 'font-size: var(--grid-header-fontsize, 13px);vertical-align: middle;'
 
-    return {
+    return Object.assign({}, config, {
       type: 'gutter',
       name: 'button',
       width: 26,
@@ -51,6 +51,6 @@ export class GutterButton {
         },
         align: 'center'
       }
-    }
+    })
   }
 }
