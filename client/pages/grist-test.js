@@ -127,7 +127,8 @@ class GristTest extends localize(i18next)(PageView) {
           name: 'button',
           icon: 'edit',
           handlers: {
-            click: 'record-view'
+            // click: 'record-view'
+            click: 'record-form'
           }
         },
         {

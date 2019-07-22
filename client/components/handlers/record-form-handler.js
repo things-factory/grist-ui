@@ -1,6 +1,6 @@
 import { html } from 'lit-html'
 import { openPopup } from '@things-factory/layout-base'
-import '../record-view/record-view'
+import '../record-view/record-form'
 
 const STYLE = 'width: 50vw;height: 50vh'
 
@@ -9,19 +9,19 @@ const STYLE = 'width: 50vw;height: 50vh'
  * 전반적인 처리를 위해서, columns 및 data 정보를 포함해서 제공할 수 있어야 한다.
  */
 
-export const RecordViewHandler = function(columns, data, column, record, rowIndex) {
+export const RecordFormHandler = function(columns, data, column, record, rowIndex) {
   var field = this /* data-grid-field */
 
   openPopup(
     html`
-      <record-view
+      <record-form
         style=${STYLE}
         .field=${field}
         .columns=${columns}
         .column=${column}
         .record=${record}
         .rowIndex=${rowIndex}
-      ></record-view>
+      ></record-form>
     `,
     {
       backdrop: true
