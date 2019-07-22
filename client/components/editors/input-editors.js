@@ -48,9 +48,9 @@ export class InputEditor extends LitElement {
 
   firstUpdated() {
     this.shadowRoot.addEventListener('change', this.onchange.bind(this))
+    this.shadowRoot.addEventListener('focusout', this.onfocusout.bind(this))
 
-    var value = this.record[this.column.name]
-    this.value = value === undefined ? '' : value
+    this.value = this.formatForEditor(this.record[this.column.name])
   }
 
   select() {
@@ -61,33 +61,41 @@ export class InputEditor extends LitElement {
     this.editor.focus()
   }
 
-  extractValue(e) {
+  formatForEditor(value) {
+    return value === undefined ? '' : value
+  }
+
+  formatFromEditor(e) {
     return e.target.value
   }
 
-  touchRecord(value) {
-    return Object.assign({}, this.record, {
-      [this.column.name]: value
+  rebuildRecord(record, column, value) {
+    return Object.assign({}, record, {
+      [column.name]: value
     })
+  }
+
+  onfocusout() {
+    if (this._dirtyValue !== this.value) {
+      this.dispatchEvent(
+        new CustomEvent('record-change', {
+          bubbles: true,
+          composed: true,
+          detail: {
+            before: this.record,
+            after: this.rebuildRecord(this.record, this.column, this._dirtyValue),
+            row: this.row,
+            column: this.column
+          }
+        })
+      )
+    }
   }
 
   onchange(e) {
     e.stopPropagation()
 
-    console.log('edddddddd', this)
-
-    this.dispatchEvent(
-      new CustomEvent('record-change', {
-        bubbles: true,
-        composed: true,
-        detail: {
-          before: this.record,
-          after: this.touchRecord(this.extractValue(e)),
-          row: this.row,
-          column: this.column
-        }
-      })
-    )
+    this._dirtyValue = this.formatFromEditor(e)
   }
 
   get editorTemplate() {
@@ -147,6 +155,24 @@ export class TimeInput extends InputEditor {
 customElements.define('time-input', TimeInput)
 
 export class DateTimeInput extends InputEditor {
+  formatForEditor(timestamp) {
+    if (!timestamp) {
+      timestamp = Date.now()
+    }
+    var datetime = new Date(timestamp)
+
+    var tzoffset = datetime.getTimezoneOffset() * 60000 //offset in milliseconds
+
+    return new Date(timestamp - tzoffset).toISOString().slice(0, -1)
+  }
+
+  formatFromEditor(e) {
+    var value = e.target.value
+    var datetime = new Date(value)
+
+    return datetime.getTime()
+  }
+
   get editorTemplate() {
     return html`
       <input type="datetime-local" .value=${this.value} />
@@ -165,7 +191,7 @@ export class ColorInput extends InputEditor {
 customElements.define('color-input', ColorInput)
 
 export class CheckboxInput extends InputEditor {
-  extractValue(e) {
+  formatFromEditor(e) {
     return e.target.checked
   }
 

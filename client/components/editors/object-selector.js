@@ -157,7 +157,6 @@ export class ObjectSelector extends LitElement {
     var grist = this.shadowRoot.querySelector('data-grist')
 
     var selectedRecords = grist.selectedRecords
-    console.log('selected', selectedRecords)
 
     return selectedRecords && selectedRecords.length > 0 ? selectedRecords[0] : undefined
   }
