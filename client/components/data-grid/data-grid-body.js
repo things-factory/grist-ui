@@ -278,15 +278,6 @@ class DataGridBody extends LitElement {
       this.scrollLeft = left
     }
   }
-
-  async focus() {
-    // super.focus()
-    // if (!this.focused || isNaN(this.focused.row)) {
-    //   this.focused = { row: 0, column: 0 }
-    //   await this.updateComplete
-    //   this.showFocused()
-    // }
-  }
 }
 
 customElements.define('data-grid-body', DataGridBody)
