@@ -9,6 +9,7 @@ const KEY_DOWN = 40
 const KEY_ENTER = 13
 const KEY_TAP = 9
 const KEY_BACKSPACE = 8
+const KEY_ESC = 27
 
 function calcScrollPos(parent, child) {
   /* getBoundingClientRect는 safari에서 스크롤 상태에서 다른 브라우저와는 다른 값을 리턴함 - 사파리는 약간 이상 작동함. */
@@ -116,10 +117,6 @@ class DataGridBody extends LitElement {
   firstUpdated() {
     this.setAttribute('tabindex', '-1')
 
-    this.addEventListener('record-change', e => {
-      this.editTarget = {}
-    })
-
     /*
      * focusout 으로 property를 변경시키는 경우, focusout에 의해 update가 발생하는 경우에는,
      * 그리드 내부의 컴포넌트가 갱신되는 현상을 초래하게 된다.
@@ -135,9 +132,6 @@ class DataGridBody extends LitElement {
     this.addEventListener('focusin', e => {
       if (!this._focusedListener) {
         this._focusedListener = (async e => {
-          if (this.editTarget) {
-            return
-          }
           // arrow-key
           var keyCode = e.keyCode
           var { row, column } = this.focused || {}
@@ -145,25 +139,59 @@ class DataGridBody extends LitElement {
           var maxrow = records.length - 1
           var maxcolumn = (this.columns || []).filter(column => !column.hidden).length - 1
 
-          switch (keyCode) {
-            case KEY_UP:
-              row = Math.max(0, row - 1)
-              break
-            case KEY_DOWN:
-            case KEY_ENTER:
-              row = Math.min(maxrow, row + 1)
-              break
-            case KEY_LEFT:
-            case KEY_BACKSPACE:
-              column = Math.max(0, column - 1)
-              break
-            case KEY_RIGHT:
-            case KEY_TAP:
-              column = Math.min(maxcolumn, column + 1)
-              break
+          if (this.editTarget) {
+            switch (keyCode) {
+              case KEY_ENTER:
+                this.editTarget = null
+                this.focus()
+                return
+              case KEY_ESC:
+                /* TODO 편집이 취소되어야 한다. */
+                this.editTarget = null
+                this.focus()
+                return
+              case KEY_TAP:
+                column = Math.min(maxcolumn, column + 1)
+                break
 
-            default:
-              return
+              default:
+                return
+            }
+          } else {
+            switch (keyCode) {
+              case KEY_UP:
+                row = Math.max(0, row - 1)
+                break
+              case KEY_DOWN:
+                row = Math.min(maxrow, row + 1)
+                break
+              case KEY_ENTER:
+                this.startEditTarget(row, column)
+                return
+              case KEY_LEFT:
+              case KEY_BACKSPACE:
+                column = Math.max(0, column - 1)
+                break
+              case KEY_RIGHT:
+              case KEY_TAP:
+                column = Math.min(maxcolumn, column + 1)
+                break
+              case KEY_ESC:
+                return
+
+              default:
+                if (
+                  (keyCode > 47 && keyCode < 58) || // number keys
+                  (keyCode == 32 || keyCode == 13) || // spacebar & return key(s) (if you want to allow carriage returns)
+                  (keyCode > 64 && keyCode < 91) || // letter keys
+                  (keyCode > 95 && keyCode < 112) || // numpad keys
+                  (keyCode > 185 && keyCode < 193) || // ;=,-./` (in order)
+                  (keyCode > 218 && keyCode < 223) // [\]' (in order)
+                ) {
+                  this.startEditTarget(row, column)
+                }
+                return
+            }
           }
 
           this.focused = { row, column }
@@ -210,15 +238,19 @@ class DataGridBody extends LitElement {
         return
       }
 
-      if (this.editTarget && row == this.editTarget.row && column == this.editTarget.column) {
-        return
-      }
-
-      this.editTarget = {
-        row,
-        column
-      }
+      this.startEditTarget(row, column)
     })
+  }
+
+  startEditTarget(row, column) {
+    if (this.editTarget && row == this.editTarget.row && column == this.editTarget.column) {
+      return
+    }
+
+    this.editTarget = {
+      row,
+      column
+    }
   }
 
   showFocused() {

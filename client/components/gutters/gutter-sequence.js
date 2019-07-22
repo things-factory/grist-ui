@@ -17,10 +17,6 @@ export class GutterSequence {
       header: '#',
       record: {
         renderer: function(column, record, idx) {
-          if (this.hasAttribute('focused-row')) {
-            return '>'
-          }
-
           var { limit = 0, page = 1, total = 0, records = [] } = this.data || {}
           return (page - 1) * limit + idx + 1
         },

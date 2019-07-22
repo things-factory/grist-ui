@@ -46,11 +46,15 @@ export class InputEditor extends LitElement {
     return this.shadowRoot.firstElementChild
   }
 
-  firstUpdated() {
+  async firstUpdated() {
     this.shadowRoot.addEventListener('change', this.onchange.bind(this))
     this.shadowRoot.addEventListener('focusout', this.onfocusout.bind(this))
 
-    this.value = this.formatForEditor(this.record[this.column.name])
+    this.value = this._dirtyValue = this.formatForEditor(this.record[this.column.name])
+
+    this.focus()
+    await this.updateComplete
+    this.select()
   }
 
   select() {

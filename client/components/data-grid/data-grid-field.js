@@ -6,16 +6,13 @@ class DataGridField extends LitElement {
   static get properties() {
     return {
       align: { attribute: true },
-      odd: { attribute: true },
       record: Object,
       column: Object,
       rowIndex: Number,
       columnIndex: Number,
       data: Object,
       selectedRecords: Array,
-      editing: { attribute: 'editing' },
-      focusedRow: { attribute: 'focused-row' },
-      selectedRow: { attribute: 'selected-row' }
+      editing: { attribute: 'editing' }
     }
   }
 
@@ -83,19 +80,6 @@ class DataGridField extends LitElement {
       return html`
         ${rendered}
       `
-    }
-  }
-
-  async updated(changed) {
-    if (changed.has('editing')) {
-      if (this.isEditing) {
-        await this.updateComplete
-
-        let editor = this.shadowRoot.querySelector('#editor')
-
-        editor.focus()
-        editor.select()
-      }
     }
   }
 

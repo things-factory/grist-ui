@@ -60,13 +60,20 @@ export class ObjectEditor extends LitElement {
 
     return html`
       <span>${value[nameField]}(${value[descriptionField]})</span>
-      <mwc-icon @click=${this.onclick.bind(this)}>arrow_drop_down</mwc-icon>
+      <mwc-icon>arrow_drop_down</mwc-icon>
     `
   }
 
   firstUpdated() {
     this.value = this.record[this.column.name]
     this.template = ((this.column.record || {}).options || {}).template
+
+    this.addEventListener('click', e => {
+      e.stopPropagation()
+
+      this.openSelector()
+    })
+    this.openSelector()
   }
 
   get icon() {
@@ -79,9 +86,7 @@ export class ObjectEditor extends LitElement {
     this.icon.focus()
   }
 
-  onclick(e) {
-    e.stopPropagation()
-
+  openSelector() {
     if (this.popup) {
       delete this.popup
     }
