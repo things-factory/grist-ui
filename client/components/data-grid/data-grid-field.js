@@ -94,7 +94,6 @@ class DataGridField extends LitElement {
         }).bind(this)
 
         this._onRecordChange = (e => {
-          console.log('record-change data-grid-field')
           this._editCancelled && e.stopPropagation()
         }).bind(this)
 

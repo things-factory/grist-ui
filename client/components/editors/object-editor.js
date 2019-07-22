@@ -93,6 +93,7 @@ export class ObjectEditor extends LitElement {
 
     const confirmCallback = selected => {
       var after = Object.assign({}, this.record, {
+        __dirty__: 'x',
         [this.column.name]: selected
       })
 

@@ -93,6 +93,7 @@ class GristTest extends localize(i18next)(PageView) {
             role: idx % 2 ? 'admin' : 'worker',
             color: idx % 2 ? '#87f018' : '#180f87',
             rate: Math.round(Math.random() * 100),
+            homepage: idx % 2 ? 'http://hatiolab.com' : 'http://deadpool.hatiolab.com',
             createdAt: Date.now(),
             updatedAt: Date.now()
           }
@@ -107,6 +108,10 @@ class GristTest extends localize(i18next)(PageView) {
 
     this.config = {
       columns: [
+        {
+          type: 'gutter',
+          name: 'dirty'
+        },
         {
           type: 'gutter',
           name: 'sequence'
@@ -127,12 +132,19 @@ class GristTest extends localize(i18next)(PageView) {
           hidden: true
         },
         {
-          type: 'string',
+          type: 'link',
           name: 'name',
           header: i18next.t('field.name'),
           record: {
             align: 'center',
-            editable: true
+            editable: true,
+            options: {
+              // href: 'http://hatiolab.com',
+              href: function(column, record, rowIndex) {
+                return record['homepage']
+              }
+              // target: '_blank'
+            }
           },
           sortable: true,
           width: 120

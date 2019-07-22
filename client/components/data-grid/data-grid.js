@@ -159,6 +159,17 @@ class DataGrid extends LitElement {
         this.selectedRecords = selectedRecords
       }
     })
+
+    this.addEventListener('record-change', e => {
+      var { after, before, column, row } = e.detail
+
+      var records = [...this.data.records]
+      records.splice(row, 1, after)
+      this.data = {
+        ...this.data,
+        records
+      }
+    })
   }
 
   updated(changes) {
@@ -218,16 +229,6 @@ class DataGrid extends LitElement {
         .columns=${columns}
         .data=${this.data}
         .selectedRecords=${this.selectedRecords}
-        @record-change=${e => {
-          var { after, before, column, row } = e.detail
-          console.log('record-change', e.detail)
-          var records = [...this.data.records]
-          records.splice(row, 1, after)
-          this.data = {
-            ...this.data,
-            records
-          }
-        }}
       ></data-grid-body>
 
       ${paginatable
