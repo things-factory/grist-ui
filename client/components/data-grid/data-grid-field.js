@@ -83,35 +83,29 @@ class DataGridField extends LitElement {
     }
   }
 
-  firstUpdated() {
-    this.addEventListener('click', async e => {
-      let { rowIndex: row, columnIndex: column } = this
+  updated(changes) {
+    if (changes.has('editing')) {
+      if (this.isEditing) {
+        this._onKeydownInEditingMode = (e => {
+          if (e.keyCode == 27 /* KEY_ESC */) {
+            /* 편집 취소 */
+            this._editCancelled = true
+          }
+        }).bind(this)
 
-      this.dispatchEvent(
-        new CustomEvent('cell-click', {
-          bubbles: true,
-          composed: true,
-          detail: { row, column }
-        })
-      )
+        this._onRecordChange = (e => {
+          console.log('record-change data-grid-field')
+          this._editCancelled && e.stopPropagation()
+        }).bind(this)
 
-      e.stopPropagation()
-    })
-
-    this.addEventListener('dblclick', async e => {
-      let { rowIndex: row, columnIndex: column } = this
-
-      if (this.column.record.editable)
-        this.dispatchEvent(
-          new CustomEvent('cell-dblclick', {
-            bubbles: true,
-            composed: true,
-            detail: { row, column }
-          })
-        )
-
-      e.stopPropagation()
-    })
+        delete this._editCancelled
+        this.addEventListener('record-change', this._onRecordChange)
+        this.addEventListener('keydown', this._onKeydownInEditingMode)
+      } else {
+        this.removeEventListener('record-change', this._onRecordChange)
+        this.removeEventListener('keydown', this._onKeydownInEditingMode)
+      }
+    }
   }
 }
 

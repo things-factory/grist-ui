@@ -141,12 +141,9 @@ class DataGridBody extends LitElement {
 
           if (this.editTarget) {
             switch (keyCode) {
-              case KEY_ENTER:
-                this.editTarget = null
-                this.focus()
-                return
               case KEY_ESC:
-                /* TODO 편집이 취소되어야 한다. */
+              /* TODO 편집이 취소되어야 한다. */
+              case KEY_ENTER:
                 this.editTarget = null
                 this.focus()
                 return
@@ -208,20 +205,25 @@ class DataGridBody extends LitElement {
       }
     })
 
-    this.shadowRoot.addEventListener('cell-click', async e => {
-      let { row, column } = e.detail
+    this.shadowRoot.addEventListener('click', async e => {
+      e.stopPropagation()
 
-      if (isNaN(row) || isNaN(column)) {
+      /* target should be 'data-grid-field' */
+      var target = e.target
+      var { rowIndex, columnIndex } = target
+
+      if (isNaN(rowIndex) || isNaN(columnIndex)) {
+        console.error('should not be here.')
         return
       }
 
-      if (this.focused && row == this.focused.row && column == this.focused.column) {
+      if (this.focused && rowIndex == this.focused.row && columnIndex == this.focused.column) {
         return
       }
 
       this.focused = {
-        row,
-        column
+        row: rowIndex,
+        column: columnIndex
       }
 
       this.editTarget = null
@@ -231,14 +233,21 @@ class DataGridBody extends LitElement {
       this.showFocused()
     })
 
-    this.shadowRoot.addEventListener('cell-dblclick', e => {
-      let { row, column } = e.detail
+    this.shadowRoot.addEventListener('dblclick', async e => {
+      e.stopPropagation()
 
-      if (isNaN(row) || isNaN(column)) {
+      /* target should be 'data-grid-field' */
+      var target = e.target
+      var { rowIndex, columnIndex, column } = target
+
+      if (isNaN(rowIndex) || isNaN(columnIndex)) {
+        console.error('should not be here.')
         return
       }
 
-      this.startEditTarget(row, column)
+      if (column.record.editable) {
+        this.startEditTarget(rowIndex, columnIndex)
+      }
     })
   }
 
@@ -268,6 +277,15 @@ class DataGridBody extends LitElement {
     if (left !== undefined) {
       this.scrollLeft = left
     }
+  }
+
+  async focus() {
+    // super.focus()
+    // if (!this.focused || isNaN(this.focused.row)) {
+    //   this.focused = { row: 0, column: 0 }
+    //   await this.updateComplete
+    //   this.showFocused()
+    // }
   }
 }
 
