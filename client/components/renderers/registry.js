@@ -31,5 +31,9 @@ export function unregisterRenderer(type) {
 }
 
 export function getRenderer(type) {
+  if (typeof type == 'function') {
+    return type
+  }
+
   return renderer[type] || TextRenderer
 }
