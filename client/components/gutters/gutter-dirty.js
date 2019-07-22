@@ -25,7 +25,7 @@ export class GutterDirty {
                 <mwc-icon style=${INLINESTYLE}>remove</mwc-icon>
               `
               return html``
-            case 'x':
+            case 'M':
               return html`
                 <mwc-icon style=${INLINESTYLE}>done</mwc-icon>
               `

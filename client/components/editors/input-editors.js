@@ -75,7 +75,7 @@ export class InputEditor extends LitElement {
 
   rebuildRecord(record, column, value) {
     return Object.assign({}, record, {
-      __dirty__: 'x',
+      __dirty__: 'M',
       [column.name]: value
     })
   }
