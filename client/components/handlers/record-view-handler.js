@@ -4,7 +4,12 @@ import '../record-view'
 
 const STYLE = 'width: 50vw;height: 50vh'
 
-export const RecordViewHandler = function(columns, column, record, rowIndex) {
+/*
+ * handler들은 data-grid-field 로부터 호출되는 것을 전제로 하며,
+ * 전반적인 처리를 위해서, columns 및 data 정보를 포함해서 제공할 수 있어야 한다.
+ */
+
+export const RecordViewHandler = function(columns, data, column, record, rowIndex) {
   var field = this /* data-grid-field */
 
   openPopup(

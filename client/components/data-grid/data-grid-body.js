@@ -231,8 +231,7 @@ class DataGridBody extends LitElement {
 
       /* do click handler */
       var { click } = column.handlers
-      console.log('target', target)
-      click && click.call(target, this.columns, column, record, rowIndex)
+      click && click.call(target, this.columns, this.data, column, record, rowIndex)
     })
 
     this.shadowRoot.addEventListener('dblclick', async e => {
@@ -251,7 +250,7 @@ class DataGridBody extends LitElement {
 
       /* do dblclick handler */
       var { dblclick } = column.handlers
-      dblclick && dblclick.call(target, this.columns, column, record, rowIndex)
+      dblclick && dblclick.call(target, this.columns, this.data, column, record, rowIndex)
     })
   }
 
