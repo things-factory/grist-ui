@@ -31,9 +31,6 @@ export class GutterRowSelector {
               }}
             />
           `
-        },
-        handlers: {
-          change: function(e) {}
         }
       },
       record: {
@@ -67,12 +64,7 @@ export class GutterRowSelector {
             />
           `
         },
-        align: 'center',
-        handlers: {
-          change: function(e) {
-            e.target.checked
-          }
-        }
+        align: 'center'
       }
     })
   }

@@ -210,27 +210,28 @@ class DataGridBody extends LitElement {
 
       /* target should be 'data-grid-field' */
       var target = e.target
-      var { rowIndex, columnIndex } = target
+      var { column, record, rowIndex, columnIndex } = target
 
-      if (isNaN(rowIndex) || isNaN(columnIndex)) {
+      if (!isNaN(rowIndex) && !isNaN(columnIndex)) {
+        if (!this.focused || (rowIndex !== this.focused.row || columnIndex !== this.focused.column)) {
+          this.focused = {
+            row: rowIndex,
+            column: columnIndex
+          }
+
+          this.editTarget = null
+
+          await this.updateComplete
+
+          this.showFocused()
+        }
+      } else {
         console.error('should not be here.')
-        return
       }
 
-      if (this.focused && rowIndex == this.focused.row && columnIndex == this.focused.column) {
-        return
-      }
-
-      this.focused = {
-        row: rowIndex,
-        column: columnIndex
-      }
-
-      this.editTarget = null
-
-      await this.updateComplete
-
-      this.showFocused()
+      /* do click handler */
+      var { click } = column.handlers
+      click && click.call(target, this.columns, this.data, column, record, rowIndex)
     })
 
     this.shadowRoot.addEventListener('dblclick', async e => {
@@ -238,21 +239,25 @@ class DataGridBody extends LitElement {
 
       /* target should be 'data-grid-field' */
       var target = e.target
-      var { rowIndex, columnIndex, column } = target
+      var { record, rowIndex, columnIndex, column } = target
 
-      if (isNaN(rowIndex) || isNaN(columnIndex)) {
+      if (!isNaN(rowIndex) && !isNaN(columnIndex)) {
+        this.startEditTarget(rowIndex, columnIndex)
+      } else {
         console.error('should not be here.')
         return
       }
 
-      if (column.record.editable) {
-        this.startEditTarget(rowIndex, columnIndex)
-      }
+      /* do dblclick handler */
+      var { dblclick } = column.handlers
+      dblclick && dblclick.call(target, this.columns, this.data, column, record, rowIndex)
     })
   }
 
   startEditTarget(row, column) {
-    if (this.editTarget && row == this.editTarget.row && column == this.editTarget.column) {
+    var { editable } = (this.columns || []).filter(column => !column.hidden)[column].record
+
+    if (!editable || (this.editTarget && row == this.editTarget.row && column == this.editTarget.column)) {
       return
     }
 

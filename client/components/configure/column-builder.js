@@ -1,6 +1,7 @@
 import { generateGutterColumn } from '../gutters'
 import { getRenderer } from '../renderers'
 import { getEditor } from '../editors'
+import { getHandler } from '../handlers'
 
 export const buildColumn = column => {
   var compiled = { ...column }
@@ -9,11 +10,27 @@ export const buildColumn = column => {
     compiled = generateGutterColumn(column)
   }
 
-  var { record = {} } = compiled
-  var { renderer, editor, editable } = record
+  var { header = {}, record = {}, handlers = {} } = compiled
 
-  if (!renderer) {
-    renderer = getRenderer(column.type)
+  /* header */
+  if (typeof header == 'string') {
+    compiled.header = {
+      renderer: () => header
+    }
+  } else {
+    var { renderer: headerRenderer } = header
+
+    compiled.header = {
+      ...header,
+      renderer: getRenderer(headerRenderer)
+    }
+  }
+
+  /* record */
+  var { renderer: recordRenderer, editor, editable } = record
+
+  if (!recordRenderer) {
+    recordRenderer = getRenderer(column.type)
   }
 
   if (editable && typeof editor !== 'function') {
@@ -26,8 +43,16 @@ export const buildColumn = column => {
 
   compiled.record = {
     ...record,
-    renderer,
+    renderer: recordRenderer,
     editor
+  }
+
+  /* handler */
+  var { click, dblclick } = handlers
+
+  compiled.handlers = {
+    click: getHandler(click),
+    dblclick: getHandler(dblclick)
   }
 
   return compiled

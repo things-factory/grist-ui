@@ -30,7 +30,8 @@ class GristTest extends localize(i18next)(PageView) {
 
   get context() {
     return {
-      title: 'Grist Test'
+      title: 'Grist Test',
+      printable: true
     }
   }
 
@@ -124,7 +125,10 @@ class GristTest extends localize(i18next)(PageView) {
         {
           type: 'gutter',
           name: 'button',
-          icon: 'edit'
+          icon: 'edit',
+          handlers: {
+            click: 'record-view'
+          }
         },
         {
           type: 'string',
@@ -154,10 +158,14 @@ class GristTest extends localize(i18next)(PageView) {
           name: 'description',
           header: i18next.t('field.description'),
           record: {
-            align: 'left',
-            editable: true
+            align: 'left'
           },
-          width: 200
+          width: 200,
+          handlers: {
+            dblclick: (column, record, rowIndex) => {
+              alert(`${column.name} ${record[column.name]}, row : ${rowIndex}`)
+            }
+          }
         },
         {
           type: 'string',

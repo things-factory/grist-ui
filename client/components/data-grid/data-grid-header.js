@@ -116,17 +116,8 @@ class DataGridHeader extends LitElement {
   }
 
   _renderHeader(column) {
-    var { header } = column
-    var title
-
-    if (typeof header == 'object') {
-      let { renderer } = header
-      if (typeof renderer == 'function') {
-        title = renderer.call(this, column)
-      }
-    } else {
-      title = header
-    }
+    var { renderer } = column.header
+    var title = renderer.call(this, column)
 
     return html`
       ${title}

@@ -34,6 +34,10 @@ export function unregisterEditor(type) {
 }
 
 export function getEditor(type) {
+  if (typeof type == 'function') {
+    return type
+  }
+
   return function(column, record, row) {
     var clazz = editors[type] || TextInput
 
