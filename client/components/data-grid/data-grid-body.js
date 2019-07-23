@@ -1,15 +1,12 @@
-import { LitElement, html, css } from 'lit-element'
+import { LitElement, html } from 'lit-element'
 
 import './data-grid-field'
 
-const KEY_LEFT = 37
-const KEY_UP = 38
-const KEY_RIGHT = 39
-const KEY_DOWN = 40
-const KEY_ENTER = 13
-const KEY_TAP = 9
-const KEY_BACKSPACE = 8
-const KEY_ESC = 27
+import { dataGridBodyKeydownHandler } from './event-handlers/data-grid-body-keydown-handler'
+import { dataGridBodyClickHandler } from './event-handlers/data-grid-body-click-handler'
+import { dataGridBodyDblclickHandler } from './event-handlers/data-grid-body-dblclick-handler'
+
+import { dataGridBodyStyle } from './data-grid-body-style'
 
 function calcScrollPos(parent, child) {
   /* getBoundingClientRect는 safari에서 스크롤 상태에서 다른 브라우저와는 다른 값을 리턴함 - 사파리는 약간 이상 작동함. */
@@ -38,38 +35,7 @@ class DataGridBody extends LitElement {
   }
 
   static get styles() {
-    return [
-      css`
-        :host {
-          display: grid;
-          grid-template-columns: var(--grid-template-columns);
-          grid-auto-rows: var(--grid-record-height, min-content);
-
-          overflow: auto;
-          outline: none;
-        }
-
-        :host > [odd] {
-          background-color: var(--grid-record-odd-background-color, #eee);
-        }
-
-        :host > [focused] {
-          border: 1px dotted rgba(0, 0, 0, 0.5);
-        }
-
-        :host > [selected-row] {
-          background-color: var(--grid-record-selected-background-color, orange);
-        }
-
-        :host > [focused-row] {
-          background-color: var(--grid-record-focused-background-color, tomato);
-        }
-
-        :host > [editing] {
-          background-color: var(--grid-record-editor-background-color, transparent);
-        }
-      `
-    ]
+    return [dataGridBodyStyle]
   }
 
   render() {
@@ -78,6 +44,8 @@ class DataGridBody extends LitElement {
 
     var columns = (this.columns || []).filter(column => !column.hidden)
     var { records = [] } = this.data || {}
+
+    // TODO selectedRecords는 별도로 관리하지 않고, record 내부에 __selected__ 로 관리하자.
     var selectedRecords = this.selectedRecords
 
     return html`
@@ -115,6 +83,7 @@ class DataGridBody extends LitElement {
   }
 
   firstUpdated() {
+    /* focus() 를 받을 수 있도록 함. */
     this.setAttribute('tabindex', '-1')
 
     /*
@@ -131,127 +100,14 @@ class DataGridBody extends LitElement {
 
     this.addEventListener('focusin', e => {
       if (!this._focusedListener) {
-        this._focusedListener = (async e => {
-          // arrow-key
-          var keyCode = e.keyCode
-          var { row, column } = this.focused || {}
-          var { records = [] } = this.data || {}
-          var maxrow = records.length - 1
-          var maxcolumn = (this.columns || []).filter(column => !column.hidden).length - 1
-
-          if (this.editTarget) {
-            switch (keyCode) {
-              case KEY_ESC:
-              /* TODO 편집이 취소되어야 한다. */
-              case KEY_ENTER:
-                this.editTarget = null
-                this.focus()
-                return
-              case KEY_TAP:
-                column = Math.min(maxcolumn, column + 1)
-                break
-
-              default:
-                return
-            }
-          } else {
-            switch (keyCode) {
-              case KEY_UP:
-                row = Math.max(0, row - 1)
-                break
-              case KEY_DOWN:
-                row = Math.min(maxrow, row + 1)
-                break
-              case KEY_ENTER:
-                this.startEditTarget(row, column)
-                return
-              case KEY_LEFT:
-              case KEY_BACKSPACE:
-                column = Math.max(0, column - 1)
-                break
-              case KEY_RIGHT:
-              case KEY_TAP:
-                column = Math.min(maxcolumn, column + 1)
-                break
-              case KEY_ESC:
-                return
-
-              default:
-                if (
-                  (keyCode > 47 && keyCode < 58) || // number keys
-                  (keyCode == 32 || keyCode == 13) || // spacebar & return key(s) (if you want to allow carriage returns)
-                  (keyCode > 64 && keyCode < 91) || // letter keys
-                  (keyCode > 95 && keyCode < 112) || // numpad keys
-                  (keyCode > 185 && keyCode < 193) || // ;=,-./` (in order)
-                  (keyCode > 218 && keyCode < 223) // [\]' (in order)
-                ) {
-                  this.startEditTarget(row, column)
-                }
-                return
-            }
-          }
-
-          this.focused = { row, column }
-
-          /* arrow key에 의한 scrollbar의 자동 움직임을 하지 못하도록 한다. */
-          e.preventDefault()
-
-          await this.updateComplete
-
-          this.showFocused()
-        }).bind(this)
-
+        this._focusedListener = dataGridBodyKeydownHandler.bind(this)
         window.addEventListener('keydown', this._focusedListener)
       }
     })
 
-    this.shadowRoot.addEventListener('click', async e => {
-      e.stopPropagation()
+    this.shadowRoot.addEventListener('click', dataGridBodyClickHandler.bind(this))
 
-      /* target should be 'data-grid-field' */
-      var target = e.target
-      var { column, record, rowIndex, columnIndex } = target
-
-      if (!isNaN(rowIndex) && !isNaN(columnIndex)) {
-        if (!this.focused || (rowIndex !== this.focused.row || columnIndex !== this.focused.column)) {
-          this.focused = {
-            row: rowIndex,
-            column: columnIndex
-          }
-
-          this.editTarget = null
-
-          await this.updateComplete
-
-          this.showFocused()
-        }
-      } else {
-        console.error('should not be here.')
-      }
-
-      /* do click handler */
-      var { click } = column.handlers
-      click && click.call(target, this.columns, this.data, column, record, rowIndex)
-    })
-
-    this.shadowRoot.addEventListener('dblclick', async e => {
-      e.stopPropagation()
-
-      /* target should be 'data-grid-field' */
-      var target = e.target
-      var { record, rowIndex, columnIndex, column } = target
-
-      if (!isNaN(rowIndex) && !isNaN(columnIndex)) {
-        this.startEditTarget(rowIndex, columnIndex)
-      } else {
-        console.error('should not be here.')
-        return
-      }
-
-      /* do dblclick handler */
-      var { dblclick } = column.handlers
-      dblclick && dblclick.call(target, this.columns, this.data, column, record, rowIndex)
-    })
+    this.shadowRoot.addEventListener('dblclick', dataGridBodyDblclickHandler.bind(this))
   }
 
   startEditTarget(row, column) {
@@ -267,20 +123,34 @@ class DataGridBody extends LitElement {
     }
   }
 
-  showFocused() {
-    let focused = this.shadowRoot.querySelector('[focused]')
+  updated(changes) {
+    if (changes.has('focused')) {
+      let element = this.shadowRoot.querySelector('[focused]')
+      if (!element) {
+        return
+      }
 
-    if (!focused) {
-      return
+      let { top, left } = calcScrollPos(this, element)
+      // TODO this.scroll()을 사용하면, 효과가 좋으나 left 계산에 문제가 있는 것 같음.
+      // this.scroll({
+      //   top,
+      //   left,
+      //   behavior: 'smooth'
+      // })
+      if (top !== undefined) {
+        this.scrollTop = top
+      }
+      if (left !== undefined) {
+        this.scrollLeft = left
+      }
     }
+  }
 
-    let { top, left } = calcScrollPos(this, focused)
+  focus() {
+    super.focus()
 
-    if (top !== undefined) {
-      this.scrollTop = top
-    }
-    if (left !== undefined) {
-      this.scrollLeft = left
+    if (!this.focused || this.focused.row === undefined) {
+      this.focused({ row: 0, column: 0 })
     }
   }
 }

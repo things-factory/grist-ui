@@ -250,7 +250,7 @@ class GristTest extends localize(i18next)(PageView) {
         {
           type: 'datetime',
           name: 'updatedAt',
-          header: i18next.t('field.updated-at'),
+          header: i18next.t('field.updated_at'),
           record: {
             align: 'center',
             editable: true
@@ -261,7 +261,7 @@ class GristTest extends localize(i18next)(PageView) {
         {
           type: 'datetime',
           name: 'createdAt',
-          header: i18next.t('field.created-at'),
+          header: i18next.t('field.created_at'),
           record: {
             align: 'center',
             editable: true
