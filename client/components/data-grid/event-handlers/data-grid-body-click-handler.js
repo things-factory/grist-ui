@@ -10,6 +10,11 @@ export function dataGridBodyClickHandler(e) {
   var target = e.target
   var { column, record, rowIndex, columnIndex } = target
 
+  if (!column) {
+    /* 여백 컬럼이 클릭된 경우 */
+    return
+  }
+
   if (!isNaN(rowIndex) && !isNaN(columnIndex)) {
     if (!this.focused || (rowIndex !== this.focused.row || columnIndex !== this.focused.column)) {
       this.focused = {
@@ -23,7 +28,11 @@ export function dataGridBodyClickHandler(e) {
     console.error('should not be here.')
   }
 
-  /* do click handler */
+  /* do column click handler */
   var { click } = column.handlers
   click && click.call(target, this.columns, this.data, column, record, rowIndex)
+
+  /* do rows click handler */
+  var { click: rowsClick } = this.config.rows.handlers
+  rowsClick && rowsClick.call(target, this.columns, this.data, column, record, rowIndex)
 }

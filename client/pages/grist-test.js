@@ -163,7 +163,7 @@ class GristTest extends localize(i18next)(PageView) {
           },
           width: 200,
           handlers: {
-            dblclick: (column, record, rowIndex) => {
+            dblclick: (columns, data, column, record, rowIndex) => {
               alert(`${column.name} ${record[column.name]}, row : ${rowIndex}`)
             }
           }
@@ -270,6 +270,11 @@ class GristTest extends localize(i18next)(PageView) {
           width: 180
         }
       ],
+      rows: {
+        handlers: {
+          click: 'select-row-toggle'
+        }
+      },
       sorters: [
         {
           name: 'name',

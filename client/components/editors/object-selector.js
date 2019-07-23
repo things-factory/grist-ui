@@ -11,8 +11,7 @@ export class ObjectSelector extends LitElement {
       value: String,
       config: Object,
       data: Object,
-      confirmCallback: Object,
-      selectedRecords: Array
+      confirmCallback: Object
     }
   }
 
@@ -156,9 +155,9 @@ export class ObjectSelector extends LitElement {
   get selected() {
     var grist = this.shadowRoot.querySelector('data-grist')
 
-    var selectedRecords = grist.selectedRecords
+    var selected = grist.selected
 
-    return selectedRecords && selectedRecords.length > 0 ? selectedRecords[0] : undefined
+    return selected && selected.length > 0 ? selected[0] : undefined
   }
 }
 
