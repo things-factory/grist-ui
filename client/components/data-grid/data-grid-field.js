@@ -11,7 +11,6 @@ class DataGridField extends LitElement {
       rowIndex: Number,
       columnIndex: Number,
       data: Object,
-      selectedRecords: Array,
       editing: { attribute: 'editing' }
     }
   }

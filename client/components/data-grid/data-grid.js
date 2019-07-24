@@ -4,6 +4,7 @@ import { ScrollbarStyles } from '@things-factory/shell'
 import './data-grid-header'
 import './data-grid-body'
 import './data-grid-footer'
+import { RecordFormHandler } from '../handlers/record-form-handler'
 
 /**
  * DataGrid
@@ -82,8 +83,7 @@ class DataGrid extends LitElement {
        * }
        */
       config: Object,
-      data: Object,
-      selectedRecords: Array
+      data: Object
     }
   }
 
@@ -130,40 +130,31 @@ class DataGrid extends LitElement {
 
     this.addEventListener('select-all-change', e => {
       var { selected } = e.detail
-      this.selectedRecords = selected ? [...this.data.records] : []
+      var { records } = this.data
+
+      records.forEach(record => (record['__selected__'] = selected))
+      this.data = { ...this.data }
     })
 
     this.addEventListener('select-record-change', e => {
-      var { records, added = [], removed = [] } = e.detail
+      var { records: selectedRecords, added = [], removed = [] } = e.detail
+      var { records } = this.data
 
-      if (records) {
-        /* 지정된 records 만으로 selectedRecords를 변경한다. */
-        this.selectedRecords = [...records]
+      if (selectedRecords) {
+        records.forEach(record => (record['__selected__'] = false))
+        selectedRecords.forEach(record => (record['__selected__'] = true))
       } else {
-        var selectedRecords = [...(this.selectedRecords || [])]
-
-        removed.map(record => {
-          var idx = selectedRecords.indexOf(record)
-          if (idx != -1) {
-            selectedRecords.splice(idx, 1)
-          }
-        })
-
-        added.map(record => {
-          var idx = selectedRecords.indexOf(record)
-          if (idx == -1) {
-            selectedRecords.push(record)
-          }
-        })
-
-        this.selectedRecords = selectedRecords
+        removed.forEach(record => (record['__selected__'] = false))
+        added.forEach(record => (record['__selected__'] = true))
       }
+
+      this.data = { ...this.data }
     })
 
     this.addEventListener('record-change', e => {
       var { after, before, column, row } = e.detail
 
-      var records = [...this.data.records]
+      var records = this.data.records
       records.splice(row, 1, after)
       this.data = {
         ...this.data,
@@ -178,7 +169,7 @@ class DataGrid extends LitElement {
        * 데이타 내용에 따라 동적으로 컬럼의 폭이 달라지는 경우(예를 들면, sequence field)가 있으므로,
        * data의 변동에 대해서도 다시 계산되어야 한다.
        */
-      this.calculateWidths(this.config.columns)
+      this.calculateWidths(this.config && this.config.columns)
     }
   }
 
@@ -210,13 +201,13 @@ class DataGrid extends LitElement {
     var { pagination = {}, columns = [] } = this.config || {}
 
     var paginatable = !pagination.infinite
+    var data = this.data
 
     return html`
       <data-grid-header
         .config=${this.config}
         .columns=${columns}
-        .data=${this.data}
-        .selectedRecords=${this.selectedRecords}
+        .data=${data}
         @column-width-changed=${e => {
           let { idx, width } = e.detail
           columns[idx].width = width
@@ -224,16 +215,11 @@ class DataGrid extends LitElement {
         }}
       ></data-grid-header>
 
-      <data-grid-body
-        .config=${this.config}
-        .columns=${columns}
-        .data=${this.data}
-        .selectedRecords=${this.selectedRecords}
-      ></data-grid-body>
+      <data-grid-body .config=${this.config} .columns=${columns} .data=${data}></data-grid-body>
 
       ${paginatable
         ? html`
-            <data-grid-footer .config=${this.config} .data=${this.data}></data-grid-footer>
+            <data-grid-footer .config=${this.config} .data=${data}></data-grid-footer>
           `
         : html``}
     `

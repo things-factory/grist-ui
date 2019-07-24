@@ -10,10 +10,12 @@ export class GutterRowSelector {
       sortable: false,
       header: {
         renderer: function(column) {
+          var checked = ((this.data || {}).records || []).find(record => record['__selected__'])
+
           return html`
             <input
               type="checkbox"
-              .checked=${(this.selectedRecords || []).length > 0}
+              .checked=${checked}
               @change=${e => {
                 let selected = column.multiple ? e.target.checked : false
 
@@ -38,7 +40,7 @@ export class GutterRowSelector {
           return html`
             <input
               type=${column.multiple ? 'checkbox' : 'radio'}
-              .checked=${this.hasAttribute('selected-row')}
+              .checked=${record['__selected__']}
               @change=${e => {
                 let selected = e.target.checked
 

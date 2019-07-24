@@ -29,8 +29,7 @@ class DataGridBody extends LitElement {
       columns: Array,
       data: Object,
       focused: Object,
-      editTarget: Object,
-      selectedRecords: Array
+      editTarget: Object
     }
   }
 
@@ -43,39 +42,39 @@ class DataGridBody extends LitElement {
     var { row: editingRow, column: editingColumn } = this.editTarget || {}
 
     var columns = (this.columns || []).filter(column => !column.hidden)
-    var { records = [] } = this.data || {}
-
-    // TODO selectedRecords는 별도로 관리하지 않고, record 내부에 __selected__ 로 관리하자.
-    var selectedRecords = this.selectedRecords
+    var data = this.data || {}
+    var { records = [] } = data
 
     return html`
       ${records.map((record, idxRow) => {
-        var attrSelectedRow = (selectedRecords || []).indexOf(record) != -1
         var attrFocusedRow = idxRow === focusedRow
+        var attrSelected = record['__selected__']
         var attrOdd = idxRow % 2
 
         return html`
           ${columns.map(
             (column, idxColumn) => html`
               <data-grid-field
-                .data=${this.data}
+                .data=${data}
                 .rowIndex=${idxRow}
                 .columnIndex=${idxColumn}
                 .column=${column}
                 .record=${record}
-                .selectedRecords=${selectedRecords}
                 ?odd=${attrOdd}
                 ?focused-row=${attrFocusedRow}
-                ?selected-row=${attrSelectedRow}
+                ?selected-row=${attrSelected}
                 ?focused=${idxRow === focusedRow && idxColumn === focusedColumn}
                 ?editing=${idxRow === editingRow && idxColumn === editingColumn}
               ></data-grid-field>
             `
           )}
           <data-grid-field
+            .data=${data}
+            .rowIndex=${idxRow}
+            .record=${record}
             ?odd=${attrOdd}
             ?focused-row=${attrFocusedRow}
-            ?selected-row=${attrSelectedRow}
+            ?selected-row=${attrSelected}
           ></data-grid-field>
         `
       })}

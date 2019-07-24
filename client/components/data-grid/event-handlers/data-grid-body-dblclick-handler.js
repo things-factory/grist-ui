@@ -10,6 +10,11 @@ export async function dataGridBodyDblclickHandler(e) {
   var target = e.target
   var { record, rowIndex, columnIndex, column } = target
 
+  if (!column) {
+    /* 여백 컬럼이 클릭된 경우 */
+    return
+  }
+
   if (!isNaN(rowIndex) && !isNaN(columnIndex)) {
     this.startEditTarget(rowIndex, columnIndex)
   } else {
@@ -17,7 +22,11 @@ export async function dataGridBodyDblclickHandler(e) {
     return
   }
 
-  /* do dblclick handler */
+  /* do column dblclick handler */
   var { dblclick } = column.handlers
   dblclick && dblclick.call(target, this.columns, this.data, column, record, rowIndex)
+
+  /* do rows dblclick handler */
+  var { click: rowsDblclick } = this.config.rows.handlers
+  rowsDblclick && rowsDblclick.call(target, this.columns, this.data, column, record, rowIndex)
 }

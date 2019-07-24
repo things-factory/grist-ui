@@ -273,6 +273,11 @@ class GristTest extends localize(i18next)(PageView) {
           width: 180
         }
       ],
+      rows: {
+        handlers: {
+          click: 'select-row-toggle'
+        }
+      },
       sorters: [
         {
           name: 'name',

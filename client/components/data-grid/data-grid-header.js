@@ -7,8 +7,7 @@ class DataGridHeader extends LitElement {
       config: Object,
       columns: Array,
       data: Object,
-      _sorters: Array,
-      selectedRecords: Array
+      _sorters: Array
     }
   }
 
