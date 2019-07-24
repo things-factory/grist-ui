@@ -75,6 +75,11 @@ export class DataGlister extends LitElement {
     return this.shadowRoot.querySelector('#grist')
   }
 
+  get dirtyRecords() {
+    var { records = [] } = this._data || {}
+    return records.filter(record => record['__dirty__'])
+  }
+
   get selected() {
     var { records = [] } = this._data || {}
     return records.filter(record => record['__selected__'])

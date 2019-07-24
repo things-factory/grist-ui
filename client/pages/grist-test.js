@@ -201,6 +201,11 @@ class GristTest extends localize(i18next)(PageView) {
             align: 'center',
             editable: true
           },
+          handlers: {
+            dblclick: () => {
+              console.log(this.shadowRoot.querySelector('data-grist').dirtyRecords)
+            }
+          },
           sortable: true,
           width: 60
         },
