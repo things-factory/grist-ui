@@ -163,7 +163,7 @@ class GristTest extends localize(i18next)(PageView) {
           },
           width: 200,
           handlers: {
-            dblclick: (column, record, rowIndex) => {
+            dblclick: (columns, data, column, record, rowIndex) => {
               alert(`${column.name} ${record[column.name]}, row : ${rowIndex}`)
             }
           }
@@ -185,7 +185,10 @@ class GristTest extends localize(i18next)(PageView) {
           header: i18next.t('field.company'),
           record: {
             align: 'left',
-            editable: true
+            editable: true,
+            options: {
+              queryName: 'companies'
+            }
           },
           sortable: true,
           width: 240

@@ -1,8 +1,7 @@
-import { LitElement, html, css } from 'lit-element'
-
-import { isMobileDevice } from '@things-factory/shell'
 import { i18next } from '@things-factory/i18n-base'
-
+import { client, isMobileDevice } from '@things-factory/shell'
+import gql from 'graphql-tag'
+import { css, html, LitElement } from 'lit-element'
 import '../data-grist'
 
 export class ObjectSelector extends LitElement {
@@ -11,6 +10,7 @@ export class ObjectSelector extends LitElement {
       value: String,
       config: Object,
       data: Object,
+      queryName: String,
       confirmCallback: Object,
       selectedRecords: Array
     }
@@ -93,7 +93,7 @@ export class ObjectSelector extends LitElement {
     history.back()
   }
 
-  firstUpdated() {
+  async firstUpdated() {
     this.config = {
       columns: [
         {
@@ -137,14 +137,26 @@ export class ObjectSelector extends LitElement {
       }
     }
 
-    this.data = {
-      records: new Array(50).fill().map((item, idx) => {
-        return {
-          id: idx + 1,
-          name: 'QWERTYUIOP',
-          description: 'qwertyuioasdfghjklzxcvbnm'
+    const response = await client.query({
+      query: gql`
+        query {
+          ${this.queryName} (filters: []) {
+            items {
+              id
+              name
+              description
+            }
+            total
+          }
         }
-      })
+      `
+    })
+
+    this.data = {
+      records: response.data[this.queryName].items,
+      total: response.data[this.queryName].total,
+      limit: 100,
+      page: 1
     }
 
     var selected = this.data.records.find(item => this.value == item.id)

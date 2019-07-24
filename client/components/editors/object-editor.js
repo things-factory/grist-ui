@@ -59,7 +59,7 @@ export class ObjectEditor extends LitElement {
     }
 
     return html`
-      <span>${value[nameField]}(${value[descriptionField]})</span>
+      <span>${value[nameField]} (${value[descriptionField]})</span>
       <mwc-icon>arrow_drop_down</mwc-icon>
     `
   }
@@ -118,6 +118,7 @@ export class ObjectEditor extends LitElement {
           .value=${this.value.id}
           style="width: 50vw;height: 50vh;"
           .confirmCallback=${confirmCallback.bind(this)}
+          .queryName=${this.column.record.options.queryName}
         ></object-selector>
       `
 
