@@ -95,9 +95,10 @@ class DataGrid extends LitElement {
           display: flex;
           flex-direction: column;
 
-          background-color: var(--data-grid-background-color, white);
-
           overflow: hidden;
+
+          border: 1px solid var(--grid-header-border-color);
+          border-radius: 4px;
         }
 
         data-grid-body {

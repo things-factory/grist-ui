@@ -49,8 +49,8 @@ class DataGridHeader extends LitElement {
         span[title] {
           flex: 1;
           text-overflow: ellipsis;
-          font-size: var(--grid-header-fontsize);
-          color: var(--grid-header-color, white);
+          font: var(--grid-header-font);
+          color: var(--grid-header-color);
         }
 
         span[sorter] {

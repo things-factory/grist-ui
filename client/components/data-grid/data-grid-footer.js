@@ -21,18 +21,19 @@ class DataGridFooter extends LitElement {
           flex-direction: row;
           overflow: hidden;
 
-          font-size: 0.8em;
+          padding: var(--grid-footer-padding);
+          background-color: var(--grid-footer-background-color);
+          font-size: var(--grid-footer-font-size);
         }
 
         :host * {
           white-space: nowrap;
           overflow: hidden;
-          background-color: var(--grid-footer-background-color, gray);
           padding: 0 2px;
 
           text-overflow: ellipsis;
           text-align: center;
-          color: var(--grid-footer-color, white);
+          color: var(--grid-footer-color);
         }
 
         .filler {
@@ -45,16 +46,17 @@ class DataGridFooter extends LitElement {
         }
 
         .limit a {
-          color: lightgray;
+          color: var(--grid-footer-limit-color);
         }
 
         .limit a[selected] {
-          color: white;
+          color: var(--grid-footer-color);
           font-weight: bold;
+          text-decoration: underline;
         }
 
         a[inactive] * {
-          color: lightgray;
+          color: var(--grid-footer-inactive-color);
         }
       `
     ]

@@ -11,19 +11,20 @@ export const dataGridBodyStyle = css`
   }
 
   :host > [odd] {
-    background-color: var(--grid-record-odd-background-color, #eee);
+    background-color: var(--grid-record-odd-background-color);
   }
 
   :host > [focused] {
-    border: 1px dotted rgba(0, 0, 0, 0.5);
+    border: var(--grid-record-focused-border);
   }
 
   :host > [selected-row] {
-    background-color: var(--grid-record-selected-background-color, orange);
+    background-color: var(--grid-record-selected-background-color);
   }
 
   :host > [focused-row] {
-    background-color: var(--grid-record-focused-background-color, tomato);
+    background-color: var(--grid-record-focused-background-color);
+    color: var(--grid-record-focused-color);
   }
 
   :host > [editing] {
