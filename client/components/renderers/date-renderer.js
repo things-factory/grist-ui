@@ -11,7 +11,7 @@ const OPTIONS = {
 }
 
 export const DateRenderer = (column, record, rowIndex) => {
-  var value = record[column.name]
+  var value = Number(record[column.name])
   var options = column.record.options || OPTIONS
   var formatter = new Intl.DateTimeFormat(navigator.language, options)
 
