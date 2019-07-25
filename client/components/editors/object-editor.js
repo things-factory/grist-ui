@@ -58,9 +58,19 @@ export class ObjectEditor extends LitElement {
       [descriptionField]: ''
     }
 
+    if (!JSON.stringify(value[descriptionField])) {
+    }
+
     return html`
-      <span>${value[nameField]} (${value[descriptionField]})</span>
-      <mwc-icon>arrow_drop_down</mwc-icon>
+      ${!JSON.stringify(value[descriptionField])
+        ? html`
+            <span>${value[nameField]}</span>
+            <mwc-icon>arrow_drop_down</mwc-icon>
+          `
+        : html`
+            <span>${value[nameField]} (${value[descriptionField]})</span>
+            <mwc-icon>arrow_drop_down</mwc-icon>
+          `}
     `
   }
 
