@@ -188,6 +188,7 @@ export class ObjectSelector extends LitElement {
 
   _buildConditions() {
     const queryConditions = {
+      filters: [],
       ...this.basicArgs
     }
 
