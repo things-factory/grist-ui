@@ -188,7 +188,7 @@ class GristTest extends localize(i18next)(PageView) {
             editable: true,
             options: {
               queryName: 'companies',
-              queryArgs: {
+              basicArgs: {
                 filters: [
                   {
                     name: 'name',

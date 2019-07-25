@@ -11,7 +11,7 @@ export class ObjectSelector extends LitElement {
       config: Object,
       data: Object,
       queryName: String,
-      queryArgs: Object,
+      basicArgs: Object,
       confirmCallback: Object,
       selectedRecords: Array
     }
@@ -64,11 +64,27 @@ export class ObjectSelector extends LitElement {
 
   render() {
     return html`
-      <form>
+      <form
+        id="search-form"
+        @keypress="${async e => {
+          if (e.keyCode === 13) {
+            this.data = await this.getData()
+          }
+        }}"
+      >
+        <label>${i18next.t('label.name')}</label>
         <input name="name" />
+
+        <label>${i18next.t('label.description')}</label>
         <input name="description" />
 
-        <mwc-icon search>search</mwc-icon>
+        <mwc-icon
+          search
+          @click="${async () => {
+            this.data = await this.getData()
+          }}}"
+          >search</mwc-icon
+        >
       </form>
 
       <data-grist
@@ -138,10 +154,19 @@ export class ObjectSelector extends LitElement {
       }
     }
 
+    this.data = await this.getData()
+
+    var selected = this.data.records.find(item => this.value == item.id)
+    if (selected) {
+      this.selectedRecords = [selected]
+    }
+  }
+
+  async getData() {
     const response = await client.query({
       query: gql`
         query {
-          ${this.queryName} (${gqlBuilder.buildArgs(this.queryArgs || { filters: [] })}) {
+          ${this.queryName} (${gqlBuilder.buildArgs(this._buildConditions())}) {
             items {
               id
               name
@@ -153,17 +178,30 @@ export class ObjectSelector extends LitElement {
       `
     })
 
-    this.data = {
+    return {
       records: response.data[this.queryName].items,
       total: response.data[this.queryName].total,
       limit: 100,
       page: 1
     }
+  }
 
-    var selected = this.data.records.find(item => this.value == item.id)
-    if (selected) {
-      this.selectedRecords = [selected]
+  _buildConditions() {
+    const queryConditions = {
+      ...this.basicArgs
     }
+
+    queryConditions.filters = [...queryConditions.filters, ...this.serializeFormData()]
+    return queryConditions
+  }
+
+  serializeFormData() {
+    const searchInputs = Array.from(this.shadowRoot.querySelectorAll('#search-form > input'))
+    return searchInputs
+      .filter(input => input.value)
+      .map(input => {
+        return { name: input.name, operator: 'like', value: input.value }
+      })
   }
 
   get selected() {
