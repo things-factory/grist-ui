@@ -187,7 +187,16 @@ class GristTest extends localize(i18next)(PageView) {
             align: 'left',
             editable: true,
             options: {
-              queryName: 'companies'
+              queryName: 'companies',
+              queryArgs: {
+                filters: [
+                  {
+                    name: 'name',
+                    operator: 'like',
+                    value: 'alternative'
+                  }
+                ]
+              }
             }
           },
           sortable: true,

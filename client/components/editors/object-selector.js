@@ -1,5 +1,5 @@
 import { i18next } from '@things-factory/i18n-base'
-import { client, isMobileDevice } from '@things-factory/shell'
+import { client, isMobileDevice, gqlBuilder } from '@things-factory/shell'
 import gql from 'graphql-tag'
 import { css, html, LitElement } from 'lit-element'
 import '../data-grist'
@@ -11,6 +11,7 @@ export class ObjectSelector extends LitElement {
       config: Object,
       data: Object,
       queryName: String,
+      queryArgs: Object,
       confirmCallback: Object,
       selectedRecords: Array
     }
@@ -140,7 +141,7 @@ export class ObjectSelector extends LitElement {
     const response = await client.query({
       query: gql`
         query {
-          ${this.queryName} (filters: []) {
+          ${this.queryName} (${gqlBuilder.buildArgs(this.queryArgs || { filters: [] })}) {
             items {
               id
               name
