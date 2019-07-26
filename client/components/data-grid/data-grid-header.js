@@ -51,6 +51,7 @@ class DataGridHeader extends LitElement {
           text-overflow: ellipsis;
           font: var(--grid-header-font);
           color: var(--grid-header-color);
+          text-transform: capitalize;
         }
 
         span[sorter] {

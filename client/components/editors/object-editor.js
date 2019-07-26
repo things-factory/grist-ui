@@ -29,6 +29,9 @@ export class ObjectEditor extends LitElement {
 
         border: 0;
         background-color: transparent;
+
+        font: var(--grist-object-editor-font);
+        color: var(--grist-object-editor-color);
       }
 
       span {
@@ -38,8 +41,6 @@ export class ObjectEditor extends LitElement {
         height: 100%;
 
         text-align: inherit;
-        font-size: inherit;
-        font-family: inherit;
       }
 
       mwc-icon {
@@ -126,7 +127,7 @@ export class ObjectEditor extends LitElement {
       html`
         <object-selector
           .value=${this.value.id}
-          style="width: 50vw;height: 50vh;"
+          style="width: 550px;height: 400px;"
           .confirmCallback=${confirmCallback.bind(this)}
           .queryName=${this.column.record.options.queryName}
           .basicArgs=${this.column.record.options.basicArgs}

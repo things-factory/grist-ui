@@ -11,6 +11,9 @@ export class DataGlister extends LitElement {
       :host {
         display: flex;
         flex-direction: row;
+        box-sizing: border-box;
+        background-color: var(--grist-background-color);
+        padding: var(--grist-padding);
       }
 
       data-grid,
