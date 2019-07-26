@@ -1,5 +1,5 @@
 import { LitElement, html, css } from 'lit-element'
-import _ from 'lodash'
+import throttle from 'lodash/throttle'
 
 class DataGridHeader extends LitElement {
   static get properties() {
@@ -192,7 +192,7 @@ class DataGridHeader extends LitElement {
 
   _notifyWidthChange(idx, width) {
     if (!this.throttledNotifier) {
-      this.throttledNotifier = _.throttle(function(idx, width) {
+      this.throttledNotifier = throttle(function(idx, width) {
         var idx = this.dispatchEvent(
           new CustomEvent('column-width-changed', {
             bubbles: true,
