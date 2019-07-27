@@ -9,8 +9,6 @@ import {
   ColorInput
 } from './input-editors'
 
-import { ObjectEditor } from './object-editor'
-
 var editors = {
   string: TextInput,
   integer: NumberInput,
@@ -21,8 +19,7 @@ var editors = {
   date: DateInput,
   time: TimeInput,
   datetime: DateTimeInput,
-  color: ColorInput,
-  object: ObjectEditor
+  color: ColorInput
 }
 
 export function registerEditor(type, editor) {
