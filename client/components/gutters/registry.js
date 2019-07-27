@@ -10,16 +10,16 @@ var gutters = {
   dirty: GutterDirty
 }
 
-export function registerGutter(type, gutter) {
-  gutters[type] = gutter
+export function registerGutter(name, gutter) {
+  gutters[name] = gutter
 }
 
-export function unregisterGutter(type) {
-  delete gutters[type]
+export function unregisterGutter(name) {
+  delete gutters[name]
 }
 
 export const generateGutterColumn = config => {
-  var clazz = gutters[config.type]
+  var clazz = gutters[config.name]
 
   if (clazz) {
     return clazz.instance(config)
