@@ -5,7 +5,7 @@ import { buildConfig } from './configure/config-builder'
 import './data-grid/data-grid'
 import './data-list/data-list'
 
-export class DataGlister extends LitElement {
+export class DataGrist extends LitElement {
   static get styles() {
     return css`
       :host {
@@ -14,11 +14,16 @@ export class DataGlister extends LitElement {
         box-sizing: border-box;
         background-color: var(--grist-background-color);
         padding: var(--grist-padding);
+
+        overflow: hidden;
       }
 
       data-grid,
       data-list {
         flex: 1;
+      }
+
+      data-list {
         overflow-y: auto;
       }
     `
@@ -89,4 +94,4 @@ export class DataGlister extends LitElement {
   }
 }
 
-customElements.define('data-grist', DataGlister)
+customElements.define('data-grist', DataGrist)

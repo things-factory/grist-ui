@@ -22,7 +22,7 @@ export class ObjectSelector extends LitElement {
       :host {
         display: flex;
         flex-direction: column;
-        overflow-x: overlay;
+        overflow-x: auto;
 
         padding: 5px;
 
