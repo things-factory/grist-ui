@@ -12,8 +12,12 @@ const OPTIONS = {
 
 export const DateRenderer = (column, record, rowIndex) => {
   var value = Number(record[column.name])
+  if (isNaN(value)) {
+    return ''
+  }
+
   var options = column.record.options || OPTIONS
   var formatter = new Intl.DateTimeFormat(navigator.language, options)
 
-  return formatter.format(isNaN(value) ? new Date() : new Date(value))
+  return formatter.format(new Date(value))
 }
