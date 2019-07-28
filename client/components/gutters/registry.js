@@ -3,7 +3,7 @@ import { GutterRowSelector } from './gutter-row-selector'
 import { GutterButton } from './gutter-button'
 import { GutterDirty } from './gutter-dirty'
 
-var gutters = {
+var GUTTERS = {
   sequence: GutterSequence,
   'row-selector': GutterRowSelector,
   button: GutterButton,
@@ -11,15 +11,15 @@ var gutters = {
 }
 
 export function registerGutter(name, gutter) {
-  gutters[name] = gutter
+  GUTTERS[name] = gutter
 }
 
 export function unregisterGutter(name) {
-  delete gutters[name]
+  delete GUTTERS[name]
 }
 
 export const generateGutterColumn = config => {
-  var clazz = gutters[config.name]
+  var clazz = GUTTERS[config.name]
 
   if (clazz) {
     return clazz.instance(config)

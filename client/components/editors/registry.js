@@ -9,7 +9,7 @@ import {
   ColorInput
 } from './input-editors'
 
-var editors = {
+var EDITORS = {
   string: TextInput,
   integer: NumberInput,
   float: NumberInput,
@@ -23,11 +23,11 @@ var editors = {
 }
 
 export function registerEditor(type, editor) {
-  editors[type] = editor
+  EDITORS[type] = editor
 }
 
 export function unregisterEditor(type) {
-  delete editors[type]
+  delete EDITORS[type]
 }
 
 export function getEditor(type) {
@@ -36,7 +36,7 @@ export function getEditor(type) {
   }
 
   return function(column, record, row) {
-    var clazz = editors[type] || TextInput
+    var clazz = EDITORS[type] || TextInput
 
     var element = new clazz()
 

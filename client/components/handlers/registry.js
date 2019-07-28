@@ -5,7 +5,7 @@ import { SelectRowToggle } from './select-row-toggle'
 
 const NOOP = () => {}
 
-var handlers = {
+var HANDLERS = {
   'record-view': RecordViewHandler,
   'record-form': RecordFormHandler,
   'select-row': SelectRow,
@@ -13,11 +13,11 @@ var handlers = {
 }
 
 export function registerHandler(type, handler) {
-  handlers[type] = handler
+  HANDLERS[type] = handler
 }
 
 export function unregisterHandler(type) {
-  delete handlers[type]
+  delete HANDLERS[type]
 }
 
 export function getHandler(type) {
@@ -25,5 +25,5 @@ export function getHandler(type) {
     return type
   }
 
-  return handlers[type] || NOOP
+  return HANDLERS[type] || NOOP
 }

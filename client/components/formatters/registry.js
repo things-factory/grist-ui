@@ -4,18 +4,18 @@ import { TextFormatter } from './text-formatter'
 
 const NOOP = () => {}
 
-var formatters = {
+var FORMATTERS = {
   number: NumberFormatter,
   date: DateFormatter,
   text: TextFormatter
 }
 
 export function registerFormatter(type, formatter) {
-  formatters[type] = formatter
+  FORMATTERS[type] = formatter
 }
 
 export function unregisterFormatter(type) {
-  delete formatters[type]
+  delete FORMATTERS[type]
 }
 
 export function getFormatter(type) {
@@ -23,5 +23,5 @@ export function getFormatter(type) {
     return type
   }
 
-  return formatters[type] || NOOP
+  return FORMATTERS[type] || NOOP
 }

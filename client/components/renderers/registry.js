@@ -5,7 +5,7 @@ import { ColorRenderer } from './color-renderer'
 import { ProgressRenderer } from './progress-render'
 import { LinkRenderer } from './link-renderer'
 
-var renderer = {
+var RENDERERS = {
   string: TextRenderer,
   integer: TextRenderer,
   float: TextRenderer,
@@ -21,11 +21,11 @@ var renderer = {
 }
 
 export function registerRenderer(type, renderer) {
-  renderer[type] = renderer
+  RENDERERS[type] = renderer
 }
 
 export function unregisterRenderer(type) {
-  delete renderer[type]
+  delete RENDERERS[type]
 }
 
 export function getRenderer(type) {
@@ -33,5 +33,5 @@ export function getRenderer(type) {
     return type
   }
 
-  return renderer[type] || TextRenderer
+  return RENDERERS[type] || TextRenderer
 }
