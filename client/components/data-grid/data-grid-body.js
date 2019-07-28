@@ -128,6 +128,10 @@ class DataGridBody extends LitElement {
   }
 
   updated(changes) {
+    if (changes.has('columns')) {
+      this.focused = null
+    }
+
     if (changes.has('focused')) {
       // var { row, column } = this.focused
       // if(row == this.records.length + 1) {
