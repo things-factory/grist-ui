@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit-element'
 
 import { buildConfig } from './configure/config-builder'
+import { DataProvider } from './data-provider'
 
 import './data-grid/data-grid'
 import './data-list/data-list'
@@ -35,6 +36,7 @@ export class DataGrist extends LitElement {
       config: Object,
       data: Object,
       selectedRecords: Array,
+      dataProvider: Object,
       _data: Object,
       _config: Object
     }
@@ -53,6 +55,10 @@ export class DataGrist extends LitElement {
   }
 
   updated(changes) {
+    if (changes.has('dataProvider')) {
+      this._dataProvider = new DataProvider(this.dataProvider)
+    }
+
     if (changes.has('config')) {
       this._config = buildConfig(this.config)
     }
