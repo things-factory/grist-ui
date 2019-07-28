@@ -15,5 +15,5 @@ export const DateRenderer = (column, record, rowIndex) => {
   var options = column.record.options || OPTIONS
   var formatter = new Intl.DateTimeFormat(navigator.language, options)
 
-  return formatter.format(new Date(value))
+  return formatter.format(isNaN(value) ? new Date() : new Date(value))
 }

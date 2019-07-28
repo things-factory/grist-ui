@@ -38,12 +38,17 @@ class DataGridBody extends LitElement {
   }
 
   render() {
-    var { row: focusedRow, column: focusedColumn } = this.focused || {}
+    var { row: focusedRow = 0, column: focusedColumn = 0 } = this.focused || {}
     var { row: editingRow, column: editingColumn } = this.editTarget || {}
 
     var columns = (this.columns || []).filter(column => !column.hidden)
     var data = this.data || {}
     var { records = [] } = data
+
+    /* 이 경우는 맨 아래 레코드보다 아래로 내려왔을 때, 가상의 빈 레코드를 추가해주는 작업이다. */
+    if (focusedRow == records.length) {
+      records = [...records, { __dirty__: '+' }]
+    }
 
     return html`
       ${records.map((record, idxRow) => {
@@ -124,6 +129,11 @@ class DataGridBody extends LitElement {
 
   updated(changes) {
     if (changes.has('focused')) {
+      // var { row, column } = this.focused
+      // if(row == this.records.length + 1) {
+      //   this.records
+      // }
+
       let element = this.shadowRoot.querySelector('[focused]')
       if (!element) {
         return
@@ -149,7 +159,7 @@ class DataGridBody extends LitElement {
     super.focus()
 
     if (!this.focused || this.focused.row === undefined) {
-      this.focused({ row: 0, column: 0 })
+      this.focused = { row: 0, column: 0 }
     }
   }
 }

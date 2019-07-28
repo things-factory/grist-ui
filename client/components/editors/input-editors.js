@@ -74,10 +74,15 @@ export class InputEditor extends LitElement {
   }
 
   rebuildRecord(record, column, value) {
-    return Object.assign({}, record, {
-      __dirty__: 'M',
-      [column.name]: value
-    })
+    return Object.assign(
+      {
+        __dirty__: 'M'
+      },
+      record,
+      {
+        [column.name]: value
+      }
+    )
   }
 
   onfocusout() {

@@ -6,6 +6,13 @@ import { DataProvider } from './data-provider'
 import './data-grid/data-grid'
 import './data-list/data-list'
 
+const DEFAULT_DATA = {
+  page: 1,
+  limit: 20,
+  total: 1,
+  records: []
+}
+
 export class DataGrist extends LitElement {
   static get styles() {
     return css`
@@ -64,7 +71,9 @@ export class DataGrist extends LitElement {
     }
 
     if (changes.has('data') || changes.has('selectedRecords')) {
-      var { records } = this.data || {}
+      var { records } = this.data || {
+        ...DEFAULT_DATA
+      }
 
       if (this.selectedRecords) {
         records = [...records]
@@ -79,6 +88,7 @@ export class DataGrist extends LitElement {
       }
 
       this._data = {
+        ...DEFAULT_DATA,
         ...this.data,
         records
       }
