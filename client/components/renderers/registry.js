@@ -3,7 +3,6 @@ import { TextRenderer } from './text-renderer'
 import { DateRenderer } from './date-renderer'
 import { ColorRenderer } from './color-renderer'
 import { ProgressRenderer } from './progress-render'
-import { ObjectRenderer } from './object-renderer'
 import { LinkRenderer } from './link-renderer'
 
 var renderer = {
@@ -18,7 +17,6 @@ var renderer = {
   datetime: DateRenderer,
   color: ColorRenderer,
   progress: ProgressRenderer,
-  object: ObjectRenderer,
   link: LinkRenderer
 }
 
