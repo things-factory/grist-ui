@@ -95,8 +95,20 @@ class DataGrid extends LitElement {
     this.addEventListener('record-change', e => {
       var { after, before, column, row } = e.detail
 
-      var records = this.data.records
-      records.splice(row, 1, after)
+      var records = this.data.records || []
+
+      switch (after['__dirty__']) {
+        case '+':
+          records.push(after)
+          break
+        case '-':
+          records.splice(row, 1)
+          break
+        case 'M':
+        default:
+          records.splice(row, 1, after)
+      }
+
       this.data = {
         ...this.data,
         records
