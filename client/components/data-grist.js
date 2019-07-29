@@ -1,10 +1,11 @@
 import { LitElement, html, css } from 'lit-element'
 
 import { buildConfig } from './configure/config-builder'
-import { DataProvider } from './data-provider'
 
 import './data-grid/data-grid'
 import './data-list/data-list'
+
+import { DataProvider } from './data-provider'
 
 const DEFAULT_DATA = {
   page: 1,
@@ -43,10 +44,24 @@ export class DataGrist extends LitElement {
       config: Object,
       data: Object,
       selectedRecords: Array,
-      dataProvider: Object,
+      fetchHandler: Object,
+      fetchOptions: Object,
+      editHandler: Object,
       _data: Object,
       _config: Object
     }
+  }
+
+  connectedCallback() {
+    super.connectedCallback()
+
+    this.dataProvider = new DataProvider(this)
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback()
+
+    this.dataProvider.dispose()
   }
 
   render() {
@@ -61,13 +76,22 @@ export class DataGrist extends LitElement {
     `
   }
 
-  updated(changes) {
-    if (changes.has('dataProvider')) {
-      this._dataProvider = new DataProvider(this.dataProvider)
+  fetch() {
+    if (this.dataProvider) {
+      let { limit = 20, page = 1 } = this._config.pagination
+      let { sorters } = this._config
+      this.dataProvider.fetch({
+        limit,
+        page,
+        sorters
+      })
     }
+  }
 
+  updated(changes) {
     if (changes.has('config')) {
       this._config = buildConfig(this.config)
+      this.fetch()
     }
 
     if (changes.has('data') || changes.has('selectedRecords')) {
@@ -92,6 +116,18 @@ export class DataGrist extends LitElement {
         ...this.data,
         records
       }
+    }
+
+    if (changes.has('fetchHandler')) {
+      this.dataProvider.fetchHandler = this.fetchHandler
+    }
+
+    if (changes.has('editHandler')) {
+      this.dataProvider.editHandler = this.editHandler
+    }
+
+    if (changes.has('fetchOptions')) {
+      this.dataProvider.fetchOptions = this.fetchOptions
     }
   }
 

@@ -2,26 +2,75 @@ function _calculateTotalPage(limit, total) {
   return Math.ceil(total / limit)
 }
 
+const NOOP = function() {}
+
 export class DataProvider {
-  constructor(fetcher, limit) {
-    this.fetcher = fetcher
+  constructor(grist) {
+    this.grist = grist
+    this._fetchHandler = null
+    this._editHandler = null
 
-    this.limit = limit
+    this._pageChangeHandler = this.onPageChange.bind(this)
+    this._limitChangeHandler = this.onLimitChange.bind(this)
+    this._sortersChangeHandler = this.onSortersChange.bind(this)
+    this._recordChangeHandler = this.onRecordChange.bind(this)
 
-    this.page = 0
-    this.total = -1
-    this.records = null
-
-    this.filters = []
-    this.sorters = []
+    this.grist.addEventListener('page-changed', this._pageChangeHandler)
+    this.grist.addEventListener('limit-changed', this._limitChangeHandler)
+    this.grist.addEventListener('sorters-changed', this._sortersChangeHandler)
+    this.grist.addEventListener('record-change', this._recordChangeHandler)
   }
 
-  get filters() {
-    this._filters
+  dispose() {
+    this.grist.removeEventListener('page-changed', this._pageChangeHandler)
+    this.grist.removeEventListener('limit-changed', this._limitChangeHandler)
+    this.grist.removeEventListener('sorters-changed', this._sortersChangeHandler)
+    this.grist.removeEventListener('record-change', this._recordChangeHandler)
   }
 
-  set filters(filters) {
-    this._filters = filters
+  onPageChange(e) {
+    var page = e.detail
+    this.fetch({ page })
+  }
+
+  onLimitChange(e) {
+    var limit = e.detail
+    this.fetch({ limit })
+  }
+
+  onSortersChange(e) {
+    this.sorters = e.detail
+    this.fetch()
+  }
+
+  onRecordChange(e) {
+    this.editHandler.call()
+  }
+
+  get fetchOptions() {
+    return this._fetchOptions
+  }
+
+  set fetchOptions(fetchOptions) {
+    this._fetchOptions = fetchOptions
+
+    this.fetch()
+  }
+
+  get fetchHandler() {
+    return this._fetchHandler || NOOP
+  }
+
+  set fetchHandler(fetchHandler) {
+    this._fetchHandler = fetchHandler
+  }
+
+  get editHandler() {
+    return this._editHandler || NOOP
+  }
+
+  set editHandler(editHandler) {
+    this._editHandler = editHandler
   }
 
   async attach() {
@@ -32,26 +81,25 @@ export class DataProvider {
       /* fetch에서 limit과 page를 제공하지 않는 경우를 대비함. */
       limit: this.limit,
       page,
-      ...(await this.fetch(page, this.limit, this.filters, this.sorters))
+      ...(await this.fetch({ page }))
     })
   }
 
-  async fetch(page, limit, filters, sorters) {
-    /* fetcher should reture { page, limit, total, records } */
-    this._records = null
+  async fetch({ page = this.page, limit = this.limit, sorters = this.sorters } = {}) {
+    /* fetchHandler should reture { page, limit, total, records } */
+    this.records = null
 
-    this.filters = filters
     this.sorters = sorters
 
     return this._update({
       /* fetch에서 limit과 page를 제공하지 않는 경우를 대비함. */
       limit,
       page,
-      ...(await this.fetcher.call(null, {
+      ...(await this.fetchHandler.call(null, {
         page,
         limit,
-        filters,
-        sorters
+        sorters,
+        options: this.fetchOptions
       }))
     })
   }
@@ -70,7 +118,7 @@ export class DataProvider {
       this.records = [...this.records, ...records]
     }
 
-    return {
+    this.grist.data = {
       page: this.page,
       limit: this.limit,
       total: this.total,
