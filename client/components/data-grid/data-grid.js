@@ -97,16 +97,10 @@ class DataGrid extends LitElement {
 
       var records = this.data.records || []
 
-      switch (after['__dirty__']) {
-        case '+':
-          records.push(after)
-          break
-        case '-':
-          records.splice(row, 1)
-          break
-        case 'M':
-        default:
-          records.splice(row, 1, after)
+      if (records.length > row) {
+        records.splice(row, 1, after)
+      } else {
+        records.push(after)
       }
 
       this.data = {
