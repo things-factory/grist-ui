@@ -54,18 +54,12 @@ class DataGridField extends LitElement {
       return html``
     }
 
-    var align = (this.column.record && this.column.record.align) || DEFAULT_TEXT_ALIGN
-    if (align != DEFAULT_TEXT_ALIGN) {
-      this.style.setProperty('--data-grid-field-text-align', align)
-    }
-
     var column = this.column
     var record = this.record
     var rowIndex = this.rowIndex
 
     if (this.isEditing) {
       let { editor } = column.record
-
       let rendered = editor.call(this, column, record, rowIndex)
       rendered.id = 'editor'
 
@@ -102,6 +96,13 @@ class DataGridField extends LitElement {
       } else {
         this.removeEventListener('record-change', this._onRecordChange)
         this.removeEventListener('keydown', this._onKeydownInEditingMode)
+      }
+    }
+
+    if (changes.has('column')) {
+      var align = (this.column.record && this.column.record.align) || DEFAULT_TEXT_ALIGN
+      if (align != DEFAULT_TEXT_ALIGN) {
+        this.style.setProperty('--data-grid-field-text-align', align)
       }
     }
   }

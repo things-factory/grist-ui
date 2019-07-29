@@ -95,13 +95,12 @@ export class DataGrist extends LitElement {
     }
 
     if (changes.has('data') || changes.has('selectedRecords')) {
-      var { records } = this.data || {
-        ...DEFAULT_DATA
-      }
+      var { records } = this.data || []
 
       if (this.selectedRecords) {
         records = [...records]
 
+        /* 원본 데이타를 남기고, 복사본(_data)을 사용한다. */
         this.selectedRecords.forEach(selected => {
           var index = records.indexOf(selected)
           records.splice(index, 1, {

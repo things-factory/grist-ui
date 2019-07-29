@@ -4,7 +4,6 @@ import { ScrollbarStyles } from '@things-factory/shell'
 import './data-grid-header'
 import './data-grid-body'
 import './data-grid-footer'
-import { RecordFormHandler } from '../handlers/record-form-handler'
 
 /**
  * DataGrid
@@ -88,13 +87,17 @@ class DataGrid extends LitElement {
         added.forEach(record => (record['__selected__'] = true))
       }
 
-      this.data = { ...this.data }
+      this.data = {
+        ...this.data,
+        records: [...records]
+      }
     })
 
     /* record change processing */
     this.addEventListener('record-change', e => {
       var { after, before, column, row } = e.detail
 
+      /* 빈 그리드로 시작한 경우, data 설정이 되어있지 않을 수 있다. */
       var records = this.data.records || []
 
       if (records.length > row) {
@@ -105,7 +108,7 @@ class DataGrid extends LitElement {
 
       this.data = {
         ...this.data,
-        records
+        records: [...records]
       }
     })
   }
