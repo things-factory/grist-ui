@@ -70,6 +70,13 @@ class DataGrid extends LitElement {
     this.addEventListener('select-record-change', e => {
       var { records: selectedRecords, added = [], removed = [] } = e.detail
       var { records } = this.data
+      var { selectable = false } = this.config.rows
+
+      if (!selectable) {
+        return
+      } else if (selectable && !selectable.multiple) {
+        records.forEach(record => (record['__selected__'] = false))
+      }
 
       if (selectedRecords) {
         records.forEach(record => (record['__selected__'] = false))

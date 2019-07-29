@@ -22,6 +22,10 @@ const STYLE = css`
     font-size: inherit;
     font-family: inherit;
   }
+
+  :host > input[type='checkbox'] {
+    width: initial;
+  }
 `
 
 export class InputEditor extends LitElement {
@@ -49,6 +53,8 @@ export class InputEditor extends LitElement {
   async firstUpdated() {
     this.shadowRoot.addEventListener('change', this.onchange.bind(this))
     this.shadowRoot.addEventListener('focusout', this.onfocusout.bind(this))
+    this.shadowRoot.addEventListener('click', this.onclick.bind(this))
+    this.shadowRoot.addEventListener('dblclick', this.ondblclick.bind(this))
 
     this.value = this._dirtyValue = this.formatForEditor(this.record[this.column.name])
 
@@ -106,6 +112,14 @@ export class InputEditor extends LitElement {
     e.stopPropagation()
 
     this._dirtyValue = this.formatFromEditor(e)
+  }
+
+  onclick(e) {
+    e.stopPropagation()
+  }
+
+  ondblclick(e) {
+    e.stopPropagation()
   }
 
   get editorTemplate() {

@@ -16,7 +16,10 @@ export async function dataGridBodyDblclickHandler(e) {
   }
 
   if (!isNaN(rowIndex) && !isNaN(columnIndex)) {
-    this.startEditTarget(rowIndex, columnIndex)
+    /* 새로 시작된 에디터가 이 click 이벤트를 받지 못하도록 한 사이클을 delay 시킴 */
+    setTimeout(() => {
+      this.startEditTarget(rowIndex, columnIndex)
+    }, 1)
   } else {
     console.error('should not be here.')
     return
