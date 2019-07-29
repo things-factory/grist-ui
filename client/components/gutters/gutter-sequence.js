@@ -18,7 +18,9 @@ export class GutterSequence {
       record: {
         renderer: function(column, record, idx) {
           var { limit = 0, page = 1, total = 0, records = [] } = this.data || {}
-          return (page - 1) * limit + idx + 1
+          var value = (page - 1) * limit + idx + 1
+
+          return isNaN(value) ? '' : value
         },
         align: 'center'
       }

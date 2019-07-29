@@ -47,6 +47,7 @@ class DataGrid extends LitElement {
   }
 
   firstUpdated() {
+    /* header and body scroll synchronization */
     this.header.addEventListener('scroll', e => {
       if (this.body.scrollLeft !== this.header.scrollLeft) {
         this.body.scrollLeft = this.header.scrollLeft
@@ -59,6 +60,7 @@ class DataGrid extends LitElement {
       }
     })
 
+    /* record selection processing */
     this.addEventListener('select-all-change', e => {
       var { selected } = e.detail
       var { records } = this.data
@@ -72,7 +74,7 @@ class DataGrid extends LitElement {
       var { records } = this.data
       var { selectable = false } = this.config.rows
 
-      if (!selectable) {
+      if (!records || !selectable) {
         return
       } else if (selectable && !selectable.multiple) {
         records.forEach(record => (record['__selected__'] = false))
@@ -89,6 +91,7 @@ class DataGrid extends LitElement {
       this.data = { ...this.data }
     })
 
+    /* record change processing */
     this.addEventListener('record-change', e => {
       var { after, before, column, row } = e.detail
 
