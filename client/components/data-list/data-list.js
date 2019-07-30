@@ -13,29 +13,39 @@ class DataList extends LitElement {
     return [
       css`
         :host {
-          background-color: var(--data-list-background-color, white);
-
+          background-color: var(--data-list-background-color);
           overflow: auto;
         }
 
         .item {
-          padding: 5px 15px 5px 15px;
-          border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+          padding: var(--data-list-item-padding);
+          border-bottom: var(--data-list-item-border-bottom);
+        }
+        .item:nth-child(even) {
+          background-color: #fff;
+        }
+        .item div {
+          padding-top: 3px;
         }
 
         .name {
-          font-size: 1.2em;
-          font-weight: bold;
+          font: var(--data-list-item-name-font);
+          color: var(--data-list-item-name-color);
+          text-transform: capitalize;
         }
 
         .desc {
-          font-size: 0.8em;
-          color: gray;
+          font: var(--data-list-item-disc-font);
+          color: var(--data-list-item-disc-color);
         }
 
         .update-info {
-          font-size: 0.8em;
-          color: black;
+          font: var(--data-list-item-etc-font);
+          color: var(--data-list-item-etc-color);
+        }
+        .update-info mwc-icon {
+          vertical-align: middle;
+          font-size: 1em;
         }
       `
     ]
@@ -82,7 +92,9 @@ class DataList extends LitElement {
             <div class="desc">${record.description}</div>
             ${record.updatedAt
               ? html`
-                  <div class="update-info">Updated At : ${record.updatedAt} / ${record.updaterId}</div>
+                  <div class="update-info">
+                    <mwc-icon>access_time</mwc-icon> Updated At : ${record.updatedAt} / ${record.updaterId}
+                  </div>
                 `
               : ``}
           </div>
