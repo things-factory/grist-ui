@@ -1,5 +1,19 @@
 import { LitElement, html, css } from 'lit-element'
 
+// TODO 로케일 설정에 따라서 포맷이 바뀌도록 해야한다.
+const OPTIONS = {
+  year: 'numeric',
+  month: 'numeric',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: 'numeric',
+  second: 'numeric',
+  hour12: false
+  // timeZone: 'America/Los_Angeles'
+}
+
+const formatter = new Intl.DateTimeFormat(navigator.language, OPTIONS)
+
 class DataList extends LitElement {
   static get properties() {
     return {
@@ -93,7 +107,8 @@ class DataList extends LitElement {
             ${record.updatedAt
               ? html`
                   <div class="update-info">
-                    <mwc-icon>access_time</mwc-icon> Updated At : ${record.updatedAt} / ${record.updaterId}
+                    <mwc-icon>access_time</mwc-icon> Updated At :
+                    ${formatter.format(new Date(Number(record.updatedAt)))} / ${record.updaterId}
                   </div>
                 `
               : ``}
