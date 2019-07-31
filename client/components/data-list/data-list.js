@@ -97,7 +97,7 @@ class DataList extends LitElement {
   updated(changes) {
     if (changes.has('config')) {
       this._records = []
-      this.page = 0
+      this.page = 1
     }
 
     if (changes.has('data')) {

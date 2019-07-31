@@ -36,8 +36,6 @@ function fireLongPressEvent() {
       true
     )
   }
-
-  log('long-press event fired on ' + this.outerHTML)
 }
 
 /**
@@ -65,18 +63,6 @@ function startLongPressTimer(e) {
 function clearLongPressTimer(e) {
   clearTimeout(timer)
   timer = null
-  if (e) log(e.type)
-}
-
-/**
- * Writes values to the console if available
- * @param {string} value - value to log
- * @returns {void}
- */
-function log(value) {
-  if (console && console.log) {
-    console.log('[long-press-event.js]', value)
-  }
 }
 
 /**

@@ -104,12 +104,16 @@ export class DataProvider {
     })
   }
 
-  _update({ page, limit, total, records }) {
+  async _update({ page, limit, total, records }) {
+    // total을 감안해서 page가 최대값을 넘지 않도록 한다.
+    var maxpage = _calculateTotalPage(limit, total)
+    if (maxpage < page) {
+      return await this.fetch({ page: maxpage, limit })
+    }
+
     this.limit = limit
     this.total = total
-
-    // total을 감안해서 page가 최대값을 넘지 않도록 한다.
-    this.page = Math.max(0, Math.min(_calculateTotalPage(limit, total), page))
+    this.page = page
 
     if (!this.records) {
       this.records = records
