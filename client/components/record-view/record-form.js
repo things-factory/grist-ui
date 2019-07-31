@@ -6,6 +6,7 @@ export class RecordForm extends LitElement {
       :host {
         display: grid;
         grid-template-columns: 1fr 2fr;
+        grid-auto-rows: min-content;
         grid-gap: 10px;
         background-color: #fff;
         padding: 10px;

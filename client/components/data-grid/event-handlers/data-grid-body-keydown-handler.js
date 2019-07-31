@@ -30,9 +30,18 @@ export async function dataGridBodyKeydownHandler(e) {
         this.editTarget = null
         this.focus()
         return
-      case KEY_TAP:
-        column = Math.min(maxcolumn, column + 1)
-        break
+
+      // case KEY_TAP:
+      //   this.editTarget = null
+      //   column = Math.min(maxcolumn, column + 1)
+      //   this.focus()
+      //   break
+
+      // case KEY_DOWN:
+      //   this.editTarget = null
+      //   row = Math.min(maxrow, row + 1)
+      //   this.focus()
+      //   break
 
       default:
         return
@@ -88,7 +97,9 @@ export async function dataGridBodyKeydownHandler(e) {
     }
   }
 
-  this.focused = { row, column }
+  if (this.focused.row !== row || this.focused.column !== column) {
+    this.focused = { row, column }
+  }
 
   /* arrow key에 의한 scrollbar의 자동 움직임을 하지 못하도록 한다. */
   e.preventDefault()

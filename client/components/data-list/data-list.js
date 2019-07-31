@@ -1,18 +1,11 @@
 import { LitElement, html, css } from 'lit-element'
+import { openPopup } from '@things-factory/layout-base'
 
-// TODO 로케일 설정에 따라서 포맷이 바뀌도록 해야한다.
-const OPTIONS = {
-  year: 'numeric',
-  month: 'numeric',
-  day: 'numeric',
-  hour: 'numeric',
-  minute: 'numeric',
-  second: 'numeric',
-  hour12: false
-  // timeZone: 'America/Los_Angeles'
-}
+import { longpressable } from '../../utils/longpressable'
+import '../record-view'
+import './record-partial'
 
-const formatter = new Intl.DateTimeFormat(navigator.language, OPTIONS)
+const STYLE = 'width: 100vw;height: 100vh'
 
 class DataList extends LitElement {
   static get properties() {
@@ -28,44 +21,17 @@ class DataList extends LitElement {
       css`
         :host {
           background-color: var(--data-list-background-color);
-          overflow: auto;
+          overflow-y: auto;
         }
 
-        .item {
-          padding: var(--data-list-item-padding);
-          border-bottom: var(--data-list-item-border-bottom);
-        }
-        .item:nth-child(even) {
+        :nth-child(even) {
           background-color: #fff;
-        }
-        .item div {
-          padding-top: 3px;
-        }
-
-        .name {
-          font: var(--data-list-item-name-font);
-          color: var(--data-list-item-name-color);
-          text-transform: capitalize;
-        }
-
-        .desc {
-          font: var(--data-list-item-disc-font);
-          color: var(--data-list-item-disc-color);
-        }
-
-        .update-info {
-          font: var(--data-list-item-etc-font);
-          color: var(--data-list-item-etc-color);
-        }
-        .update-info mwc-icon {
-          vertical-align: middle;
-          font-size: 1em;
         }
       `
     ]
   }
 
-  firstUpdated() {
+  firstUpdated(changes) {
     /* infinite scrolling */
     this.addEventListener('scroll', e => {
       const totalScrollHeight = this.scrollHeight
@@ -80,6 +46,51 @@ class DataList extends LitElement {
           this.dispatchEvent(new CustomEvent('page-changed', { bubbles: true, composed: true, detail: this.page + 1 }))
         }
       }
+    })
+
+    /* long-press */
+    longpressable(this.shadowRoot)
+
+    this.shadowRoot.addEventListener('click', e => {
+      var partial = e.target
+      var columns = this.config.columns
+      var { record, rowIndex } = partial
+
+      openPopup(
+        html`
+          <record-form
+            style=${STYLE}
+            .columns=${columns}
+            .column=${columns[0]}
+            .record=${record}
+            .rowIndex=${rowIndex}
+          ></record-form>
+        `,
+        {
+          backdrop: true
+        }
+      )
+    })
+
+    this.shadowRoot.addEventListener('long-press', e => {
+      var partial = e.target
+      var columns = this.config.columns
+      var { record, rowIndex } = partial
+
+      openPopup(
+        html`
+          <record-view
+            style=${STYLE}
+            .columns=${columns}
+            .column=${columns[0]}
+            .record=${record}
+            .rowIndex=${rowIndex}
+          ></record-view>
+        `,
+        {
+          backdrop: true
+        }
+      )
     })
   }
 
@@ -98,23 +109,14 @@ class DataList extends LitElement {
   }
 
   render() {
+    var records = this._records || []
     return html`
-      ${(this._records || []).map(
-        record => html`
-          <div class="item">
-            <div class="name">${record.name}</div>
-            <div class="desc">${record.description}</div>
-            ${record.updatedAt
-              ? html`
-                  <div class="update-info">
-                    <mwc-icon>access_time</mwc-icon> Updated At :
-                    ${formatter.format(new Date(Number(record.updatedAt)))} / ${record.updaterId}
-                  </div>
-                `
-              : ``}
-          </div>
+      ${records.map(
+        (record, rowIndex) => html`
+          <record-partial .record=${record} .rowIndex=${rowIndex}></record-partial>
         `
       )}
+      <record-partial .rowIndex=${records.length}></record-partial>
     `
   }
 }

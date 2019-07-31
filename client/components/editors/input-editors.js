@@ -2,6 +2,8 @@ import { LitElement, html, css } from 'lit-element'
 
 const STYLE = css`
   :host {
+    display: block;
+
     width: 100%;
     height: 100%;
 
@@ -10,6 +12,8 @@ const STYLE = css`
   }
 
   :host > * {
+    display: block;
+
     width: 100%;
     height: 100%;
 
@@ -25,6 +29,13 @@ const STYLE = css`
 
   :host > input[type='checkbox'] {
     width: initial;
+  }
+
+  @media screen and (max-width: 460px) {
+    :host > * {
+      border: initial;
+      background-color: initial;
+    }
   }
 `
 
