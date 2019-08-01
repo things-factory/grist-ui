@@ -18,15 +18,15 @@ export class GutterDirty {
           switch (record['__dirty__']) {
             case '+':
               return html`
-                <mwc-icon style=${INLINESTYLE}>add</mwc-icon>
+                <mwc-icon style=${INLINESTYLE} center>add</mwc-icon>
               `
             case '-':
               return html`
-                <mwc-icon style=${INLINESTYLE}>remove</mwc-icon>
+                <mwc-icon style=${INLINESTYLE} center>remove</mwc-icon>
               `
             case 'M':
               return html`
-                <mwc-icon style=${INLINESTYLE}>done</mwc-icon>
+                <mwc-icon style=${INLINESTYLE} center>done</mwc-icon>
               `
             default:
               return ''

@@ -39,6 +39,7 @@ export class GutterRowSelector {
         renderer: function(column, record, idx) {
           return html`
             <input
+              center
               type=${column.multiple ? 'checkbox' : 'radio'}
               .checked=${record['__selected__']}
               @change=${e => {

@@ -24,7 +24,7 @@ export class GutterButton {
       record: {
         renderer: function(column, record, idx) {
           return html`
-            <mwc-icon style=${inlineRecordStyle}>${icon}</mwc-icon>
+            <mwc-icon style=${inlineRecordStyle} center>${icon}</mwc-icon>
           `
         },
         align: 'center'
