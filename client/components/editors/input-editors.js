@@ -29,6 +29,7 @@ const STYLE = css`
 
   :host > input[type='checkbox'] {
     width: initial;
+    margin: auto;
   }
 
   @media screen and (max-width: 460px) {
