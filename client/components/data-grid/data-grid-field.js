@@ -19,7 +19,9 @@ class DataGridField extends LitElement {
     return [
       css`
         :host {
-          display: block;
+          display: flex;
+          align-items: center;
+          justify-content: var(--data-grid-field-text-align, flex-start);
 
           white-space: nowrap;
           overflow: hidden;
@@ -30,15 +32,19 @@ class DataGridField extends LitElement {
 
           font-size: var(--grid-record-wide-fontsize);
           text-overflow: ellipsis;
-
-          text-align: var(--data-grid-field-text-align, left);
         }
 
         :host([editing]) {
           padding: 0;
         }
 
-        :host > * {
+        * {
+          flex: 1;
+          margin: 0;
+        }
+
+        *[center] {
+          flex: none;
           margin: 0 auto;
         }
       `
@@ -102,7 +108,13 @@ class DataGridField extends LitElement {
     if (changes.has('column')) {
       var align = (this.column.record && this.column.record.align) || DEFAULT_TEXT_ALIGN
       if (align != DEFAULT_TEXT_ALIGN) {
-        this.style.setProperty('--data-grid-field-text-align', align)
+        let justify = 'center'
+        switch (align) {
+          case 'right':
+            justify = 'flex-end'
+            break
+        }
+        this.style.setProperty('--data-grid-field-text-align', justify)
       }
     }
   }

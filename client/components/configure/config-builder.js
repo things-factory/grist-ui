@@ -7,9 +7,10 @@ export const buildConfig = config => {
     ...config
   }
 
-  var { columns = [], rows = {} } = config
+  var { columns = [], rows = {}, pagination = {} } = config
   compiled.columns = columns.map(column => buildColumn(column))
   compiled.rows = buildRows(rows)
+  compiled.pagination = pagination
 
   return compiled
 }
