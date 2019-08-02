@@ -18,10 +18,11 @@ export class GutterSequence {
       header: '#',
       record: {
         renderer: function(column, record, idx) {
-          var { limit = 0, page = 1, total = 0, records = [] } = this.data || {}
-          var value = (page - 1) * limit + idx + 1
+          // var { limit = 0, page = 1, total = 0, records = [] } = this.data || {}
+          // var value = (page - 1) * limit + idx + 1
 
-          return isNaN(value) ? '' : value
+          // return isNaN(value) ? '' : value
+          return record['__seq__']
         },
         align: 'center'
       }
