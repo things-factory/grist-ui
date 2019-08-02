@@ -4,7 +4,8 @@ export class GutterRowSelector {
   static instance(config = {}) {
     return Object.assign({}, config, {
       type: 'gutter',
-      name: 'row-selector',
+      name: '__selected__',
+      gutterType: 'row-selector',
       width: 26,
       resizable: false,
       sortable: false,

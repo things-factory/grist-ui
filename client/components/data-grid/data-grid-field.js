@@ -11,7 +11,11 @@ class DataGridField extends LitElement {
       rowIndex: Number,
       columnIndex: Number,
       data: Object,
-      editing: { attribute: 'editing' }
+      editing: { attribute: 'editing' },
+      selectedRow: {
+        attribute: 'selected-row'
+      },
+      value: Object
     }
   }
 
@@ -60,26 +64,36 @@ class DataGridField extends LitElement {
       return html``
     }
 
-    var column = this.column
-    var record = this.record
-    var rowIndex = this.rowIndex
+    return this.isEditing
+      ? html`
+          ${this.editor}
+        `
+      : html`
+          ${this.renderer}
+        `
+  }
 
-    if (this.isEditing) {
-      let { editor } = column.record
-      let rendered = editor.call(this, column, record, rowIndex)
-      rendered.id = 'editor'
+  get renderer() {
+    if (this._renderer === undefined) {
+      var { column, record, rowIndex } = this
 
-      return html`
-        ${rendered}
-      `
-    } else {
       let { renderer } = column.record
-      let rendered = renderer.call(this, column, record, rowIndex)
-
-      return html`
-        ${rendered}
-      `
+      this._renderer = renderer.call(this, column, record, rowIndex)
     }
+
+    return this._renderer
+  }
+
+  get editor() {
+    if (!this._editor) {
+      var { column, record, rowIndex } = this
+
+      let { editor } = column.record
+      this._editor = editor.call(this, column, record, rowIndex)
+      this._editor.id = 'editor'
+    }
+
+    return this._editor
   }
 
   updated(changes) {
@@ -92,16 +106,18 @@ class DataGridField extends LitElement {
           }
         }).bind(this)
 
-        this._onRecordChange = (e => {
+        this._onFieldChange = (e => {
           this._editCancelled && e.stopPropagation()
         }).bind(this)
 
         delete this._editCancelled
-        this.addEventListener('record-change', this._onRecordChange)
+        this.addEventListener('field-change', this._onFieldChange)
         this.addEventListener('keydown', this._onKeydownInEditingMode)
       } else {
-        this.removeEventListener('record-change', this._onRecordChange)
+        this.removeEventListener('field-change', this._onFieldChange)
         this.removeEventListener('keydown', this._onKeydownInEditingMode)
+
+        delete this._editor
       }
     }
 
@@ -116,6 +132,10 @@ class DataGridField extends LitElement {
         }
         this.style.setProperty('--data-grid-field-text-align', justify)
       }
+    }
+
+    if (changes.has('value')) {
+      delete this._renderer
     }
   }
 }

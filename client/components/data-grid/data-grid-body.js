@@ -70,6 +70,7 @@ class DataGridBody extends LitElement {
                 ?selected-row=${attrSelected}
                 ?focused=${idxRow === focusedRow && idxColumn === focusedColumn}
                 ?editing=${idxRow === editingRow && idxColumn === editingColumn}
+                .value=${record[column.name]}
               ></data-grid-field>
             `
           )}

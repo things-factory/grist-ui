@@ -10,7 +10,7 @@ export class GutterButton {
 
     return Object.assign({}, config, {
       type: 'gutter',
-      name: 'button',
+      gutterType: 'button',
       width: 26,
       resizable: false,
       sortable: false,

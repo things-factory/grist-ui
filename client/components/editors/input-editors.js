@@ -91,27 +91,15 @@ export class InputEditor extends LitElement {
     return e.target.value
   }
 
-  rebuildRecord(record, column, value) {
-    return Object.assign(
-      {
-        __dirty__: 'M'
-      },
-      record,
-      {
-        [column.name]: value
-      }
-    )
-  }
-
   onfocusout() {
     if (this._dirtyValue !== this.value) {
       this.dispatchEvent(
-        new CustomEvent('record-change', {
+        new CustomEvent('field-change', {
           bubbles: true,
           composed: true,
           detail: {
-            before: this.record,
-            after: this.rebuildRecord(this.record, this.column, this._dirtyValue),
+            before: this.value,
+            after: this._dirtyValue,
             row: this.row,
             column: this.column
           }

@@ -19,7 +19,7 @@ export function unregisterGutter(name) {
 }
 
 export const generateGutterColumn = config => {
-  var clazz = GUTTERS[config.name]
+  var clazz = GUTTERS[config.gutterName]
 
   if (clazz) {
     return clazz.instance(config)

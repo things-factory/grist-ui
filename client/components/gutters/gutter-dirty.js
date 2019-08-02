@@ -8,7 +8,8 @@ export class GutterDirty {
   static instance(config = {}) {
     return Object.assign({}, config, {
       type: 'gutter',
-      name: 'dirty',
+      name: '__dirty__',
+      gutterType: 'dirty',
       width: 16,
       resizable: false,
       sortable: false,
