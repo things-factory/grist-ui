@@ -2,6 +2,7 @@ export class GutterSequence {
   static instance(config = {}) {
     return Object.assign({}, config, {
       type: 'gutter',
+      name: '__seq__',
       getterType: 'sequence',
       width: function(column) {
         if (this.data) {

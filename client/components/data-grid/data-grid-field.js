@@ -136,6 +136,7 @@ class DataGridField extends LitElement {
 
     if (changes.has('value')) {
       delete this._renderer
+      this.requestUpdate()
     }
   }
 }

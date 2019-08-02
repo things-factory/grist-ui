@@ -94,29 +94,6 @@ export class DataGrist extends LitElement {
       this.fetch()
     }
 
-    if (changes.has('data') || changes.has('selectedRecords')) {
-      var { records } = this.data || []
-
-      if (this.selectedRecords) {
-        records = [...records]
-
-        /* 원본 데이타를 남기고, 복사본(_data)을 사용한다. */
-        this.selectedRecords.forEach(selected => {
-          var index = records.indexOf(selected)
-          records.splice(index, 1, {
-            ...selected,
-            __selected__: true
-          })
-        })
-      }
-
-      this._data = {
-        ...DEFAULT_DATA,
-        ...this.data,
-        records
-      }
-    }
-
     if (changes.has('fetchHandler')) {
       this.dataProvider.fetchHandler = this.fetchHandler
     }
@@ -127,6 +104,45 @@ export class DataGrist extends LitElement {
 
     if (changes.has('fetchOptions')) {
       this.dataProvider.fetchOptions = this.fetchOptions
+    }
+
+    if (changes.has('data')) {
+      var { limit = DEFAULT_DATA.limit, page = DEFAULT_DATA.page, total = DEFAULT_DATA.total, records = [] } = this.data
+
+      /* 원본 데이타를 남기고, 복사본(_data)을 사용한다. */
+      records = records.map((record, idx) => {
+        return {
+          ...record,
+          __seq__: (page - 1) * limit + idx + 1
+        }
+      })
+
+      this._data = {
+        limit,
+        page,
+        total,
+        records
+      }
+    }
+
+    if (changes.has('selectedRecords')) {
+      var { records } = this.data || []
+      var selectedRecords = this.selectedRecords || []
+
+      var _records = this._data.records
+
+      /* 원본데이타에서 index를 찾아서, 복사본 데이타의 selected를 설정한다. */
+      selectedRecords.forEach(selected => {
+        var index = records.indexOf(selected)
+        var record = _records[index]
+        if (record) {
+          record['__selected__'] = true
+        }
+      })
+
+      this._data = {
+        ...this._data
+      }
     }
   }
 
