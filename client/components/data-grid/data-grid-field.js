@@ -25,7 +25,7 @@ class DataGridField extends LitElement {
         :host {
           display: flex;
           align-items: center;
-          justify-content: var(--data-grid-field-text-align, flex-start);
+          justify-content: var(--data-grid-field-justify-content, flex-start);
 
           white-space: nowrap;
           overflow: hidden;
@@ -130,7 +130,7 @@ class DataGridField extends LitElement {
             justify = 'flex-end'
             break
         }
-        this.style.setProperty('--data-grid-field-text-align', justify)
+        this.style.setProperty('--data-grid-field-justify-content', justify)
       }
     }
 

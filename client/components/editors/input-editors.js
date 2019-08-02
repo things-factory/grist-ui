@@ -22,7 +22,6 @@ const STYLE = css`
 
     box-sizing: border-box;
 
-    text-align: inherit;
     font-size: inherit;
     font-family: inherit;
   }
@@ -67,6 +66,12 @@ export class InputEditor extends LitElement {
     this.shadowRoot.addEventListener('focusout', this.onfocusout.bind(this))
     this.shadowRoot.addEventListener('click', this.onclick.bind(this))
     this.shadowRoot.addEventListener('dblclick', this.ondblclick.bind(this))
+
+    var align = this.column.record && this.column.record.align
+    if (align) {
+      this.style.textAlign = align
+      this.style.textAlignLast = align /* for select */
+    }
 
     this.value = this._dirtyValue = this.formatForEditor(this.record[this.column.name])
 

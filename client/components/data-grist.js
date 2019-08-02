@@ -78,13 +78,18 @@ export class DataGrist extends LitElement {
 
   fetch() {
     if (this.dataProvider) {
-      let { limit = 20, page = 1 } = this._config.pagination
+      let { limit = 20, page = 1, infinite } = this._config.pagination
       let { sorters } = this._config
-      this.dataProvider.fetch({
-        limit,
-        page,
-        sorters
-      })
+
+      if (infinite) {
+        this.dataProvider.attach()
+      } else {
+        this.dataProvider.fetch({
+          limit,
+          page,
+          sorters
+        })
+      }
     }
   }
 

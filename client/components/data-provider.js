@@ -74,14 +74,21 @@ export class DataProvider {
   }
 
   async attach() {
+    var { page = 0, limit = 20 } = this
+
     // total이 변했을 수도 있으므로, 현재페이지보다 하나 큰 페이지를 요청한다.
-    var page = this.page + 1
+    page = page + 1
 
     return this._update({
       /* fetch에서 limit과 page를 제공하지 않는 경우를 대비함. */
-      limit: this.limit,
+      limit,
       page,
-      ...(await this.fetch({ page }))
+      ...(await this.fetchHandler.call(null, {
+        page,
+        limit,
+        sorters: this.sorters,
+        options: this.fetchOptions
+      }))
     })
   }
 
@@ -111,16 +118,22 @@ export class DataProvider {
       return await this.fetch({ page: maxpage, limit })
     }
 
-    this.limit = limit
-    this.total = total
-    this.page = page
+    if (!records) {
+      return
+    }
 
     if (!this.records) {
       this.records = records
-    } else {
+    } else if (this.page < page) {
       // attach인 경우에는 records를 append한다.
       this.records = [...this.records, ...records]
+    } else {
+      return
     }
+
+    this.limit = limit
+    this.total = total
+    this.page = page
 
     this.grist.data = {
       page: this.page,
