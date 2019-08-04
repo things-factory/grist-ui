@@ -97,7 +97,7 @@ export async function dataGridBodyKeydownHandler(e) {
     }
   }
 
-  if (this.focused.row !== row || this.focused.column !== column) {
+  if (!this.focused || this.focused.row !== row || this.focused.column !== column) {
     this.focused = { row, column }
   }
 

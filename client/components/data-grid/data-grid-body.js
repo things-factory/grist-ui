@@ -164,7 +164,10 @@ class DataGridBody extends LitElement {
     super.focus()
 
     if (!this.focused || this.focused.row === undefined) {
-      this.focused = { row: 0, column: 0 }
+      let { records = [] } = this.data
+      let row = records.findIndex(record => record['__selected__'])
+
+      this.focused = { row: row == -1 ? 0 : row, column: 0 }
     }
   }
 }

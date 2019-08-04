@@ -209,6 +209,13 @@ class DataGrid extends LitElement {
         : html``}
     `
   }
+
+  focus() {
+    super.focus()
+
+    var body = this.shadowRoot.querySelector('data-grid-body')
+    body && body.focus()
+  }
 }
 
 customElements.define('data-grid', DataGrid)

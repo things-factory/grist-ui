@@ -164,6 +164,12 @@ export class DataGrist extends LitElement {
     var { records = [] } = this._data || {}
     return records.filter(record => record['__selected__'])
   }
+
+  focus() {
+    super.focus()
+
+    this.grist.focus()
+  }
 }
 
 customElements.define('data-grist', DataGrist)

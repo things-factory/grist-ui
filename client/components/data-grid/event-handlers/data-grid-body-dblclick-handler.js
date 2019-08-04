@@ -4,7 +4,7 @@
  * - handler의 this 는 data-grid-body임.
  */
 export async function dataGridBodyDblclickHandler(e) {
-  // e.stopPropagation()
+  e.stopPropagation()
 
   /* target should be 'data-grid-field' */
   var target = e.target

@@ -86,6 +86,8 @@ class DataGridField extends LitElement {
         delete this._editCancelled
         this.addEventListener('field-change', this._onFieldChange)
         this.addEventListener('keydown', this._onKeydownInEditingMode)
+
+        // var editor = this.shadowRoot.firstElementChild
       } else {
         this.removeEventListener('field-change', this._onFieldChange)
         this.removeEventListener('keydown', this._onKeydownInEditingMode)
