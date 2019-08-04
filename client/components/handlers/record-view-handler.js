@@ -9,9 +9,7 @@ const STYLE = 'width: 50vw;height: 50vh'
  * 전반적인 처리를 위해서, columns 및 data 정보를 포함해서 제공할 수 있어야 한다.
  */
 
-export const RecordViewHandler = function(columns, data, column, record, rowIndex) {
-  var field = this /* data-grid-field */
-
+export const RecordViewHandler = function(columns, data, column, record, rowIndex, field) {
   openPopup(
     html`
       <record-view

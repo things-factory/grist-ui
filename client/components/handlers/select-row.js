@@ -3,9 +3,7 @@
  * 전반적인 처리를 위해서, columns 및 data 정보를 포함해서 제공할 수 있어야 한다.
  */
 
-export const SelectRow = function(columns, data, column, record, rowIndex) {
-  var field = this /* data-grid-field */
-
+export const SelectRow = function(columns, data, column, record, rowIndex, field) {
   field.dispatchEvent(
     new CustomEvent('select-record-change', {
       bubbles: true,

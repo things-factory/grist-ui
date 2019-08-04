@@ -15,7 +15,7 @@ export class GutterDirty {
       sortable: false,
       header: '',
       record: {
-        renderer: function(value, column, record) {
+        renderer: function(value, column, record, rowIndex, field) {
           switch (value) {
             case '+':
               return html`

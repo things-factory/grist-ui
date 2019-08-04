@@ -63,7 +63,9 @@ class DataGridField extends LitElement {
     var { renderer, editor } = column.record
 
     return html`
-      ${this.isEditing ? editor(value, column, record, rowIndex) : renderer(value, column, record, rowIndex)}
+      ${this.isEditing
+        ? editor(value, column, record, rowIndex, this)
+        : renderer(value, column, record, rowIndex, this)}
     `
   }
 

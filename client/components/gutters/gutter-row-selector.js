@@ -37,7 +37,7 @@ export class GutterRowSelector {
         }
       },
       record: {
-        renderer: function(value, column, record) {
+        renderer: function(value, column, record, rowIndex, field) {
           return html`
             <input
               center
@@ -55,7 +55,7 @@ export class GutterRowSelector {
                       records: selected ? [record] : []
                     }
 
-                this.dispatchEvent(
+                field.dispatchEvent(
                   new CustomEvent('select-record-change', {
                     bubbles: true,
                     composed: true,

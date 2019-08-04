@@ -4,7 +4,7 @@
  * - handler의 this 는 data-grid-body임.
  */
 export function dataGridBodyClickHandler(e) {
-  e.stopPropagation()
+  // e.stopPropagation()
 
   /* target should be 'data-grid-field' */
   var target = e.target
@@ -30,9 +30,9 @@ export function dataGridBodyClickHandler(e) {
 
   /* do column click handler */
   var { click } = column.handlers
-  click && click.call(target, this.columns, this.data, column, record, rowIndex)
+  click && click(this.columns, this.data, column, record, rowIndex, target)
 
   /* do rows click handler */
   var { click: rowsClick } = this.config.rows.handlers
-  rowsClick && rowsClick.call(target, this.columns, this.data, column, record, rowIndex)
+  rowsClick && rowsClick(this.columns, this.data, column, record, rowIndex, target)
 }

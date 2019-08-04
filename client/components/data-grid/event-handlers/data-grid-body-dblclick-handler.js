@@ -4,7 +4,7 @@
  * - handler의 this 는 data-grid-body임.
  */
 export async function dataGridBodyDblclickHandler(e) {
-  e.stopPropagation()
+  // e.stopPropagation()
 
   /* target should be 'data-grid-field' */
   var target = e.target
@@ -27,9 +27,9 @@ export async function dataGridBodyDblclickHandler(e) {
 
   /* do column dblclick handler */
   var { dblclick } = column.handlers
-  dblclick && dblclick.call(target, this.columns, this.data, column, record, rowIndex)
+  dblclick && dblclick(this.columns, this.data, column, record, rowIndex, target)
 
   /* do rows dblclick handler */
   var { click: rowsDblclick } = this.config.rows.handlers
-  rowsDblclick && rowsDblclick.call(target, this.columns, this.data, column, record, rowIndex)
+  rowsDblclick && rowsDblclick(this.columns, this.data, column, record, rowIndex, target)
 }

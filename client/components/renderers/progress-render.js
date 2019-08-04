@@ -50,7 +50,7 @@ class DataGristProgressRenderer extends LitElement {
 
 customElements.define('data-grist-progress-renderer', DataGristProgressRenderer)
 
-export const ProgressRenderer = (value, column, record) => {
+export const ProgressRenderer = (value, column, record, rowIndex, field) => {
   var { min = 0, max = 100 } = column.record.options || {}
 
   return html`

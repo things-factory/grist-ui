@@ -17,7 +17,7 @@ export class GutterSequence {
       sortable: false,
       header: '#',
       record: {
-        renderer: function(value, column, record) {
+        renderer: function(value, column, record, rowIndex, field) {
           return value
         },
         align: 'center'

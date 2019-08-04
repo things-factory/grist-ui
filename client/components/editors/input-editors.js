@@ -44,7 +44,9 @@ export class InputEditor extends LitElement {
     return {
       value: Object,
       column: Object,
-      record: Object
+      record: Object,
+      rowIndex: Number,
+      field: Object
     }
   }
 

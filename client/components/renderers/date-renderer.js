@@ -10,7 +10,7 @@ const OPTIONS = {
   // timeZone: 'America/Los_Angeles'
 }
 
-export const DateRenderer = (value, column, record) => {
+export const DateRenderer = (value, column, record, rowIndex, field) => {
   value = Number(value)
   if (isNaN(value)) {
     return ''
