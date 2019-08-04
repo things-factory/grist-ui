@@ -141,7 +141,8 @@ class DataGrid extends LitElement {
           detail: {
             before: beforeRecord,
             after: afterRecord,
-            column: column
+            column,
+            row
           }
         })
       )
