@@ -35,14 +35,15 @@ export function getEditor(type) {
     return type
   }
 
-  return function(column, record, row) {
+  return function(value, column, record, rowIndex) {
     var clazz = EDITORS[type] || TextInput
 
     var element = new clazz()
 
-    element.row = row
+    element.value = value
     element.record = record
     element.column = column
+    element.row = rowIndex
 
     return element
   }

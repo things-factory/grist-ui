@@ -1,8 +1,6 @@
 import { html } from 'lit-html'
 
-export const BooleanRenderer = (column, record, rowIndex) => {
-  var value = record[column.name]
-
+export const BooleanRenderer = (value, column, record) => {
   return html`
     <input type="checkbox" .checked=${!!value} disabled center />
   `

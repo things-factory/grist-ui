@@ -44,8 +44,7 @@ export class InputEditor extends LitElement {
     return {
       value: Object,
       column: Object,
-      record: Object,
-      row: Number
+      record: Object
     }
   }
 
@@ -105,8 +104,9 @@ export class InputEditor extends LitElement {
           detail: {
             before: this.value,
             after: this._dirtyValue,
-            row: this.row,
-            column: this.column
+            column: this.column,
+            record: this.record,
+            row: this.row
           }
         })
       )

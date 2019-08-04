@@ -1,13 +1,12 @@
 import { html } from 'lit-html'
 
-export const LinkRenderer = (column, record, rowIndex) => {
+export const LinkRenderer = (value, column, record) => {
   var { href, target } = column.record.options || {}
 
-  var value = record[column.name]
   value = value === undefined ? '' : value
 
   if (typeof href == 'function') {
-    href = href.call(this, column, record, rowIndex)
+    href = href.call(null, value, column, record)
   }
 
   return target

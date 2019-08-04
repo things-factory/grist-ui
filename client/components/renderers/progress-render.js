@@ -29,17 +29,20 @@ class DataGristProgressRenderer extends LitElement {
 
   static get properties() {
     return {
-      value: Number
+      value: Number,
+      min: Number,
+      max: Number
     }
   }
 
   render() {
-    var value = this.value
+    var { value, min, max } = this
+    var progress = isNaN(value) ? 0 : Math.min(100, Math.max(0, ((value - min) * 100) / (max - min)))
 
     return html`
       <div id="border"></div>
-      <div id="bar" style="width:${value}%">
-        &nbsp;${isNaN(value) ? '' : value}
+      <div id="bar" style="width:${progress}%">
+        &nbsp;${isNaN(progress) ? '' : progress}
       </div>
     `
   }
@@ -47,14 +50,14 @@ class DataGristProgressRenderer extends LitElement {
 
 customElements.define('data-grist-progress-renderer', DataGristProgressRenderer)
 
-export const ProgressRenderer = (column, record, rowIndex) => {
+export const ProgressRenderer = (value, column, record) => {
   var { min = 0, max = 100 } = column.record.options || {}
-  var value = Number(record[column.name])
-  value = Number(value)
-
-  var progress = isNaN(value) ? 0 : Math.min(100, Math.max(0, ((value - min) * 100) / (max - min)))
 
   return html`
-    <data-grist-progress-renderer .value=${progress}></data-grist-progress-renderer>
+    <data-grist-progress-renderer
+      .value=${Number(value)}
+      .min=${Number(min)}
+      .max=${Number(max)}
+    ></data-grist-progress-renderer>
   `
 }

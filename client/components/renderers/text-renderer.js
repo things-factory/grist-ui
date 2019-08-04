@@ -1,4 +1,3 @@
-export const TextRenderer = (column, record, rowIndex) => {
-  var value = record[column.name]
+export const TextRenderer = (value, column, record) => {
   return value === undefined ? '' : value
 }

@@ -95,7 +95,7 @@ class DataGrid extends LitElement {
 
     /* field change processing */
     this.addEventListener('field-change', e => {
-      var { after, before, column, row } = e.detail
+      var { after, before, column, record, row } = e.detail
 
       /* compare changes */
       if (after === before) {
@@ -106,6 +106,7 @@ class DataGrid extends LitElement {
 
       /* 빈 그리드로 시작한 경우, data 설정이 되어있지 않을 수 있다. */
       var records = this.data.records || []
+
       var beforeRecord = records[row]
       var afterRecord = beforeRecord
         ? {
@@ -140,7 +141,6 @@ class DataGrid extends LitElement {
           detail: {
             before: beforeRecord,
             after: afterRecord,
-            row: row,
             column: column
           }
         })

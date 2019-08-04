@@ -15,8 +15,8 @@ export class GutterDirty {
       sortable: false,
       header: '',
       record: {
-        renderer: function(column, record, idx) {
-          switch (record['__dirty__']) {
+        renderer: function(value, column, record) {
+          switch (value) {
             case '+':
               return html`
                 <mwc-icon style=${INLINESTYLE} center>add</mwc-icon>

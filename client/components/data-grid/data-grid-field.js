@@ -9,12 +9,7 @@ class DataGridField extends LitElement {
       record: Object,
       column: Object,
       rowIndex: Number,
-      columnIndex: Number,
-      data: Object,
       editing: { attribute: 'editing' },
-      selectedRow: {
-        attribute: 'selected-row'
-      },
       value: Object
     }
   }
@@ -64,36 +59,12 @@ class DataGridField extends LitElement {
       return html``
     }
 
-    return this.isEditing
-      ? html`
-          ${this.editor}
-        `
-      : html`
-          ${this.renderer}
-        `
-  }
+    var { value, column, record, rowIndex } = this
+    var { renderer, editor } = column.record
 
-  get renderer() {
-    if (this._renderer === undefined) {
-      var { column, record, rowIndex } = this
-
-      let { renderer } = column.record
-      this._renderer = renderer.call(this, column, record, rowIndex)
-    }
-
-    return this._renderer
-  }
-
-  get editor() {
-    if (!this._editor) {
-      var { column, record, rowIndex } = this
-
-      let { editor } = column.record
-      this._editor = editor.call(this, column, record, rowIndex)
-      this._editor.id = 'editor'
-    }
-
-    return this._editor
+    return html`
+      ${this.isEditing ? editor(value, column, record, rowIndex) : renderer(value, column, record, rowIndex)}
+    `
   }
 
   updated(changes) {
@@ -116,8 +87,6 @@ class DataGridField extends LitElement {
       } else {
         this.removeEventListener('field-change', this._onFieldChange)
         this.removeEventListener('keydown', this._onKeydownInEditingMode)
-
-        delete this._editor
       }
     }
 
@@ -132,12 +101,6 @@ class DataGridField extends LitElement {
         }
         this.style.setProperty('--data-grid-field-justify-content', justify)
       }
-    }
-
-    if (changes.has('value')) {
-      delete this._renderer
-      delete this._editor
-      this.requestUpdate()
     }
   }
 }

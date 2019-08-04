@@ -1,7 +1,6 @@
 import { html } from 'lit-html'
 
-export const ColorRenderer = (column, record, rowIndex) => {
-  var value = record[column.name]
+export const ColorRenderer = (value, column, record) => {
   value = value === undefined ? '#000' : value
 
   return html`
