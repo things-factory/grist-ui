@@ -170,6 +170,10 @@ export class DataGrist extends LitElement {
 
     this.grist.focus()
   }
+
+  commit() {
+    this.data = this._data
+  }
 }
 
 customElements.define('data-grist', DataGrist)
