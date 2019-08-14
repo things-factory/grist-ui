@@ -156,7 +156,7 @@ export class DataGrist extends LitElement {
   }
 
   get dirtyRecords() {
-    var { records = [] } = this._data || {}
+    var { records = [] } = this.grist.data || {}
     return records.filter(record => record['__dirty__'])
   }
 
