@@ -14,18 +14,25 @@ export class DataProvider {
     this._limitChangeHandler = this.onLimitChange.bind(this)
     this._sortersChangeHandler = this.onSortersChange.bind(this)
     this._recordChangeHandler = this.onRecordChange.bind(this)
+    this._attachPageHandler = this.onAttachPage.bind(this)
 
-    this.grist.addEventListener('page-changed', this._pageChangeHandler)
-    this.grist.addEventListener('limit-changed', this._limitChangeHandler)
-    this.grist.addEventListener('sorters-changed', this._sortersChangeHandler)
+    this.grist.addEventListener('attach-page', this._attachPageHandler)
+    this.grist.addEventListener('page-change', this._pageChangeHandler)
+    this.grist.addEventListener('limit-change', this._limitChangeHandler)
+    this.grist.addEventListener('sorters-change', this._sortersChangeHandler)
     this.grist.addEventListener('record-change', this._recordChangeHandler)
   }
 
   dispose() {
-    this.grist.removeEventListener('page-changed', this._pageChangeHandler)
-    this.grist.removeEventListener('limit-changed', this._limitChangeHandler)
-    this.grist.removeEventListener('sorters-changed', this._sortersChangeHandler)
+    this.grist.removeEventListener('attach-page', this._attachPageHandler)
+    this.grist.removeEventListener('page-change', this._pageChangeHandler)
+    this.grist.removeEventListener('limit-change', this._limitChangeHandler)
+    this.grist.removeEventListener('sorters-change', this._sortersChangeHandler)
     this.grist.removeEventListener('record-change', this._recordChangeHandler)
+  }
+
+  onAttachPage() {
+    this.attach()
   }
 
   onPageChange(e) {
@@ -73,10 +80,23 @@ export class DataProvider {
     this._editHandler = editHandler
   }
 
-  async attach() {
+  get sorters() {
+    return this._sorters
+  }
+
+  set sorters(sorters) {
+    this._sorters = sorters
+  }
+
+  async attach(reset = false) {
     var { page = 0, limit = 20 } = this
 
     // total이 변했을 수도 있으므로, 현재페이지보다 하나 큰 페이지를 요청한다.
+    if (reset) {
+      this.records = null
+      page = 0
+    }
+
     page = page + 1
 
     return this._update({

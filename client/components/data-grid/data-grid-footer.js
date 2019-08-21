@@ -68,11 +68,11 @@ class DataGridFooter extends LitElement {
     if (page > Math.ceil(total / limit) || page <= 0) {
       return
     }
-    this.dispatchEvent(new CustomEvent('page-changed', { bubbles: true, composed: true, detail: page }))
+    this.dispatchEvent(new CustomEvent('page-change', { bubbles: true, composed: true, detail: page }))
   }
 
   _changeLimit(limit) {
-    this.dispatchEvent(new CustomEvent('limit-changed', { bubbles: true, composed: true, detail: limit }))
+    this.dispatchEvent(new CustomEvent('limit-change', { bubbles: true, composed: true, detail: limit }))
   }
 
   render() {

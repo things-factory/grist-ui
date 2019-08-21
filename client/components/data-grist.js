@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit-element'
+import PullToRefresh from 'pulltorefreshjs'
 
 import { buildConfig } from './configure/config-builder'
 
@@ -6,6 +7,8 @@ import './data-grid/data-grid'
 import './data-list/data-list'
 
 import { DataProvider } from './data-provider'
+
+import { PullToRefreshStyles } from '@things-factory/shell'
 
 const DEFAULT_DATA = {
   page: 1,
@@ -16,26 +19,29 @@ const DEFAULT_DATA = {
 
 export class DataGrist extends LitElement {
   static get styles() {
-    return css`
-      :host {
-        display: flex;
-        flex-direction: row;
-        box-sizing: border-box;
-        background-color: var(--grist-background-color);
-        padding: var(--grist-padding);
+    return [
+      PullToRefreshStyles,
+      css`
+        :host {
+          display: flex;
+          flex-direction: column;
+          box-sizing: border-box;
+          background-color: var(--grist-background-color);
+          padding: var(--grist-padding);
 
-        overflow: hidden;
-      }
+          overflow: hidden;
+        }
 
-      data-grid,
-      data-list {
-        flex: 1;
-      }
+        data-grid,
+        data-list {
+          flex: 1;
+        }
 
-      data-list {
-        overflow-y: auto;
-      }
-    `
+        data-list {
+          overflow-y: auto;
+        }
+      `
+    ]
   }
 
   static get properties() {
@@ -62,6 +68,22 @@ export class DataGrist extends LitElement {
     super.disconnectedCallback()
 
     this.dataProvider.dispose()
+
+    this._ptr && this._ptr.destroy()
+    delete this._ptr
+  }
+
+  firstUpdated() {
+    this._ptr = PullToRefresh.init({
+      mainElement: this.shadowRoot.querySelector('#grist'),
+      distIgnore: 30,
+      instructionsPullToRefresh: 'Pull down to refresh',
+      instructionsRefreshing: 'Refreshing',
+      instructionsReleaseToRefresh: 'Release to refresh',
+      onRefresh: () => {
+        this.fetch(true)
+      }
+    })
   }
 
   render() {
@@ -76,13 +98,13 @@ export class DataGrist extends LitElement {
     `
   }
 
-  fetch() {
+  fetch(reset = false) {
     if (this.dataProvider) {
       let { limit = 20, page = 1, infinite } = this._config.pagination
       let { sorters } = this._config
 
-      if (infinite) {
-        this.dataProvider.attach()
+      if (infinite || this.mode !== 'GRID') {
+        this.dataProvider.attach(reset)
       } else {
         this.dataProvider.fetch({
           limit,
@@ -96,6 +118,7 @@ export class DataGrist extends LitElement {
   updated(changes) {
     if (changes.has('config')) {
       this._config = buildConfig(this.config)
+      this.dataProvider.sorters = this._config.sorters
       this.fetch()
     }
 

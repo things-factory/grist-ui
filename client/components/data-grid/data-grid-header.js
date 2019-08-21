@@ -182,7 +182,7 @@ class DataGridHeader extends LitElement {
     this._sorters = sorters
 
     this.dispatchEvent(
-      new CustomEvent('sorters-changed', {
+      new CustomEvent('sorters-change', {
         bubbles: true,
         composed: true,
         detail: this._sorters
@@ -194,7 +194,7 @@ class DataGridHeader extends LitElement {
     if (!this.throttledNotifier) {
       this.throttledNotifier = throttle(function(idx, width) {
         var idx = this.dispatchEvent(
-          new CustomEvent('column-width-changed', {
+          new CustomEvent('column-width-change', {
             bubbles: true,
             composed: true,
             detail: {

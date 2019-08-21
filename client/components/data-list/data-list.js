@@ -1,7 +1,9 @@
 import { LitElement, html, css } from 'lit-element'
+
 import { openPopup } from '@things-factory/layout-base'
 
 import { longpressable } from '../../utils/longpressable'
+
 import '../record-view'
 import './record-partial'
 
@@ -42,8 +44,8 @@ class DataList extends LitElement {
         /* 마지막 페이지까지 계속 페이지를 증가시킨다. */
         var lastPage = Math.ceil(this._total / this._limit)
 
-        if (this.page < lastPage) {
-          this.dispatchEvent(new CustomEvent('page-changed', { bubbles: true, composed: true, detail: this.page + 1 }))
+        if (this._page < lastPage) {
+          this.dispatchEvent(new CustomEvent('attach-page', { bubbles: true, composed: true }))
         }
       }
     })
@@ -97,14 +99,14 @@ class DataList extends LitElement {
   updated(changes) {
     if (changes.has('config')) {
       this._records = []
-      this.page = 1
+      this._page = 1
     }
 
     if (changes.has('data')) {
-      this._records = (this._records || []).concat((this.data && this.data.records) || [])
+      this._records = this.data.records
       this._total = this.data.total
       this._limit = this.data.limit
-      this.page = this.data.page
+      this._page = this.data.page
     }
   }
 
