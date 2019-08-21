@@ -200,7 +200,7 @@ export class DataGrist extends LitElement {
   }
 
   get selected() {
-    var { records = [] } = this._data || {}
+    var { records = [] } = this.grist.data || {}
     return records.filter(record => record['__selected__'])
   }
 
@@ -211,7 +211,25 @@ export class DataGrist extends LitElement {
   }
 
   commit() {
-    this.data = this._data
+    var { page, total, limit, records } = this.grist.data
+
+    this.data = {
+      page,
+      total,
+      limit,
+      records: records.map(record => {
+        var copied = {
+          ...record
+        }
+
+        delete copied.__seq__
+        delete copied.__dirty__
+        delete copied.__selected__
+        delete copied.__changes__
+
+        return copied
+      })
+    }
   }
 }
 
