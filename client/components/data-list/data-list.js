@@ -1,8 +1,7 @@
 import { LitElement, html, css } from 'lit-element'
 
+import { longpressable } from '@things-factory/shell'
 import { openPopup } from '@things-factory/layout-base'
-
-import { longpressable } from '../../utils/longpressable'
 
 import '../record-view'
 import './record-partial'
@@ -40,7 +39,7 @@ class DataList extends LitElement {
       const screenHeight = this.offsetHeight
       const currentScrollTop = this.scrollTop
 
-      if (totalScrollHeight == screenHeight + currentScrollTop) {
+      if (totalScrollHeight <= screenHeight + currentScrollTop + 1) {
         /* 마지막 페이지까지 계속 페이지를 증가시킨다. */
         var lastPage = Math.ceil(this._total / this._limit)
 

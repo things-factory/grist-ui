@@ -1,5 +1,4 @@
 import { LitElement, html, css } from 'lit-element'
-import PullToRefresh from 'pulltorefreshjs'
 
 import { buildConfig } from './configure/config-builder'
 
@@ -8,7 +7,7 @@ import './data-list/data-list'
 
 import { DataProvider } from './data-provider'
 
-import { PullToRefreshStyles } from '@things-factory/shell'
+import { pulltorefresh } from '@things-factory/shell'
 
 const DEFAULT_DATA = {
   page: 1,
@@ -20,7 +19,6 @@ const DEFAULT_DATA = {
 export class DataGrist extends LitElement {
   static get styles() {
     return [
-      PullToRefreshStyles,
       css`
         :host {
           display: flex;
@@ -30,6 +28,9 @@ export class DataGrist extends LitElement {
           padding: var(--grist-padding);
 
           overflow: hidden;
+
+          /* for pulltorefresh controller */
+          position: relative;
         }
 
         data-grid,
@@ -68,20 +69,14 @@ export class DataGrist extends LitElement {
     super.disconnectedCallback()
 
     this.dataProvider.dispose()
-
-    this._ptr && this._ptr.destroy()
-    delete this._ptr
   }
 
   firstUpdated() {
-    this._ptr = PullToRefresh.init({
-      mainElement: this.shadowRoot.querySelector('#grist'),
-      distIgnore: 30,
-      instructionsPullToRefresh: 'Pull down to refresh',
-      instructionsRefreshing: 'Refreshing',
-      instructionsReleaseToRefresh: 'Release to refresh',
-      onRefresh: () => {
-        this.fetch(true)
+    pulltorefresh({
+      container: this.shadowRoot,
+      scrollable: this.grist,
+      refresh: () => {
+        return this.fetch(true)
       }
     })
   }
@@ -98,15 +93,15 @@ export class DataGrist extends LitElement {
     `
   }
 
-  fetch(reset = false) {
+  async fetch(reset = false) {
     if (this.dataProvider) {
       let { limit = 20, page = 1, infinite } = this._config.pagination
       let { sorters } = this._config
 
       if (infinite || this.mode !== 'GRID') {
-        this.dataProvider.attach(reset)
+        await this.dataProvider.attach(reset)
       } else {
-        this.dataProvider.fetch({
+        await this.dataProvider.fetch({
           limit,
           page,
           sorters
