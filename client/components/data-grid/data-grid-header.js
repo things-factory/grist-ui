@@ -138,7 +138,7 @@ class DataGridHeader extends LitElement {
 
     if (sorters.length > 1) {
       var rank = sorters.indexOf(sorter) + 1
-      return sorter.descending
+      return sorter.desc
         ? html`
             &#9650;<sub>${rank}</sub>
           `
@@ -146,7 +146,7 @@ class DataGridHeader extends LitElement {
             &#9660;<sub>${rank}</sub>
           `
     } else {
-      return sorter.descending
+      return sorter.desc
         ? html`
             &#9650;
           `
@@ -166,10 +166,10 @@ class DataGridHeader extends LitElement {
     var idx = sorters.findIndex(sorter => sorter.name == column.name)
     if (idx !== -1) {
       let sorter = sorters[idx]
-      if (sorter.descending) {
+      if (sorter.desc) {
         sorters.splice(idx, 1)
       } else {
-        sorter.descending = true
+        sorter.desc = true
       }
     } else {
       var sorter = {
