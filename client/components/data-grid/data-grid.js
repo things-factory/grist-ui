@@ -194,7 +194,7 @@ class DataGrid extends LitElement {
         .config=${this.config}
         .columns=${columns}
         .data=${data}
-        @column-width-changed=${e => {
+        @column-width-change=${e => {
           let { idx, width } = e.detail
           columns[idx].width = width
           this.calculateWidths(columns)
