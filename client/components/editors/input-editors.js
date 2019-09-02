@@ -146,7 +146,7 @@ export class TextInput extends InputEditor {
 customElements.define('text-input', TextInput)
 
 export class NumberInput extends InputEditor {
-  touchValue(e) {
+  formatFromEditor(e) {
     let value = e.target.value
 
     switch (this.column.type) {
