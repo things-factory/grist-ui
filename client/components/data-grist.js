@@ -225,6 +225,8 @@ export class DataGrist extends LitElement {
         delete copied.__dirty__
         delete copied.__selected__
         delete copied.__changes__
+        delete copied.__dirtyfields__
+        delete copied.__origin__
 
         return copied
       })
