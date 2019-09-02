@@ -1,3 +1,6 @@
+import isEqual from 'lodash/isEqual'
+import isEmpty from 'lodash/isEmpty'
+
 function _calculateTotalPage(limit, total) {
   return Math.ceil(total / limit)
 }
@@ -50,7 +53,36 @@ export class DataProvider {
     this.fetch()
   }
 
+  checkDirties() {
+    var { records } = this.grist.dirtyData
+    var touches = records.filter(record => record['__dirty__'] == 'M')
+    var { columns } = this.grist._config
+
+    for (var record of touches) {
+      var origin = record['__origin__']
+
+      var dirtyFields = (record['__dirtyfields__'] = columns
+        .filter(column => column.type !== 'gutter' && !isEqual(origin[column.name], record[column.name]))
+        .reduce((sum, column) => {
+          var name = column.name
+
+          sum[name] = {
+            before: origin[name],
+            after: record[name]
+          }
+
+          return sum
+        }, {}))
+
+      if (isEmpty(dirtyFields)) {
+        delete record['__dirty__']
+      }
+    }
+  }
+
   onRecordChange(e) {
+    this.checkDirties()
+
     this.editHandler.call()
   }
 

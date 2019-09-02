@@ -55,6 +55,7 @@ class DataGridBody extends LitElement {
         var attrFocusedRow = idxRow === focusedRow
         var attrSelected = record['__selected__']
         var attrOdd = idxRow % 2
+        var dirtyFields = record['__dirtyfields__'] || {}
 
         return html`
           ${columns.map(
@@ -71,6 +72,7 @@ class DataGridBody extends LitElement {
                 ?focused=${idxRow === focusedRow && idxColumn === focusedColumn}
                 ?editing=${idxRow === editingRow && idxColumn === editingColumn}
                 .value=${record[column.name]}
+                ?dirty=${!!dirtyFields[column.name]}
               ></data-grid-field>
             `
           )}

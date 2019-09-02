@@ -136,7 +136,8 @@ export class DataGrist extends LitElement {
       records = records.map((record, idx) => {
         return {
           ...record,
-          __seq__: (page - 1) * limit + idx + 1
+          __seq__: (page - 1) * limit + idx + 1,
+          __origin__: record
         }
       })
 
@@ -173,8 +174,12 @@ export class DataGrist extends LitElement {
     return this.shadowRoot.querySelector('#grist')
   }
 
+  get dirtyData() {
+    return this.grist.data || {}
+  }
+
   get dirtyRecords() {
-    var { records = [] } = this.grist.data || {}
+    var { records = [] } = this.dirtyData
     const editableColumns = [
       'id',
       '__dirty__',

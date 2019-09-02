@@ -21,6 +21,7 @@ class DataGridField extends LitElement {
           display: flex;
           align-items: center;
           justify-content: var(--data-grid-field-justify-content, flex-start);
+          position: relative;
 
           white-space: nowrap;
           overflow: hidden;
@@ -35,6 +36,18 @@ class DataGridField extends LitElement {
 
         :host([editing]) {
           padding: 0;
+        }
+
+        :host([dirty])::after {
+          content: '';
+          position: absolute;
+          right: 0;
+          top: 0;
+
+          width: 0px;
+          height: 0px;
+          border-top: 7px solid red;
+          border-left: 7px solid transparent;
         }
 
         * {
@@ -86,8 +99,6 @@ class DataGridField extends LitElement {
         delete this._editCancelled
         this.addEventListener('field-change', this._onFieldChange)
         this.addEventListener('keydown', this._onKeydownInEditingMode)
-
-        // var editor = this.shadowRoot.firstElementChild
       } else {
         this.removeEventListener('field-change', this._onFieldChange)
         this.removeEventListener('keydown', this._onKeydownInEditingMode)

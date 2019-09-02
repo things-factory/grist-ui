@@ -119,10 +119,6 @@ class DataGrid extends LitElement {
             [column.name]: after
           }
 
-      // TODO 레코드의 deepCompare 후에 변경 여부를 결정한다.
-      // before와 after의 비교
-      // origin record와 after의 비교에 의해서 __dirty__ flag의 수정이 필요할 수 있다.
-
       if (beforeRecord) {
         records.splice(row, 1, afterRecord)
       } else {
