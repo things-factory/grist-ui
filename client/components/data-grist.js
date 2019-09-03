@@ -164,6 +164,7 @@ export class DataGrist extends LitElement {
         }
       })
 
+      /* update _data property intentionally */
       this._data = {
         ...this._data
       }

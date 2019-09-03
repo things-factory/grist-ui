@@ -22,7 +22,6 @@ export class RecordView extends LitElement {
     return {
       field: Object,
       columns: Array,
-      column: Object,
       record: Object,
       rowIndex: Number
     }
@@ -37,7 +36,7 @@ export class RecordView extends LitElement {
       ${columns.map(column => {
         return html`
           <label>${this._renderLabel(column)}</label>
-          <div>${column.record.renderer.call(this.field, column, record, rowIndex)}</div>
+          <div>${column.record.renderer.call(this, this.field, column, record, rowIndex)}</div>
         `
       })}
     `

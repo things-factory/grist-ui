@@ -59,13 +59,7 @@ class DataList extends LitElement {
 
       openPopup(
         html`
-          <record-form
-            style=${STYLE}
-            .columns=${columns}
-            .column=${columns[0]}
-            .record=${record}
-            .rowIndex=${rowIndex}
-          ></record-form>
+          <record-form style=${STYLE} .columns=${columns} .record=${record} .rowIndex=${rowIndex}></record-form>
         `,
         {
           backdrop: true
@@ -80,13 +74,7 @@ class DataList extends LitElement {
 
       openPopup(
         html`
-          <record-view
-            style=${STYLE}
-            .columns=${columns}
-            .column=${columns[0]}
-            .record=${record}
-            .rowIndex=${rowIndex}
-          ></record-view>
+          <record-view style=${STYLE} .columns=${columns} .record=${record} .rowIndex=${rowIndex}></record-view>
         `,
         {
           backdrop: true

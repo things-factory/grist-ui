@@ -22,7 +22,6 @@ export class RecordForm extends LitElement {
     return {
       field: Object,
       columns: Array,
-      column: Object,
       record: Object,
       rowIndex: Number
     }
@@ -40,8 +39,8 @@ export class RecordForm extends LitElement {
           <label>${this._renderLabel(column)}</label>
           <div>
             ${editable
-              ? editor.call(this.field, column, record, rowIndex)
-              : renderer.call(this.field, column, record, rowIndex)}
+              ? editor.call(this, this.field, column, record, rowIndex)
+              : renderer.call(this, this.field, column, record, rowIndex)}
           </div>
         `
       })}
