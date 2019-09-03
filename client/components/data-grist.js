@@ -180,11 +180,11 @@ export class DataGrist extends LitElement {
 
   get dirtyRecords() {
     var { records = [] } = this.dirtyData
-    const editableColumns = [
-      'id',
-      '__dirty__',
-      ...this.grist.config.columns.filter(column => column.record.editable).map(column => column.name)
-    ]
+    // const editableColumns = [
+    //   'id',
+    //   '__dirty__',
+    //   ...this.grist.config.columns.filter(column => column.record.editable).map(column => column.name)
+    // ]
     return records.filter(record => record['__dirty__'])
     // .map(record => {
     //   let dirtyRecord = {}

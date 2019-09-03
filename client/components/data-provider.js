@@ -55,11 +55,11 @@ export class DataProvider {
 
   checkDirties() {
     var { records } = this.grist.dirtyData
-    var touches = records.filter(record => record['__dirty__'] == 'M')
+    // var touches = records.filter(record => record['__dirty__'] == 'M')
     var { columns } = this.grist._config
 
-    for (var record of touches) {
-      var origin = record['__origin__']
+    for (var record of records) {
+      var origin = record['__origin__'] || {}
 
       var dirtyFields = (record['__dirtyfields__'] = columns
         .filter(column => column.type !== 'gutter' && !isEqual(origin[column.name], record[column.name]))
@@ -74,7 +74,7 @@ export class DataProvider {
           return sum
         }, {}))
 
-      if (isEmpty(dirtyFields)) {
+      if (record['__dirty__'] == 'M' && isEmpty(dirtyFields)) {
         delete record['__dirty__']
       }
     }
