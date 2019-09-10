@@ -40,12 +40,14 @@ export class RecordPartial extends LitElement {
         }
 
         :host > * {
-          margin: var(--data-list-item-margin, 5px 10px);
+          margin: var(--data-list-item-margin);
+          zoom: 1.3;
         }
 
         [content] {
           flex: auto;
           display: block;
+          zoom: 1;
         }
 
         [content] div {
@@ -120,8 +122,8 @@ export class RecordPartial extends LitElement {
     return html`
       ${gutters.map(gutter => gutter.record.renderer(gutter.record[gutter.name], gutter, record, rowIndex, this))}
       <div content>
-        <div class="name">&nbsp;${record.name}</div>
-        <div class="desc">&nbsp;${record.description}</div>
+        <div class="name">${record.name}</div>
+        <div class="desc">${record.description}</div>
         ${record.updatedAt
           ? html`
               <div class="update-info">
