@@ -123,25 +123,33 @@ export class DataProvider {
   async attach(reset = false) {
     var { page = 0, limit = 20 } = this
 
-    // total이 변했을 수도 있으므로, 현재페이지보다 하나 큰 페이지를 요청한다.
+    /*
+     * page는 0 based index가 아님에 주의한다.
+     * 즉, page 값이 1 은 첫페이지를 의미한다.
+     */
     if (reset) {
       this.records = null
-      page = 0
+      page = 1
+    } else {
+      /* attach의 경우는 grist data의 변경상태를 유지하기 위해서, grist._data 를 기반으로 한다. */
+      this.records = this.grist._data ? this.grist._data.records : null
+      page = page + 1
     }
 
-    page = page + 1
-
-    return this._update({
-      /* fetch에서 limit과 page를 제공하지 않는 경우를 대비함. */
-      limit,
-      page,
-      ...(await this.fetchHandler.call(null, {
-        page,
+    return this._update(
+      {
+        /* fetch에서 limit과 page를 제공하지 않는 경우를 대비함. */
         limit,
-        sorters: this.sorters,
-        options: this.fetchOptions
-      }))
-    })
+        page,
+        ...(await this.fetchHandler.call(null, {
+          page,
+          limit,
+          sorters: this.sorters,
+          options: this.fetchOptions
+        }))
+      },
+      reset
+    )
   }
 
   async fetch({ page = this.page, limit = this.limit, sorters = this.sorters } = {}) {
@@ -169,6 +177,7 @@ export class DataProvider {
     if (maxpage < page) {
       return await this.fetch({ page: maxpage, limit })
     }
+    // CONFIRM-ME 위 코드에 대한 설명이 필요함!!!.
 
     if (!records) {
       return
