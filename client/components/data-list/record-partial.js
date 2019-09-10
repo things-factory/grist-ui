@@ -17,7 +17,9 @@ const formatter = new Intl.DateTimeFormat(navigator.language, OPTIONS)
 export class RecordPartial extends LitElement {
   static get properties() {
     return {
-      record: Object
+      config: Object,
+      record: Object,
+      rowIndex: Number
     }
   }
 
@@ -25,12 +27,22 @@ export class RecordPartial extends LitElement {
     return [
       css`
         :host {
-          display: block;
-          padding: var(--data-list-item-padding);
+          display: flex;
+          flex-direction: row;
+          align-items: center;
           border-bottom: var(--data-list-item-border-bottom);
         }
 
-        div {
+        :host > * {
+          margin: var(--data-list-item-margin, 5px 10px);
+        }
+
+        [content] {
+          flex: auto;
+          display: block;
+        }
+
+        [content] div {
           padding-top: 3px;
         }
 
@@ -60,18 +72,24 @@ export class RecordPartial extends LitElement {
 
   render() {
     var record = this.record || {}
+    var rowIndex = this.rowIndex
+
+    var gutters = (this.config.columns || []).filter(column => column.type == 'gutter')
 
     return html`
-      <div class="name">&nbsp;${record.name}</div>
-      <div class="desc">&nbsp;${record.description}</div>
-      ${record.updatedAt
-        ? html`
-            <div class="update-info">
-              <mwc-icon>access_time</mwc-icon> Updated At : ${formatter.format(new Date(Number(record.updatedAt)))} /
-              ${record.updaterId}
-            </div>
-          `
-        : ``}
+      ${gutters.map(gutter => gutter.record.renderer(gutter.record[gutter.name], gutter, record, rowIndex, this))}
+      <div content>
+        <div class="name">&nbsp;${record.name}</div>
+        <div class="desc">&nbsp;${record.description}</div>
+        ${record.updatedAt
+          ? html`
+              <div class="update-info">
+                <mwc-icon>access_time</mwc-icon> Updated At : ${formatter.format(new Date(Number(record.updatedAt)))} /
+                ${record.updaterId}
+              </div>
+            `
+          : ``}
+      </div>
     `
   }
 }

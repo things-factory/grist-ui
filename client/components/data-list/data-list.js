@@ -102,10 +102,9 @@ class DataList extends LitElement {
     return html`
       ${records.map(
         (record, rowIndex) => html`
-          <record-partial .record=${record} .rowIndex=${rowIndex}></record-partial>
+          <record-partial .config=${this.config} .record=${record} .rowIndex=${rowIndex}></record-partial>
         `
       )}
-      <record-partial .rowIndex=${records.length}></record-partial>
     `
   }
 }
