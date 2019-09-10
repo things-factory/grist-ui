@@ -24,7 +24,7 @@ class DataList extends LitElement {
         }
 
         [selected-row] {
-          background-color: black;
+          background-color: var(--data-list-selected-background-color);
         }
       `
     ]
