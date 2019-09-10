@@ -1,4 +1,10 @@
 import { LitElement, html, css } from 'lit-element'
+import { longpressable } from '@things-factory/shell'
+import { openPopup } from '@things-factory/layout-base'
+
+import '../record-view'
+
+const STYLE = 'width: 100vw;height: 100vh'
 
 // TODO 로케일 설정에 따라서 포맷이 바뀌도록 해야한다.
 const OPTIONS = {
@@ -68,6 +74,41 @@ export class RecordPartial extends LitElement {
         }
       `
     ]
+  }
+
+  firstUpdated() {
+    /* long-press */
+    longpressable(this.shadowRoot.querySelector('[content]'))
+
+    this.shadowRoot.querySelector('[content]').addEventListener('click', e => {
+      var partial = e.target
+      var columns = this.config.columns
+      var { record, rowIndex } = partial
+
+      openPopup(
+        html`
+          <record-form style=${STYLE} .columns=${columns} .record=${record} .rowIndex=${rowIndex}></record-form>
+        `,
+        {
+          backdrop: true
+        }
+      )
+    })
+
+    this.shadowRoot.addEventListener('long-press', e => {
+      var partial = e.target
+      var columns = this.config.columns
+      var { record, rowIndex } = partial
+
+      openPopup(
+        html`
+          <record-view style=${STYLE} .columns=${columns} .record=${record} .rowIndex=${rowIndex}></record-view>
+        `,
+        {
+          backdrop: true
+        }
+      )
+    })
   }
 
   render() {

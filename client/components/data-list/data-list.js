@@ -1,12 +1,6 @@
 import { LitElement, html, css } from 'lit-element'
 
-import { longpressable } from '@things-factory/shell'
-import { openPopup } from '@things-factory/layout-base'
-
-import '../record-view'
 import './record-partial'
-
-const STYLE = 'width: 100vw;height: 100vh'
 
 class DataList extends LitElement {
   static get properties() {
@@ -27,6 +21,10 @@ class DataList extends LitElement {
 
         :nth-child(even) {
           background-color: #fff;
+        }
+
+        [selected-row] {
+          background-color: black;
         }
       `
     ]
@@ -49,36 +47,79 @@ class DataList extends LitElement {
       }
     })
 
-    /* long-press */
-    longpressable(this.shadowRoot)
+    this.addEventListener('select-record-change', e => {
+      var { records: selectedRecords, added = [], removed = [] } = e.detail
+      var { records } = this.data
+      var { selectable = false } = this.config.rows
 
-    this.shadowRoot.addEventListener('click', e => {
-      var partial = e.target
-      var columns = this.config.columns
-      var { record, rowIndex } = partial
+      if (!records || !selectable) {
+        return
+      } else if (selectable && !selectable.multiple) {
+        records.forEach(record => (record['__selected__'] = false))
+      }
 
-      openPopup(
-        html`
-          <record-form style=${STYLE} .columns=${columns} .record=${record} .rowIndex=${rowIndex}></record-form>
-        `,
-        {
-          backdrop: true
-        }
-      )
+      if (selectedRecords) {
+        records.forEach(record => (record['__selected__'] = false))
+        selectedRecords.forEach(record => (record['__selected__'] = true))
+      } else {
+        removed.forEach(record => (record['__selected__'] = false))
+        added.forEach(record => (record['__selected__'] = true))
+      }
+
+      this.data = {
+        ...this.data,
+        records: [...records]
+      }
     })
 
-    this.shadowRoot.addEventListener('long-press', e => {
-      var partial = e.target
-      var columns = this.config.columns
-      var { record, rowIndex } = partial
+    /* field change processing */
+    this.addEventListener('field-change', e => {
+      var { after, before, column, record, row } = e.detail
 
-      openPopup(
-        html`
-          <record-view style=${STYLE} .columns=${columns} .record=${record} .rowIndex=${rowIndex}></record-view>
-        `,
-        {
-          backdrop: true
-        }
+      /* compare changes */
+      if (after === before) {
+        return
+      }
+
+      // TODO 오브젝트나 배열 타입인 경우 deepCompare 후에 변경 적용 여부를 결정한다.
+
+      /* 빈 그리드로 시작한 경우, data 설정이 되어있지 않을 수 있다. */
+      var records = this.data.records || []
+
+      var beforeRecord = records[row]
+      var afterRecord = beforeRecord
+        ? {
+            __dirty__: 'M',
+            ...beforeRecord,
+            [column.name]: after
+          }
+        : {
+            __dirty__: '+',
+            [column.name]: after
+          }
+
+      if (beforeRecord) {
+        records.splice(row, 1, afterRecord)
+      } else {
+        records.push(afterRecord)
+      }
+
+      this.data = {
+        ...this.data,
+        records: [...records]
+      }
+
+      this.dispatchEvent(
+        new CustomEvent('record-change', {
+          bubbles: true,
+          composed: true,
+          detail: {
+            before: beforeRecord,
+            after: afterRecord,
+            column,
+            row
+          }
+        })
       )
     })
   }
@@ -99,10 +140,16 @@ class DataList extends LitElement {
 
   render() {
     var records = this._records || []
+
     return html`
       ${records.map(
         (record, rowIndex) => html`
-          <record-partial .config=${this.config} .record=${record} .rowIndex=${rowIndex}></record-partial>
+          <record-partial
+            .config=${this.config}
+            .record=${record}
+            .rowIndex=${rowIndex}
+            ?selected-row=${record['__selected__']}
+          ></record-partial>
         `
       )}
     `
