@@ -144,7 +144,7 @@ export class DataGrist extends LitElement {
       records = records.map((record, idx) => {
         return {
           ...record,
-          __seq__: (page - 1) * limit + idx + 1,
+          __seq__: this.mode == 'GRID' ? (page - 1) * limit + idx + 1 : idx + 1,
           __origin__: record
         }
       })

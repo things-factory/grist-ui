@@ -2,6 +2,7 @@ import { LitElement, html, css } from 'lit-element'
 import { longpressable } from '@things-factory/shell'
 import { openPopup } from '@things-factory/layout-base'
 
+import './data-list-gutter'
 import '../record-view'
 
 const STYLE = 'width: 100vw;height: 100vh'
@@ -25,7 +26,14 @@ export class RecordPartial extends LitElement {
     return {
       config: Object,
       record: Object,
-      rowIndex: Number
+      rowIndex: Number,
+      selectedRow: {
+        /*
+         * row-selector를 사용자가 변경할 때, record-partial의 update를 유도하기 위해 selected-row attribute를 property에 추가함.
+         * (이를 해주지 않으면, 리스트 refresh 경우에 selected-row checkbox가 클리어되지 않는 현상이 발생함.)
+         */
+        attribute: 'selected-row'
+      }
     }
   }
 
@@ -120,7 +128,18 @@ export class RecordPartial extends LitElement {
     var gutters = (this.config.columns || []).filter(column => column.type == 'gutter')
 
     return html`
-      ${gutters.map(gutter => gutter.record.renderer(gutter.record[gutter.name], gutter, record, rowIndex, this))}
+      ${gutters.map(
+        gutter =>
+          html`
+            <data-list-gutter
+              .rowIndex=${rowIndex}
+              .column=${gutter}
+              .record=${record}
+              .value=${record[gutter.name]}
+            ></data-list-gutter>
+          `
+      )}
+
       <div content>
         <div class="name">${record.name}</div>
         <div class="desc">${record.description}</div>
