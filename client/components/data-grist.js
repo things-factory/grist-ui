@@ -93,7 +93,15 @@ export class DataGrist extends LitElement {
     `
   }
 
-  async fetch(reset = false) {
+  async fetch(reset = true) {
+    if (reset) {
+      /*
+       * scroll 의 현재위치에 의해서 scroll 이벤트가 발생할 수 있으므로, 이를 방지하기 위해서 스크롤의 위치를 TOP으로 옮긴다.
+       * (scroll 이 첫페이지 크기 이상으로 내려가 있는 경우, 첫페이지부터 다시 표시하는 경우에, scroll 이벤트가 발생한다.)
+       */
+      this.grist.scrollTop = 0
+    }
+
     if (this.dataProvider) {
       let { limit = 20, page = 1, infinite } = this._config.pagination
       let { sorters } = this._config
@@ -181,22 +189,7 @@ export class DataGrist extends LitElement {
 
   get dirtyRecords() {
     var { records = [] } = this.dirtyData
-    // const editableColumns = [
-    //   'id',
-    //   '__dirty__',
-    //   ...this.grist.config.columns.filter(column => column.record.editable).map(column => column.name)
-    // ]
     return records.filter(record => record['__dirty__'])
-    // .map(record => {
-    //   let dirtyRecord = {}
-    //   for (let key in record) {
-    //     if (editableColumns.includes(key)) {
-    //       dirtyRecord[key] = record[key]
-    //     }
-    //   }
-
-    //   return dirtyRecord
-    // })
   }
 
   get selected() {

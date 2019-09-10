@@ -1,5 +1,5 @@
 import { LitElement, html, css } from 'lit-element'
-
+import '@material/mwc-fab'
 import './record-partial'
 
 class DataList extends LitElement {
@@ -7,7 +7,8 @@ class DataList extends LitElement {
     return {
       config: Object,
       data: Object,
-      _records: Array
+      _records: Array,
+      isTop: Boolean
     }
   }
 
@@ -26,11 +27,26 @@ class DataList extends LitElement {
         [selected-row] {
           background-color: var(--data-list-selected-background-color);
         }
+
+        #create {
+          position: absolute;
+          bottom: 15px;
+          right: 16px;
+        }
+
+        #upward {
+          position: absolute;
+          top: 15px;
+          right: 16px;
+          color: red;
+        }
       `
     ]
   }
 
   firstUpdated(changes) {
+    this.isTop = true
+
     /* infinite scrolling */
     this.addEventListener('scroll', e => {
       const totalScrollHeight = this.scrollHeight
@@ -45,6 +61,8 @@ class DataList extends LitElement {
           this.dispatchEvent(new CustomEvent('attach-page', { bubbles: true, composed: true }))
         }
       }
+
+      this.isTop = this.scrollTop == 0
     })
 
     this.addEventListener('select-record-change', e => {
@@ -152,7 +170,28 @@ class DataList extends LitElement {
           ></record-partial>
         `
       )}
+      ${this.isTop
+        ? html``
+        : html`
+            <mwc-icon id="upward" @click=${e => this.gotoTop()}>arrow_upward</mwc-icon>
+          `}
+
+      <a
+        id="create"
+        href="#"
+        @click=${e => {
+          // this.onCreateClick()
+          console.log('create new record...')
+          e.preventDefault()
+        }}
+      >
+        <mwc-fab icon="add" title="create"></mwc-fab>
+      </a>
     `
+  }
+
+  gotoTop() {
+    this.scrollTop = 0
   }
 }
 
