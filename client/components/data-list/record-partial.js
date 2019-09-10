@@ -49,7 +49,7 @@ export class RecordPartial extends LitElement {
 
         :host > * {
           margin: var(--data-list-item-margin);
-          zoom: 1.3;
+          zoom: 1.4;
         }
 
         [content] {
