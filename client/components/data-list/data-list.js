@@ -30,15 +30,22 @@ class DataList extends LitElement {
 
         #create {
           position: absolute;
-          bottom: 15px;
-          right: 16px;
+          bottom: var(--data-list-fab-position-vertical);
+          right: var(--data-list-fab-position-horizontal);
+          background-color: transparent;
+          opacity: 0.85;
         }
 
         #upward {
+          --mdc-icon-size: 26px;
           position: absolute;
-          top: 15px;
-          right: 16px;
-          color: red;
+          top: var(--data-list-fab-position-vertical);
+          right: var(--data-list-fab-position-horizontal);
+          background-color: rgba(255, 255, 255, 0.7);
+          border-radius: 20px;
+          color: var(--data-list-fab-color);
+          box-shadow: var(--data-list-fab-shadow);
+          padding: 7px;
         }
       `
     ]
@@ -185,7 +192,7 @@ class DataList extends LitElement {
           e.preventDefault()
         }}
       >
-        <mwc-fab icon="add" title="create"></mwc-fab>
+        <mwc-fab mini icon="add" title="create"></mwc-fab>
       </a>
     `
   }
