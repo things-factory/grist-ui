@@ -91,13 +91,16 @@ export class RecordPartial extends LitElement {
     longpressable(this.shadowRoot.querySelector('[content]'))
 
     this.shadowRoot.querySelector('[content]').addEventListener('click', e => {
-      var partial = e.target
       var columns = this.config.columns
-      var { record, rowIndex } = partial
 
       openPopup(
         html`
-          <record-form style=${STYLE} .columns=${columns} .record=${record} .rowIndex=${rowIndex}></record-form>
+          <record-form
+            style=${STYLE}
+            .columns=${columns}
+            .record=${this.record}
+            .rowIndex=${this.rowIndex}
+          ></record-form>
         `,
         {
           backdrop: true
@@ -106,13 +109,16 @@ export class RecordPartial extends LitElement {
     })
 
     this.shadowRoot.addEventListener('long-press', e => {
-      var partial = e.target
       var columns = this.config.columns
-      var { record, rowIndex } = partial
 
       openPopup(
         html`
-          <record-view style=${STYLE} .columns=${columns} .record=${record} .rowIndex=${rowIndex}></record-view>
+          <record-view
+            style=${STYLE}
+            .columns=${columns}
+            .record=${this.record}
+            .rowIndex=${this.rowIndex}
+          ></record-view>
         `,
         {
           backdrop: true
