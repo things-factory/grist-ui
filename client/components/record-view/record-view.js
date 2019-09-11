@@ -1,5 +1,7 @@
 import { LitElement, html, css } from 'lit-element'
 
+import '../data-grid/data-grid-field'
+
 export class RecordView extends LitElement {
   static get styles() {
     return css`
@@ -13,18 +15,34 @@ export class RecordView extends LitElement {
       }
 
       label {
+        position: relative;
+
         padding: var(--record-view-item-padding);
         border-bottom: var(--record-view-border-bottom);
         font: var(--record-view-label-font);
         color: var(--record-view-label-color);
       }
-      div {
+
+      label[editable]::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 0;
+
+        width: 0px;
+        height: 0px;
+        border-top: 7px solid red;
+        border-left: 7px solid transparent;
+      }
+
+      data-grid-field {
         padding: var(--record-view-item-padding);
         border-bottom: var(--record-view-border-bottom);
         color: var(--record-view-color);
-        text-align: right;
+        background-color: transparent;
       }
-      :first-child + div {
+
+      :first-child + data-grid-field {
         color: var(--record-view-focus-color);
         font-weight: bold;
       }
@@ -46,9 +64,20 @@ export class RecordView extends LitElement {
 
     return html`
       ${columns.map(column => {
+        let { editable } = column.record
+        let dirtyFields = record['__dirtyfields__'] || {}
+        let editing = false
+
         return html`
-          <label>${this._renderLabel(column)}</label>
-          <div>${column.record.renderer.call(this, record[column.name], column, record, rowIndex)}</div>
+          <label ?editable=${editable}>${this._renderLabel(column)}</label>
+          <data-grid-field
+            .rowIndex=${rowIndex}
+            .column=${column}
+            .record=${record}
+            ?editing=${editing}
+            .value=${record[column.name]}
+            ?dirty=${!!dirtyFields[column.name]}
+          ></data-grid-field>
         `
       })}
     `
