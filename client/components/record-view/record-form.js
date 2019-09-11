@@ -7,12 +7,21 @@ export class RecordForm extends LitElement {
         display: grid;
         grid-template-columns: 1fr 2fr;
         grid-auto-rows: min-content;
-        grid-gap: 10px;
-        background-color: #fff;
+        grid-gap: 10px 0;
+        background-color: var(--record-view-background-color);
         padding: 10px;
       }
 
       label {
+        padding: var(--record-view-item-padding);
+        border-bottom: var(--record-view-border-bottom);
+        font: var(--record-view-label-font);
+        color: var(--record-view-label-color);
+      }
+      div {
+        padding: 5px 0;
+        border-bottom: var(--record-view-border-bottom);
+        color: var(--record-view-color);
         text-align: right;
       }
     `

@@ -35,6 +35,7 @@ const STYLE = css`
     :host > * {
       border: initial;
       background-color: initial;
+      max-width: 95% !important;
     }
   }
 `
