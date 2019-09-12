@@ -145,25 +145,6 @@ export class RecordPartial extends LitElement {
 
       openPopup(
         html`
-          <record-form
-            style=${STYLE}
-            .columns=${columns}
-            .record=${this.record}
-            .rowIndex=${this.rowIndex}
-            @field-change=${e => this.onFieldChange(e)}
-          ></record-form>
-        `,
-        {
-          backdrop: true
-        }
-      )
-    })
-
-    this.shadowRoot.addEventListener('long-press', e => {
-      var columns = this.config.columns
-
-      openPopup(
-        html`
           <record-view
             style=${STYLE}
             .columns=${columns}
@@ -176,6 +157,12 @@ export class RecordPartial extends LitElement {
           backdrop: true
         }
       )
+    })
+
+    this.shadowRoot.addEventListener('long-press', e => {
+      var columns = this.config.columns
+
+      // 레코드 선택으로 활용하자.
     })
   }
 

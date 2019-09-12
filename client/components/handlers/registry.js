@@ -1,5 +1,4 @@
 import { RecordViewHandler } from './record-view-handler'
-import { RecordFormHandler } from './record-form-handler'
 import { SelectRow } from './select-row'
 import { SelectRowToggle } from './select-row-toggle'
 
@@ -7,7 +6,6 @@ const NOOP = () => {}
 
 var HANDLERS = {
   'record-view': RecordViewHandler,
-  'record-form': RecordFormHandler,
   'select-row': SelectRow,
   'select-row-toggle': SelectRowToggle
 }

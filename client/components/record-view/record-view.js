@@ -15,6 +15,8 @@ export class RecordView extends LitElement {
         grid-gap: 10px 0;
         background-color: var(--record-view-background-color);
         padding: 10px;
+
+        overflow-y: auto;
       }
 
       label {
