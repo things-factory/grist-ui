@@ -86,6 +86,56 @@ export class RecordPartial extends LitElement {
     ]
   }
 
+  onFieldChange(e) {
+    var { after, before, column, record, row } = e.detail
+
+    /* compare changes */
+    if (after === before) {
+      return
+    }
+
+    // TODO 오브젝트나 배열 타입인 경우 deepCompare 후에 변경 적용 여부를 결정한다.
+
+    /* 빈 그리드로 시작한 경우, data 설정이 되어있지 않을 수 있다. */
+    var beforeRecord = this.record
+    var afterRecord = beforeRecord
+      ? {
+          __dirty__: 'M',
+          ...beforeRecord,
+          [column.name]: after
+        }
+      : {
+          __dirty__: '+',
+          [column.name]: after
+        }
+
+    this.record = afterRecord
+
+    // if (beforeRecord) {
+    //   records.splice(row, 1, afterRecord)
+    // } else {
+    //   records.push(afterRecord)
+    // }
+
+    // this.data = {
+    //   ...this.data,
+    //   records: [...records]
+    // }
+
+    // this.dispatchEvent(
+    //   new CustomEvent('record-change', {
+    //     bubbles: true,
+    //     composed: true,
+    //     detail: {
+    //       before: beforeRecord,
+    //       after: afterRecord,
+    //       column,
+    //       row
+    //     }
+    //   })
+    // )
+  }
+
   firstUpdated() {
     /* long-press */
     longpressable(this.shadowRoot.querySelector('[content]'))
@@ -100,6 +150,7 @@ export class RecordPartial extends LitElement {
             .columns=${columns}
             .record=${this.record}
             .rowIndex=${this.rowIndex}
+            @field-change=${e => this.onFieldChange(e)}
           ></record-form>
         `,
         {
@@ -118,6 +169,7 @@ export class RecordPartial extends LitElement {
             .columns=${columns}
             .record=${this.record}
             .rowIndex=${this.rowIndex}
+            @field-change=${e => this.onFieldChange(e)}
           ></record-view>
         `,
         {

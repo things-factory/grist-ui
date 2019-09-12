@@ -2,6 +2,9 @@ import { LitElement, html, css } from 'lit-element'
 
 import '../data-grid/data-grid-field'
 
+const KEY_ENTER = 13
+const KEY_ESC = 27
+
 export class RecordView extends LitElement {
   static get styles() {
     return css`
@@ -66,7 +69,6 @@ export class RecordView extends LitElement {
       ${columns.map(column => {
         let { editable } = column.record
         let dirtyFields = record['__dirtyfields__'] || {}
-        let editing = false
 
         return html`
           <label ?editable=${editable}>${this._renderLabel(column)}</label>
@@ -74,13 +76,57 @@ export class RecordView extends LitElement {
             .rowIndex=${rowIndex}
             .column=${column}
             .record=${record}
-            ?editing=${editing}
             .value=${record[column.name]}
             ?dirty=${!!dirtyFields[column.name]}
           ></data-grid-field>
         `
       })}
     `
+  }
+
+  firstUpdated() {
+    this.shadowRoot.addEventListener('click', e => {
+      e.stopPropagation()
+
+      /* target should be 'data-grid-field' */
+      var target = e.target
+
+      if (this.editTarget) {
+        this.editTarget.removeAttribute('editing')
+        this.editTarget = null
+      }
+
+      if (target.tagName !== 'DATA-GRID-FIELD' || !target.column.record.editable) {
+        return
+      }
+
+      this.editTarget = target
+      target.setAttribute('editing', true)
+    })
+
+    this._focusedListener = function(e) {
+      var keyCode = e.keyCode
+      switch (keyCode) {
+        case KEY_ESC:
+        /* TODO 편집이 취소되어야 한다. */
+        case KEY_ENTER:
+          if (this.editTarget) {
+            this.editTarget.removeAttribute('editing')
+            this.editTarget = null
+          }
+          return
+
+        default:
+          return
+      }
+    }.bind(this)
+    window.addEventListener('keydown', this._focusedListener)
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback()
+
+    window.removeEventListener('keydown', this._focusedListener)
   }
 
   _renderLabel(column) {
