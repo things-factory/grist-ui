@@ -2,6 +2,9 @@ import { LitElement, html, css } from 'lit-element'
 import '@material/mwc-fab'
 import './record-partial'
 
+import { dataListClickHandler } from './event-handlers/data-list-click-handler'
+import { dataListDblclickHandler } from './event-handlers/data-list-dblclick-handler'
+
 class DataList extends LitElement {
   static get properties() {
     return {
@@ -101,6 +104,8 @@ class DataList extends LitElement {
     this.addEventListener('field-change', e => {
       var { after, before, column, record, row } = e.detail
 
+      console.log('field-change', e.detail)
+
       /* compare changes */
       if (after === before) {
         return
@@ -147,6 +152,10 @@ class DataList extends LitElement {
         })
       )
     })
+
+    this.shadowRoot.addEventListener('click', dataListClickHandler.bind(this))
+
+    this.shadowRoot.addEventListener('dblclick', dataListDblclickHandler.bind(this))
   }
 
   updated(changes) {
@@ -180,7 +189,7 @@ class DataList extends LitElement {
       ${this.isTop
         ? html``
         : html`
-            <mwc-icon id="upward" @click=${e => this.gotoTop()}>arrow_upward</mwc-icon>
+            <mwc-icon id="upward" @click=${e => this.gotoTop(e)}>arrow_upward</mwc-icon>
           `}
 
       <a
@@ -197,8 +206,10 @@ class DataList extends LitElement {
     `
   }
 
-  gotoTop() {
+  gotoTop(e) {
     this.scrollTop = 0
+
+    e.stopPropagation()
   }
 }
 

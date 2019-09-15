@@ -87,83 +87,51 @@ export class RecordPartial extends LitElement {
   }
 
   onFieldChange(e) {
-    var { after, before, column, record, row } = e.detail
+    /* record-view의 이벤트를 부모에게로 전달한다. */
+    this.dispatchEvent(
+      new CustomEvent('field-change', {
+        bubbles: true,
+        composed: true,
+        detail: e.detail
+      })
+    )
+  }
 
-    /* compare changes */
-    if (after === before) {
-      return
+  get recordView() {
+    if (!this._recordView) {
+      this._recordView = document.createElement('record-view')
+      this._recordView.addEventListener('field-change', e => this.onFieldChange(e))
+      this._recordView.style = STYLE
     }
 
-    // TODO 오브젝트나 배열 타입인 경우 deepCompare 후에 변경 적용 여부를 결정한다.
+    var columns = this.config.columns
 
-    /* 빈 그리드로 시작한 경우, data 설정이 되어있지 않을 수 있다. */
-    var beforeRecord = this.record
-    var afterRecord = beforeRecord
-      ? {
-          __dirty__: 'M',
-          ...beforeRecord,
-          [column.name]: after
-        }
-      : {
-          __dirty__: '+',
-          [column.name]: after
-        }
+    this._recordView.columns = columns
+    this._recordView.record = this.record
+    this._recordView.rowIndex = this.rowIndex
 
-    this.record = afterRecord
-
-    // if (beforeRecord) {
-    //   records.splice(row, 1, afterRecord)
-    // } else {
-    //   records.push(afterRecord)
-    // }
-
-    // this.data = {
-    //   ...this.data,
-    //   records: [...records]
-    // }
-
-    // this.dispatchEvent(
-    //   new CustomEvent('record-change', {
-    //     bubbles: true,
-    //     composed: true,
-    //     detail: {
-    //       before: beforeRecord,
-    //       after: afterRecord,
-    //       column,
-    //       row
-    //     }
-    //   })
-    // )
+    return this._recordView
   }
 
   firstUpdated() {
     /* long-press */
     longpressable(this.shadowRoot.querySelector('[content]'))
 
-    this.shadowRoot.querySelector('[content]').addEventListener('click', e => {
-      var columns = this.config.columns
-
-      openPopup(
-        html`
-          <record-view
-            style=${STYLE}
-            .columns=${columns}
-            .record=${this.record}
-            .rowIndex=${this.rowIndex}
-            @field-change=${e => this.onFieldChange(e)}
-          ></record-view>
-        `,
-        {
-          backdrop: true
-        }
-      )
-    })
-
     this.shadowRoot.addEventListener('long-press', e => {
-      var columns = this.config.columns
+      var popup = openPopup(this.recordView, {
+        backdrop: true
+      })
 
-      // 레코드 선택으로 활용하자.
+      popup.onclosed = () => {
+        delete this._recordView
+      }
     })
+  }
+
+  updated(changes) {
+    if (changes.has('record') && this._recordView) {
+      this._recordView.record = this.record
+    }
   }
 
   render() {
