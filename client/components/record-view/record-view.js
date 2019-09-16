@@ -28,23 +28,26 @@ export class RecordView extends LitElement {
         color: var(--record-view-label-color);
       }
 
-      label[editable]::after {
-        content: '';
-        position: absolute;
-        right: 0;
-        top: 0;
+      label mwc-icon {
+        display: none;
+      }
 
-        width: 0px;
-        height: 0px;
-        border-top: 7px solid red;
-        border-left: 7px solid transparent;
+      label[editable] mwc-icon {
+        display: inline-block;
+        font-size: 12px;
+        opacity: 0.5;
       }
 
       data-grid-field {
-        padding: var(--record-view-item-padding);
+        padding: 0;
         border-bottom: var(--record-view-border-bottom);
+        font: var(--record-view-font);
         color: var(--record-view-color);
         background-color: transparent;
+      }
+
+      data-grid-field[editing='true'] {
+        border-bottom: var(--record-view-edit-border-bottom);
       }
 
       :first-child + data-grid-field {
@@ -73,7 +76,7 @@ export class RecordView extends LitElement {
         let dirtyFields = record['__dirtyfields__'] || {}
 
         return html`
-          <label ?editable=${editable}>${this._renderLabel(column)}</label>
+          <label ?editable=${editable}>${this._renderLabel(column)} <mwc-icon>edit</mwc-icon></label>
           <data-grid-field
             .rowIndex=${rowIndex}
             .column=${column}
