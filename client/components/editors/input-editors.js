@@ -36,6 +36,9 @@ const STYLE = css`
       border: initial;
       background-color: initial;
     }
+    input:focus {
+      outline: none;
+    }
   }
 `
 
