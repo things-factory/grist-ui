@@ -16,13 +16,14 @@ class DataGristProgressRenderer extends LitElement {
         width: 100%;
         box-sizing: border-box;
 
-        border: 1px solid var(--primary-color);
-        background-color: transparent;
+        border: var(--grist-input-progress-border);
+        background-color: var(--grist-input-progress-background);
       }
 
       #bar {
-        background-color: var(--data-grist-progress-color, var(--primary-color));
+        background-color: var(--grist-input-progress-bar-background);
         text-align: left;
+        color: var(--grist-input-progress-bar-color);
       }
     `
   }

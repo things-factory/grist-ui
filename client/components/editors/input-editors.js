@@ -30,13 +30,17 @@ const STYLE = css`
     width: initial;
     margin: auto;
   }
+  input[type='checkbox'],
+  input[type='radio'] {
+    zoom: var(--grist-input-zoom);
+  }
 
   @media screen and (max-width: 460px) {
     :host > * {
       border: initial;
       background-color: initial;
     }
-    input:focus {
+    *:focus {
       outline: none;
     }
   }

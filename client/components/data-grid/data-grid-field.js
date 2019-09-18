@@ -46,8 +46,8 @@ class DataGridField extends LitElement {
 
           width: 0px;
           height: 0px;
-          border-top: 7px solid red;
-          border-left: 7px solid transparent;
+          border-top: 5px solid red;
+          border-left: 5px solid transparent;
         }
 
         * {
@@ -58,6 +58,11 @@ class DataGridField extends LitElement {
         *[center] {
           flex: none;
           margin: 0 auto;
+        }
+
+        input[type='checkbox'],
+        input[type='radio'] {
+          zoom: var(--grist-input-zoom);
         }
       `
     ]
