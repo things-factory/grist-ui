@@ -34,12 +34,13 @@ export class RecordView extends LitElement {
 
       label[editable] mwc-icon {
         display: inline-block;
+        margin-left: -2px;
         font-size: 12px;
         opacity: 0.5;
       }
 
       data-grid-field {
-        padding: 0;
+        padding: 0 0 5px 0;
         border-bottom: var(--record-view-border-bottom);
         font: var(--record-view-font);
         color: var(--record-view-color);
