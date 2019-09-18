@@ -1,6 +1,6 @@
 {
   "name": "@things-factory/grist-ui",
-  "version": "0.2.108",
+  "version": "0.2.109",
   "main": "dist-server/index.js",
   "browser": "client/index.js",
   "things-factory": true,
@@ -23,6 +23,8 @@
     "migration:revert": "node ./node_modules/typeorm/cli.js migration:revert"
   },
   "dependencies": {
+    "@material/mwc-fab": "*",
+    "@material/mwc-icon": "*",
     "@things-factory/layout-base": "^0.2.25",
     "@things-factory/shell": "*"
   },
