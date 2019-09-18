@@ -1,6 +1,6 @@
 import { getHandler } from '../handlers'
 
-export const buildRows = rows => {
+export const buildRows = (rows, config) => {
   var { appendable = false, insertable = false, selectable } = rows
 
   /* handler */

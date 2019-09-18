@@ -23,6 +23,8 @@
     "migration:revert": "node ./node_modules/typeorm/cli.js migration:revert"
   },
   "dependencies": {
+    "@material/mwc-fab": "^0.8.0",
+    "@material/mwc-icon": "^0.8.0",
     "@things-factory/layout-base": "^0.2.25",
     "@things-factory/shell": "*"
   },

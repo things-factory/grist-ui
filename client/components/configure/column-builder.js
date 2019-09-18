@@ -13,21 +13,29 @@ export const buildColumn = column => {
   var { header = {}, record = {}, handlers = {} } = compiled
 
   /* header */
+
   if (typeof header == 'string') {
     compiled.header = {
-      renderer: () => header
+      renderer: () => header,
+      translation: !(column.type == 'gutter')
     }
   } else {
-    var { renderer: headerRenderer } = header
+    /* gutter type인 경우는 translation default 설정이 false 가 된다. */
+    var { renderer: headerRenderer, translation = !(column.type == 'gutter') } = header
 
     compiled.header = {
       ...header,
-      renderer: getRenderer(headerRenderer)
+      renderer: getRenderer(headerRenderer),
+      translation
     }
   }
 
-  /* record */
-  var { renderer: recordRenderer, editor, editable } = record
+  /*
+   * record
+   *
+   * record 경우는 translation default 설정이 false 가 된다.
+   */
+  var { renderer: recordRenderer, editor, editable, translation = false } = record
 
   if (!recordRenderer) {
     recordRenderer = getRenderer(column.type)
@@ -44,7 +52,8 @@ export const buildColumn = column => {
   compiled.record = {
     ...record,
     renderer: recordRenderer,
-    editor
+    editor,
+    translation
   }
 
   /* handler */

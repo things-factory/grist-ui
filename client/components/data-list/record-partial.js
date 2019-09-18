@@ -148,7 +148,7 @@ export class RecordPartial extends LitElement {
               .rowIndex=${rowIndex}
               .column=${gutter}
               .record=${record}
-              .value=${record[gutter.name]}
+              .value=${gutter.translation ? this.config.translator(record[gutter.name]) : record[gutter.name]}
             ></data-list-gutter>
           `
       )}
