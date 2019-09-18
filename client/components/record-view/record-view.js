@@ -64,7 +64,8 @@ export class RecordView extends LitElement {
     return {
       columns: Array,
       record: Object,
-      rowIndex: Number
+      rowIndex: Number,
+      translator: Object
     }
   }
 
@@ -74,7 +75,13 @@ export class RecordView extends LitElement {
         <mwc-icon>arrow_back</mwc-icon>
         <h1>grist view</h1>
       </div>
-      <record-view-body .columns=${this.columns} .record=${this.record} .rowIndex=${this.rowIndex}> </record-view-body>
+      <record-view-body
+        .columns=${this.columns}
+        .record=${this.record}
+        .rowIndex=${this.rowIndex}
+        .translator=${this.translator}
+      >
+      </record-view-body>
       <div footer>
         <button><mwc-icon>refresh</mwc-icon>Reset</button>
         <button><mwc-icon>clear</mwc-icon>Cancel</button>
