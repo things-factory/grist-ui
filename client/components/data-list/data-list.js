@@ -104,8 +104,6 @@ class DataList extends LitElement {
     this.addEventListener('field-change', e => {
       var { after, before, column, record, row } = e.detail
 
-      console.log('field-change', e.detail)
-
       /* compare changes */
       if (after === before) {
         return
@@ -199,6 +197,7 @@ class DataList extends LitElement {
           // this.onCreateClick()
           console.log('create new record...')
           e.preventDefault()
+          e.stopPropagation()
         }}
       >
         <mwc-fab mini icon="add" title="create"></mwc-fab>
