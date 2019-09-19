@@ -116,6 +116,13 @@ body {
   --aside-list-detail-background-color: #fff;
   --aside-list-detail-text: 14px var(--primary-background-color);
 
+  --overlay-center-small-width: 30%;
+  --overlay-center-small-height: 30%;
+  --overlay-center-normal-width: 50%;
+  --overlay-center-normal-height: 50%;
+  --overlay-center-large-width: 75%;
+  --overlay-center-large-height: 75%;
+
   --more-panel-background-color: rgba(57, 78, 100, 0.9);
   --more-panel-min-width: 200px;
   --morelet-min-width: 200px;
