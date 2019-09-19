@@ -5,8 +5,6 @@ import { openPopup } from '@things-factory/layout-base'
 import './data-list-gutter'
 import '../record-view'
 
-const STYLE = 'width: 100vw;height: 100vh'
-
 // TODO 로케일 설정에 따라서 포맷이 바뀌도록 해야한다.
 const OPTIONS = {
   year: 'numeric',
@@ -101,7 +99,6 @@ export class RecordPartial extends LitElement {
     if (!this._recordView) {
       this._recordView = document.createElement('record-view')
       this._recordView.addEventListener('field-change', e => this.onFieldChange(e))
-      this._recordView.style = STYLE
     }
 
     var columns = this.config.columns
@@ -120,7 +117,8 @@ export class RecordPartial extends LitElement {
 
     this.shadowRoot.addEventListener('long-press', e => {
       var popup = openPopup(this.recordView, {
-        backdrop: true
+        backdrop: true,
+        size: 'large'
       })
 
       popup.onclosed = () => {
