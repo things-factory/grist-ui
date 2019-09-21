@@ -62,8 +62,7 @@ export class RecordViewBody extends LitElement {
     return {
       columns: Array,
       record: Object,
-      rowIndex: Number,
-      translator: Object
+      rowIndex: Number
     }
   }
 
@@ -83,7 +82,7 @@ export class RecordViewBody extends LitElement {
             .rowIndex=${rowIndex}
             .column=${column}
             .record=${record}
-            .value=${column.translation ? this.translator(record[column.name]) : record[column.name]}
+            .value=${record[column.name]}
             ?dirty=${!!dirtyFields[column.name]}
           ></data-grid-field>
         `
@@ -139,10 +138,6 @@ export class RecordViewBody extends LitElement {
   _renderLabel(column) {
     var { renderer, translation } = column.header
     var title = renderer.call(this, column)
-
-    if (translation) {
-      title = this.translator(title)
-    }
 
     return html`
       ${title}

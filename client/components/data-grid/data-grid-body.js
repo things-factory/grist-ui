@@ -71,7 +71,7 @@ class DataGridBody extends LitElement {
                 ?selected-row=${attrSelected}
                 ?focused=${idxRow === focusedRow && idxColumn === focusedColumn}
                 ?editing=${idxRow === editingRow && idxColumn === editingColumn}
-                .value=${column.translation ? this.config.translator(record[column.name]) : record[column.name]}
+                .value=${record[column.name]}
                 ?dirty=${!!dirtyFields[column.name]}
               ></data-grid-field>
             `

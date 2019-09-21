@@ -119,10 +119,6 @@ class DataGridHeader extends LitElement {
     var { renderer, translation } = column.header
     var title = renderer.call(this, column)
 
-    if (translation) {
-      title = this.config.translator(title)
-    }
-
     return html`
       ${title}
     `

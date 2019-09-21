@@ -63,14 +63,6 @@ export class DataGrist extends LitElement {
     }
   }
 
-  static get translator() {
-    return DataGrist.__translator || DEFAULT_TRANSLATOR
-  }
-
-  static set translator(translator) {
-    DataGrist.__translator = translator
-  }
-
   connectedCallback() {
     super.connectedCallback()
 
@@ -132,20 +124,8 @@ export class DataGrist extends LitElement {
 
   updated(changes) {
     if (changes.has('config')) {
-      /* config에 translator가 설정되지 않으면, global translator를 적용한다. */
-      var { translator = DataGrist.translator } = this.config
-
       this._config = buildConfig({
-        ...this.config,
-        translator: function(x) {
-          try {
-            return translator(x)
-          } catch (e) {
-            /* translator 오류에 대비함. */
-            console.warn(e)
-            return x
-          }
-        }
+        ...this.config
       })
 
       this.dataProvider.sorters = this._config.sorters

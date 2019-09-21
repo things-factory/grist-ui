@@ -13,22 +13,7 @@ export class RecordView extends LitElement {
       record-view-body {
         flex: 1;
       }
-      [header] {
-        display: flex;
-        align-items: center;
-        padding: 0 10px;
-        height: var(--record-view-header-height);
-        background-color: var(--record-view-header-background);
-        color: var(--record-view-header-color);
-      }
-      [header] h1 {
-        flex-wrap: nowrap;
-        justify-content: center;
-        text-align: center;
-        flex: 1 1 0%;
-        text-transform: capitalize;
-        font: var(--record-view-header-font);
-      }
+
       [footer] {
         display: flex;
         text-align: right;
@@ -36,6 +21,7 @@ export class RecordView extends LitElement {
         box-shadow: var(--context-toolbar-shadow-line);
         height: var(--record-view-footer-height);
       }
+
       [footer] button {
         flex: 1;
         background-color: transparent;
@@ -46,14 +32,17 @@ export class RecordView extends LitElement {
         font-size: 17px;
         line-height: 3;
       }
+
       [footer] button * {
         vertical-align: middle;
       }
+
       [footer] button mwc-icon {
         margin-top: -3px;
         margin-right: 5px;
         font-size: var(--record-view-footer-iconbutton-size);
       }
+
       [footer] button[ok] {
         background-color: var(--record-view-footer-focus-background);
       }
@@ -64,24 +53,13 @@ export class RecordView extends LitElement {
     return {
       columns: Array,
       record: Object,
-      rowIndex: Number,
-      translator: Object
+      rowIndex: Number
     }
   }
 
   render() {
     return html`
-      <div header>
-        <mwc-icon>arrow_back</mwc-icon>
-        <h1>grist view</h1>
-      </div>
-      <record-view-body
-        .columns=${this.columns}
-        .record=${this.record}
-        .rowIndex=${this.rowIndex}
-        .translator=${this.translator}
-      >
-      </record-view-body>
+      <record-view-body .columns=${this.columns} .record=${this.record} .rowIndex=${this.rowIndex}> </record-view-body>
       <div footer>
         <button><mwc-icon>refresh</mwc-icon>Reset</button>
         <button><mwc-icon>clear</mwc-icon>Cancel</button>
