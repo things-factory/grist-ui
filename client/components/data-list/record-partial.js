@@ -118,7 +118,8 @@ export class RecordPartial extends LitElement {
     this.shadowRoot.addEventListener('long-press', e => {
       var popup = openPopup(this.recordView, {
         backdrop: true,
-        size: 'large'
+        size: 'large',
+        title: this.record['name']
       })
 
       popup.onclosed = () => {

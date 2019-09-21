@@ -20,7 +20,8 @@ export const RecordViewHandler = function(columns, data, column, record, rowInde
     `,
     {
       backdrop: true,
-      size: 'large'
+      size: 'large',
+      title: record['name']
     }
   )
 }
