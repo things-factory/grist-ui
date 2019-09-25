@@ -1,5 +1,6 @@
 import {
   TextInput,
+  PasswordInput,
   NumberInput,
   Select,
   CheckboxInput,
@@ -11,6 +12,7 @@ import {
 
 var EDITORS = {
   string: TextInput,
+  password: PasswordInput,
   integer: NumberInput,
   float: NumberInput,
   progress: NumberInput,

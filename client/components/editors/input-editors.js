@@ -174,6 +174,15 @@ export class NumberInput extends InputEditor {
 }
 customElements.define('number-input', NumberInput)
 
+export class PasswordInput extends InputEditor {
+  get editorTemplate() {
+    return html`
+      <input type="password" .value=${this.value} />
+    `
+  }
+}
+customElements.define('password-input', PasswordInput)
+
 export class DateInput extends InputEditor {
   get editorTemplate() {
     return html`

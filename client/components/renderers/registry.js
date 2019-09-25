@@ -1,5 +1,6 @@
 import { BooleanRenderer } from './boolean-renderer'
 import { TextRenderer } from './text-renderer'
+import { PasswordRenderer } from './password-renderer'
 import { DateRenderer } from './date-renderer'
 import { ColorRenderer } from './color-renderer'
 import { ProgressRenderer } from './progress-render'
@@ -7,6 +8,7 @@ import { LinkRenderer } from './link-renderer'
 
 var RENDERERS = {
   string: TextRenderer,
+  password: PasswordRenderer,
   integer: TextRenderer,
   float: TextRenderer,
   number: TextRenderer,
