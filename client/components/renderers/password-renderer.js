@@ -1,3 +1,5 @@
 export const PasswordRenderer = (value, column, record, rowIndex, field) => {
-  return '********'
+  return Array(String(value).length)
+    .fill('*')
+    .join('')
 }
