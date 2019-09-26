@@ -2,7 +2,11 @@ import isEqual from 'lodash/isEqual'
 import isEmpty from 'lodash/isEmpty'
 
 function _calculateTotalPage(limit, total) {
-  return Math.ceil(total / limit)
+  /*
+   * total page는 1이상이어야 한다.
+   * 즉, 레코드가 하나도 없어도, 페이지 갯수는 1이 되어야 한다.
+   */
+  return Math.max(1, Math.ceil(total / limit))
 }
 
 const NOOP = function() {}
