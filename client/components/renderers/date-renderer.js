@@ -12,7 +12,7 @@ const OPTIONS = {
 
 export const DateRenderer = (value, column, record, rowIndex, field) => {
   value = Number(value)
-  if (isNaN(value)) {
+  if (value === null || isNaN(Number(value))) {
     return ''
   }
 
