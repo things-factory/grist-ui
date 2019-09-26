@@ -38,12 +38,12 @@ class DataGristProgressRenderer extends LitElement {
 
   render() {
     var { value, min, max } = this
-    var progress = isNaN(value) ? 0 : Math.min(100, Math.max(0, ((value - min) * 100) / (max - min)))
+    var progress = isNaN(Number(value)) ? 0 : Math.min(100, Math.max(0, ((Number(value) - min) * 100) / (max - min)))
 
     return html`
       <div id="border"></div>
       <div id="bar" style="width:${progress}%">
-        &nbsp;${isNaN(progress) ? '' : progress}
+        &nbsp;${progress}
       </div>
     `
   }
