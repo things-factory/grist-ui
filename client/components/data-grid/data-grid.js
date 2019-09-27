@@ -102,6 +102,13 @@ class DataGrid extends LitElement {
         return
       }
 
+      var validation = column.validation
+      if (validation && typeof (validation == 'function')) {
+        if (!validation.call(this, after, before, record, column)) {
+          return
+        }
+      }
+
       // TODO 오브젝트나 배열 타입인 경우 deepCompare 후에 변경 적용 여부를 결정한다.
 
       /* 빈 그리드로 시작한 경우, data 설정이 되어있지 않을 수 있다. */
