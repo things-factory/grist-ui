@@ -8,12 +8,14 @@ import { LinkRenderer } from './link-renderer'
 
 var RENDERERS = {
   string: TextRenderer,
+  text: TextRenderer,
   password: PasswordRenderer,
   integer: TextRenderer,
   float: TextRenderer,
   number: TextRenderer,
   select: TextRenderer,
   boolean: BooleanRenderer,
+  checkbox: BooleanRenderer,
   date: DateRenderer,
   time: DateRenderer,
   datetime: DateRenderer,

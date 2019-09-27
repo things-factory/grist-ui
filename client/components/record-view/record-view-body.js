@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit-element'
+import '@material/mwc-icon'
 
 import '../data-grid/data-grid-field'
 
