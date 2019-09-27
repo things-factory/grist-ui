@@ -1,13 +1,12 @@
 import { html } from 'lit-html'
 
 export const BooleanRenderer = (value, column, record, rowIndex, field) => {
-  var disabled = record.editable
   return html`
     <input
       type="checkbox"
       .checked=${!!value}
       center
-      ?disabled=${record.editable}
+      ?disabled=${!column.record.editable}
       @click=${e => {
         /*
          * 특별하게, checkbox인 경우에, editor가 활성화되지 않아도, renderer에서 값을 변경할 수 있게 함.
