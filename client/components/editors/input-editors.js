@@ -167,8 +167,10 @@ export class NumberInput extends InputEditor {
   }
 
   get editorTemplate() {
+    var { min = -Infinity, max = Infinity } = this.column.record.options || {}
+
     return html`
-      <input type="number" .value=${this.value} />
+      <input type="number" .value=${this.value} .min=${Number(min)} .max=${Number(max)} />
     `
   }
 }
