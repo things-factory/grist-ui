@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit-element'
 import '@material/mwc-fab'
+import '@material/mwc-icon'
 import './record-partial'
 
 import { dataListClickHandler } from './event-handlers/data-list-click-handler'

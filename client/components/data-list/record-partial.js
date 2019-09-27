@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit-element'
 import { longpressable } from '@things-factory/shell'
 import { openPopup } from '@things-factory/layout-base'
+import '@material/mwc-icon'
 
 import './data-list-gutter'
 import '../record-view'

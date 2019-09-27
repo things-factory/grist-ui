@@ -1,5 +1,6 @@
 import {
   TextInput,
+  PasswordInput,
   NumberInput,
   Select,
   CheckboxInput,
@@ -11,15 +12,20 @@ import {
 
 var EDITORS = {
   string: TextInput,
+  text: TextInput,
+  password: PasswordInput,
   integer: NumberInput,
   float: NumberInput,
-  progress: NumberInput,
+  number: NumberInput,
   select: Select,
   boolean: CheckboxInput,
+  checkbox: CheckboxInput,
   date: DateInput,
   time: TimeInput,
   datetime: DateTimeInput,
-  color: ColorInput
+  color: ColorInput,
+  progress: NumberInput,
+  link: TextInput
 }
 
 export function registerEditor(type, editor) {

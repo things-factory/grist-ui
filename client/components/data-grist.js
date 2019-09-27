@@ -107,7 +107,8 @@ export class DataGrist extends LitElement {
     }
 
     if (this.dataProvider) {
-      let { limit = 20, page = 1, infinite } = this._config.pagination
+      let { limit: initLimit, page: initPage, infinite } = this._config.pagination
+      let { limit = initLimit || DEFAULT_DATA.limit, page = initPage || DEFAULT_DATA.page } = this.dataProvider
       let { sorters } = this._config
 
       if (infinite || this.mode !== 'GRID') {

@@ -16,44 +16,34 @@ export const buildColumn = column => {
 
   if (typeof header == 'string') {
     compiled.header = {
-      renderer: () => header,
-      translation: !(column.type == 'gutter')
+      renderer: () => header
     }
   } else {
-    /* gutter type인 경우는 translation default 설정이 false 가 된다. */
-    var { renderer: headerRenderer, translation = !(column.type == 'gutter') } = header
+    var { renderer: headerRenderer } = header
 
     compiled.header = {
       ...header,
-      renderer: getRenderer(headerRenderer),
-      translation
+      renderer: getRenderer(headerRenderer)
     }
   }
 
   /*
    * record
-   *
-   * record 경우는 translation default 설정이 false 가 된다.
    */
-  var { renderer: recordRenderer, editor, editable, translation = false } = record
+  var { renderer: recordRenderer, editor, editable } = record
 
   if (!recordRenderer) {
     recordRenderer = getRenderer(column.type)
   }
 
   if (editable && typeof editor !== 'function') {
-    if (!editor) {
-      editor = getEditor(column.type)
-    } else {
-      editor = getEditor(editor)
-    }
+    editor = getEditor(column.type)
   }
 
   compiled.record = {
     ...record,
     renderer: recordRenderer,
-    editor,
-    translation
+    editor
   }
 
   /* handler */

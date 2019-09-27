@@ -79,9 +79,9 @@ class DataGridFooter extends LitElement {
     var { records = [], page = 1, limit = DEFAULT_LIMIT, total = 0 } = this.data || {}
     var { pages = DEFAULT_PAGES } = (this.config && this.config.pagination) || {}
 
-    var begin = limit * (page - 1) + 1
-    var end = begin + records.length - 1
-    var totalPage = Math.ceil(total / limit)
+    var begin = records.length == 0 ? 0 : limit * (page - 1) + 1
+    var end = records.length == 0 ? 0 : begin + records.length - 1
+    var totalPage = Math.max(1, Math.ceil(total / limit))
 
     return html`
       <a ?inactive=${page <= 1} @click=${e => this._gotoPage(1)}><mwc-icon>skip_previous</mwc-icon></a>
