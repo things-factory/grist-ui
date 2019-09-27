@@ -137,7 +137,7 @@ export class RecordViewBody extends LitElement {
   }
 
   _renderLabel(column) {
-    var { renderer, translation } = column.header
+    var { renderer } = column.header
     var title = renderer.call(this, column)
 
     return html`
