@@ -37,5 +37,5 @@ export function getRenderer(type) {
     return type
   }
 
-  return RENDERERS[type] || TextRenderer
+  return RENDERERS[type || 'text'] || TextRenderer
 }

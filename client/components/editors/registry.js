@@ -42,7 +42,7 @@ export function getEditor(type) {
   }
 
   return function(value, column, record, rowIndex, field) {
-    var clazz = EDITORS[type] || TextInput
+    var clazz = EDITORS[type || 'text'] || TextInput
 
     var element = new clazz()
 
