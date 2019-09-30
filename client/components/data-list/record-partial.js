@@ -64,7 +64,6 @@ export class RecordPartial extends LitElement {
         .name {
           font: var(--data-list-item-name-font);
           color: var(--data-list-item-name-color);
-          text-transform: capitalize;
         }
 
         .desc {

@@ -22,6 +22,7 @@ export class RecordViewBody extends LitElement {
 
       label {
         position: relative;
+        text-transform: capitalize;
 
         padding: var(--record-view-item-padding);
         border-bottom: var(--record-view-border-bottom);
