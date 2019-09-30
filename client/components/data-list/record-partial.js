@@ -112,13 +112,45 @@ export class RecordPartial extends LitElement {
 
   firstUpdated() {
     /* long-press */
-    longpressable(this.shadowRoot.querySelector('[content]'))
+    // longpressable(this.shadowRoot.querySelector('[content]'))
 
-    this.shadowRoot.addEventListener('long-press', e => {
+    // this.shadowRoot.addEventListener('long-press', e => {
+    this.shadowRoot.addEventListener('click', e => {
       var popup = openPopup(this.recordView, {
         backdrop: true,
         size: 'large',
         title: this.record['name']
+      })
+
+      this.recordView.addEventListener('reset', () => {
+        this.dispatchEvent(
+          new CustomEvent('record-reset', {
+            bubbles: true,
+            composed: true,
+            detail: {
+              record: this.record,
+              row: this.rowIndex
+            }
+          })
+        )
+      })
+
+      this.recordView.addEventListener('cancel', () => {
+        this.dispatchEvent(
+          new CustomEvent('record-reset', {
+            bubbles: true,
+            composed: true,
+            detail: {
+              record: this.record,
+              row: this.rowIndex
+            }
+          })
+        )
+        popup.close()
+      })
+
+      this.recordView.addEventListener('ok', () => {
+        popup.close()
       })
 
       popup.onclosed = () => {

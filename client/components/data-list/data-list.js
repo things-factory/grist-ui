@@ -110,51 +110,70 @@ class DataList extends LitElement {
         return
       }
 
-      // TODO 오브젝트나 배열 타입인 경우 deepCompare 후에 변경 적용 여부를 결정한다.
-
-      /* 빈 그리드로 시작한 경우, data 설정이 되어있지 않을 수 있다. */
-      var records = this.data.records || []
-
-      var beforeRecord = records[row]
-      var afterRecord = beforeRecord
-        ? {
-            __dirty__: 'M',
-            ...beforeRecord,
-            [column.name]: after
-          }
-        : {
-            __dirty__: '+',
-            [column.name]: after
-          }
-
-      if (beforeRecord) {
-        records.splice(row, 1, afterRecord)
-      } else {
-        records.push(afterRecord)
+      var validation = column.validation
+      if (validation && typeof (validation == 'function')) {
+        if (!validation.call(this, after, before, record, column)) {
+          return
+        }
       }
 
-      this.data = {
-        ...this.data,
-        records: [...records]
-      }
+      this.onRecordChanged({ [column.name]: after }, row, column)
+    })
 
-      this.dispatchEvent(
-        new CustomEvent('record-change', {
-          bubbles: true,
-          composed: true,
-          detail: {
-            before: beforeRecord,
-            after: afterRecord,
-            column,
-            row
-          }
-        })
-      )
+    /* record reset processing */
+    this.addEventListener('record-reset', e => {
+      console.log('record-reset', e.detail)
+      var { record, row } = e.detail
+
+      this.onRecordChanged(record['__origin__'], row, null)
     })
 
     this.shadowRoot.addEventListener('click', dataListClickHandler.bind(this))
 
     this.shadowRoot.addEventListener('dblclick', dataListDblclickHandler.bind(this))
+  }
+
+  onRecordChanged(recordData, row, column /* TODO column should be removed */) {
+    // TODO 오브젝트나 배열 타입인 경우 deepCompare 후에 변경 적용 여부를 결정한다.
+
+    /* 빈 그리드로 시작한 경우, data 설정이 되어있지 않을 수 있다. */
+    var records = this.data.records || []
+
+    var beforeRecord = records[row]
+    var afterRecord = beforeRecord
+      ? {
+          __dirty__: 'M',
+          ...beforeRecord,
+          ...recordData
+        }
+      : {
+          __dirty__: '+',
+          newRecord: recordData
+        }
+
+    if (beforeRecord) {
+      records.splice(row, 1, afterRecord)
+    } else {
+      records.push(afterRecord)
+    }
+
+    this.data = {
+      ...this.data,
+      records: [...records]
+    }
+
+    this.dispatchEvent(
+      new CustomEvent('record-change', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          before: beforeRecord,
+          after: afterRecord,
+          column,
+          row
+        }
+      })
+    )
   }
 
   updated(changes) {

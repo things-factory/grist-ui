@@ -146,23 +146,7 @@ export class DataGrist extends LitElement {
     }
 
     if (changes.has('data')) {
-      var { limit = DEFAULT_DATA.limit, page = DEFAULT_DATA.page, total = DEFAULT_DATA.total, records = [] } = this.data
-
-      /* 원본 데이타를 남기고, 복사본(_data)을 사용한다. */
-      records = records.map((record, idx) => {
-        return {
-          ...record,
-          __seq__: this.mode == 'GRID' ? (page - 1) * limit + idx + 1 : idx + 1,
-          __origin__: record
-        }
-      })
-
-      this._data = {
-        limit,
-        page,
-        total,
-        records
-      }
+      this.reset()
     }
 
     if (changes.has('selectedRecords')) {
@@ -237,6 +221,26 @@ export class DataGrist extends LitElement {
     /* update _data property intentionally */
     this._data = {
       ...this._data
+    }
+  }
+
+  reset() {
+    var { limit = DEFAULT_DATA.limit, page = DEFAULT_DATA.page, total = DEFAULT_DATA.total, records = [] } = this.data
+
+    /* 원본 데이타를 남기고, 복사본(_data)을 사용한다. */
+    records = records.map((record, idx) => {
+      return {
+        ...record,
+        __seq__: this.mode == 'GRID' ? (page - 1) * limit + idx + 1 : idx + 1,
+        __origin__: record
+      }
+    })
+
+    this._data = {
+      limit,
+      page,
+      total,
+      records
     }
   }
 }

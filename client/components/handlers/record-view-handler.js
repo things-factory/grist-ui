@@ -8,7 +8,7 @@ import '../record-view/record-view'
  */
 
 export const RecordViewHandler = function(columns, data, column, record, rowIndex, field) {
-  openPopup(
+  var popup = openPopup(
     html`
       <record-view
         .field=${field}
@@ -16,6 +16,28 @@ export const RecordViewHandler = function(columns, data, column, record, rowInde
         .column=${column}
         .record=${record}
         .rowIndex=${rowIndex}
+        @reset=${e => {
+          field.dispatchEvent(
+            new CustomEvent('record-reset', {
+              bubbles: true,
+              composed: true,
+              detail: record
+            })
+          )
+        }}
+        @cancel=${e => {
+          field.dispatchEvent(
+            new CustomEvent('record-reset', {
+              bubbles: true,
+              composed: true,
+              detail: record
+            })
+          )
+          popup.close()
+        }}
+        @ok=${e => {
+          popup.close()
+        }}
       ></record-view>
     `,
     {
