@@ -183,6 +183,10 @@ export class DataProvider {
     }
     // CONFIRM-ME 위 코드에 대한 설명이 필요함!!!.
 
+    // page와 limit이 없는 경우 records 검사 전에 초기화
+    this.page = this.page || page
+    this.limit = this.limit || limit
+
     if (!records) {
       return
     }
