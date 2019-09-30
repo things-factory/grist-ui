@@ -131,7 +131,7 @@ class DataGridBody extends LitElement {
   }
 
   shouldUpdate(changes) {
-    if (changes.has('columns') || changes.has('data') || changes.has('focused')) {
+    if (changes.has('columns') || changes.has('data')) {
       /*
        * 큰 변화에 대해서는 실제 update가 발생되기 전에 editTarget을 초기화한다.
        */
