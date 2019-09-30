@@ -169,7 +169,7 @@ export class RecordPartial extends LitElement {
     var record = this.record || {}
     var rowIndex = this.rowIndex
 
-    var gutters = (this.config.columns || []).filter(column => column.type == 'gutter')
+    var gutters = (this.config.columns || []).filter(column => column.type == 'gutter' && column.forList)
 
     return html`
       ${gutters.map(
