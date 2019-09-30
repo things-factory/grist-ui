@@ -144,7 +144,7 @@ class DataList extends LitElement {
         }
       : {
           __dirty__: '+',
-          newRecord: recordData
+          ...recordData
         }
 
     if (beforeRecord) {
