@@ -25,7 +25,6 @@ function calcScrollPos(parent, child) {
 class DataGridBody extends LitElement {
   static get properties() {
     return {
-      config: Object,
       columns: Array,
       data: Object,
       focused: Object,
@@ -135,17 +134,13 @@ class DataGridBody extends LitElement {
       /*
        * 큰 변화에 대해서는 실제 update가 발생되기 전에 editTarget을 초기화한다.
        */
-      this.editTarget = {}
+      this.editTarget = null
     }
 
     return super.shouldUpdate(changes)
   }
 
   updated(changes) {
-    if (changes.has('columns')) {
-      this.focused = null
-    }
-
     if (changes.has('focused')) {
       let element = this.shadowRoot.querySelector('[focused]')
       if (!element) {
