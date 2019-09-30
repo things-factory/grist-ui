@@ -87,10 +87,7 @@ class DataGrid extends LitElement {
         added.forEach(record => (record['__selected__'] = true))
       }
 
-      this.data = {
-        ...this.data,
-        records
-      }
+      this.requestUpdate()
     })
 
     /* field change processing */
@@ -142,11 +139,6 @@ class DataGrid extends LitElement {
       records.splice(row, 1, afterRecord)
     } else {
       records.push(afterRecord)
-    }
-
-    this.data = {
-      ...this.data,
-      records
     }
 
     this.dispatchEvent(

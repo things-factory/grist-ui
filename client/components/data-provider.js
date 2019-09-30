@@ -82,6 +82,8 @@ export class DataProvider {
         delete record['__dirty__']
       }
     }
+
+    this.grist.refresh()
   }
 
   onRecordChange(e) {
