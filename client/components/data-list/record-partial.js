@@ -113,9 +113,9 @@ export class RecordPartial extends LitElement {
   firstUpdated() {
     /* long-press */
     // longpressable(this.shadowRoot.querySelector('[content]'))
-
     // this.shadowRoot.addEventListener('long-press', e => {
-    this.shadowRoot.addEventListener('click', e => {
+
+    this.shadowRoot.querySelector('[content]').addEventListener('click', e => {
       var popup = openPopup(this.recordView, {
         backdrop: true,
         size: 'large',
