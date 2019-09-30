@@ -97,7 +97,7 @@ class DataList extends LitElement {
 
       this.data = {
         ...this.data,
-        records: [...records]
+        records
       }
     })
 
@@ -122,7 +122,6 @@ class DataList extends LitElement {
 
     /* record reset processing */
     this.addEventListener('record-reset', e => {
-      console.log('record-reset', e.detail)
       var { record, row } = e.detail
 
       this.onRecordChanged(record['__origin__'], row, null)
@@ -159,7 +158,7 @@ class DataList extends LitElement {
 
     this.data = {
       ...this.data,
-      records: [...records]
+      records
     }
 
     this.dispatchEvent(
@@ -215,7 +214,6 @@ class DataList extends LitElement {
         href="#"
         @click=${e => {
           // this.onCreateClick()
-          console.log('create new record...')
           e.preventDefault()
           e.stopPropagation()
         }}

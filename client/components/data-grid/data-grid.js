@@ -89,7 +89,7 @@ class DataGrid extends LitElement {
 
       this.data = {
         ...this.data,
-        records: [...records]
+        records
       }
     })
 
@@ -146,7 +146,7 @@ class DataGrid extends LitElement {
 
     this.data = {
       ...this.data,
-      records: [...records]
+      records
     }
 
     this.dispatchEvent(
