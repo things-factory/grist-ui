@@ -32,6 +32,9 @@ export class RecordPartial extends LitElement {
          * (이를 해주지 않으면, 리스트 refresh 경우에 selected-row checkbox가 클리어되지 않는 현상이 발생함.)
          */
         attribute: 'selected-row'
+      },
+      dirty: {
+        reflect: true
       }
     }
   }
@@ -46,7 +49,8 @@ export class RecordPartial extends LitElement {
           border-bottom: var(--data-list-item-border-bottom);
           position: relative;
         }
-        :host::before {
+
+        :host([dirty])::before {
           content: '';
           position: absolute;
           left: 0;
@@ -194,8 +198,26 @@ export class RecordPartial extends LitElement {
 
     var gutters = (this.config.columns || []).filter(column => column.type == 'gutter' && column.forList)
 
+    var dirtyIcon
+
+    switch (this.dirty) {
+      case 'M':
+        dirtyIcon = 'done'
+        break
+      case '+':
+        dirtyIcon = 'add'
+        break
+      case '-':
+        dirtyIcon = 'remove'
+        break
+    }
+
     return html`
-      <mwc-icon dirty>remove</mwc-icon>
+      ${dirtyIcon
+        ? html`
+            <mwc-icon dirty>${dirtyIcon}</mwc-icon>
+          `
+        : html``}
       ${gutters.map(
         gutter =>
           html`

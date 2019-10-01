@@ -192,6 +192,7 @@ class DataList extends LitElement {
             .record=${record}
             .rowIndex=${rowIndex}
             ?selected-row=${record['__selected__']}
+            .dirty=${record['__dirty__']}
           ></record-partial>
         `
       )}
