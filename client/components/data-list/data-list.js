@@ -184,6 +184,11 @@ class DataList extends LitElement {
   render() {
     var records = this._records || []
 
+    /* 이 경우는 새로운 레코드를 생성할 때, 가상의 빈 레코드를 추가해주는 작업이다. */
+    if (this._wannaCreateNewRecord) {
+      records = [...records, { __dirty__: '+' }]
+    }
+
     return html`
       ${records.map(
         (record, rowIndex) => html`
@@ -206,7 +211,8 @@ class DataList extends LitElement {
         id="create"
         href="#"
         @click=${e => {
-          // this.onCreateClick()
+          this.createNewRecord()
+
           e.preventDefault()
           e.stopPropagation()
         }}
@@ -220,6 +226,19 @@ class DataList extends LitElement {
     this.scrollTop = 0
 
     e.stopPropagation()
+  }
+
+  async createNewRecord() {
+    this._wannaCreateNewRecord = true
+
+    await this.requestUpdate()
+
+    var newRecord = this.shadowRoot.querySelector('record-partial:last-of-type')
+    if (newRecord) {
+      newRecord.popupRecordView()
+    }
+
+    this._wannaCreateNewRecord = false
   }
 }
 

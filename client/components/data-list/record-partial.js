@@ -144,46 +144,7 @@ export class RecordPartial extends LitElement {
     // this.shadowRoot.addEventListener('long-press', e => {
 
     this.shadowRoot.querySelector('[content]').addEventListener('click', e => {
-      var popup = openPopup(this.recordView, {
-        backdrop: true,
-        size: 'large',
-        title: this.record['name']
-      })
-
-      this.recordView.addEventListener('reset', () => {
-        this.dispatchEvent(
-          new CustomEvent('record-reset', {
-            bubbles: true,
-            composed: true,
-            detail: {
-              record: this.record,
-              row: this.rowIndex
-            }
-          })
-        )
-      })
-
-      this.recordView.addEventListener('cancel', () => {
-        this.dispatchEvent(
-          new CustomEvent('record-reset', {
-            bubbles: true,
-            composed: true,
-            detail: {
-              record: this.record,
-              row: this.rowIndex
-            }
-          })
-        )
-        popup.close()
-      })
-
-      this.recordView.addEventListener('ok', () => {
-        popup.close()
-      })
-
-      popup.onclosed = () => {
-        delete this._recordView
-      }
+      this.popupRecordView()
     })
   }
 
@@ -246,6 +207,49 @@ export class RecordPartial extends LitElement {
           : ``}
       </div>
     `
+  }
+
+  popupRecordView() {
+    var popup = openPopup(this.recordView, {
+      backdrop: true,
+      size: 'large',
+      title: this.record['name']
+    })
+
+    this.recordView.addEventListener('reset', () => {
+      this.dispatchEvent(
+        new CustomEvent('record-reset', {
+          bubbles: true,
+          composed: true,
+          detail: {
+            record: this.record,
+            row: this.rowIndex
+          }
+        })
+      )
+    })
+
+    this.recordView.addEventListener('cancel', () => {
+      this.dispatchEvent(
+        new CustomEvent('record-reset', {
+          bubbles: true,
+          composed: true,
+          detail: {
+            record: this.record,
+            row: this.rowIndex
+          }
+        })
+      )
+      popup.close()
+    })
+
+    this.recordView.addEventListener('ok', () => {
+      popup.close()
+    })
+
+    popup.onclosed = () => {
+      delete this._recordView
+    }
   }
 }
 

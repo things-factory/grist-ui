@@ -4,6 +4,7 @@ import { buildConfig } from './configure/config-builder'
 
 import './data-grid/data-grid'
 import './data-list/data-list'
+import './spinner'
 
 import { DataProvider } from './data-provider'
 
@@ -59,7 +60,8 @@ export class DataGrist extends LitElement {
       fetchOptions: Object,
       editHandler: Object,
       _data: Object,
-      _config: Object
+      _config: Object,
+      showSpinner: Boolean
     }
   }
 
@@ -94,6 +96,7 @@ export class DataGrist extends LitElement {
         : html`
             <data-list id="grist" .config=${this._config} .data=${this._data}> </data-list>
           `}
+      <hatio-spinner></hatio-spinner>
     `
   }
 
@@ -185,6 +188,14 @@ export class DataGrist extends LitElement {
   get selected() {
     var { records = [] } = this.grist.data || {}
     return records.filter(record => record['__selected__'])
+  }
+
+  showSpinner() {
+    this.showSpinner = true
+  }
+
+  hideSpinner() {
+    this.showSpinner = false
   }
 
   focus() {
