@@ -4,7 +4,7 @@ import { buildConfig } from './configure/config-builder'
 
 import './data-grid/data-grid'
 import './data-list/data-list'
-import './spinner'
+import './grist-spinner'
 
 import { DataProvider } from './data-provider'
 
@@ -15,10 +15,6 @@ const DEFAULT_DATA = {
   limit: 20,
   total: 1,
   records: []
-}
-
-const DEFAULT_TRANSLATOR = function(x) {
-  return x
 }
 
 export class DataGrist extends LitElement {
@@ -46,6 +42,18 @@ export class DataGrist extends LitElement {
         data-list {
           overflow-y: auto;
         }
+
+        grist-spinner {
+          display: none;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+        }
+
+        grist-spinner[show] {
+          display: block;
+        }
       `
     ]
   }
@@ -61,7 +69,7 @@ export class DataGrist extends LitElement {
       editHandler: Object,
       _data: Object,
       _config: Object,
-      showSpinner: Boolean
+      _showSpinner: Boolean
     }
   }
 
@@ -78,13 +86,16 @@ export class DataGrist extends LitElement {
   }
 
   firstUpdated() {
-    pulltorefresh({
-      container: this.shadowRoot,
-      scrollable: this.grist,
-      refresh: () => {
-        return this.fetch(true)
-      }
-    })
+    if (this.fetchHandler) {
+      /* TODO 그리드 초기에는 fetchHandler가 설정되지 않았다가, 나중에 설정되는 경우에 대한 대응 */
+      pulltorefresh({
+        container: this.shadowRoot,
+        scrollable: this.grist,
+        refresh: () => {
+          return this.fetch(true)
+        }
+      })
+    }
   }
 
   render() {
@@ -96,7 +107,7 @@ export class DataGrist extends LitElement {
         : html`
             <data-list id="grist" .config=${this._config} .data=${this._data}> </data-list>
           `}
-      <hatio-spinner></hatio-spinner>
+      <grist-spinner ?show=${this._showSpinner}></grist-spinner>
     `
   }
 
@@ -191,11 +202,11 @@ export class DataGrist extends LitElement {
   }
 
   showSpinner() {
-    this.showSpinner = true
+    this._showSpinner = true
   }
 
   hideSpinner() {
-    this.showSpinner = false
+    this._showSpinner = false
   }
 
   focus() {
@@ -229,6 +240,7 @@ export class DataGrist extends LitElement {
   }
 
   refresh() {
+    /* FIXME - this.requestUpdate()로 대체 */
     /* update _data property intentionally */
     this._data = {
       ...this._data

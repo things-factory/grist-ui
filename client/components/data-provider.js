@@ -103,11 +103,23 @@ export class DataProvider {
   }
 
   get fetchHandler() {
-    return this._fetchHandler || NOOP
+    if (!this._fetchHandlerWrap) {
+      this._fetchHandlerWrap = async (...args) => {
+        try {
+          this.grist.showSpinner()
+          return await (this._fetchHandler || NOOP)(...args)
+        } finally {
+          this.grist.hideSpinner()
+        }
+      }
+    }
+
+    return this._fetchHandlerWrap
   }
 
   set fetchHandler(fetchHandler) {
     this._fetchHandler = fetchHandler
+    delete this._fetchHandlerWrap
   }
 
   get editHandler() {

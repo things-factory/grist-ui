@@ -1,17 +1,12 @@
 import { LitElement, html, css } from 'lit-element'
 
 import spinner from '../../assets/images/spinner.png'
+const BACKGROUND = `url(${spinner}) 0 0 no-repeat`
 
 export class Spinner extends LitElement {
   static get styles() {
     return css`
       :host {
-        display: none;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-
         width: 70px;
         height: 70px;
         margin: 0 auto;
@@ -32,15 +27,7 @@ export class Spinner extends LitElement {
   }
 
   connectedCallback() {
-    this.style.setProperty('--background', `url(${spinner}) 0 0 no-repeat`)
-
-    document.addEventListener('show-spinner', e => {
-      this.style.display = 'block'
-    })
-
-    document.addEventListener('hide-spinner', e => {
-      this.style.display = 'none'
-    })
+    this.style.setProperty('--background', BACKGROUND)
   }
 
   render() {
@@ -48,4 +35,4 @@ export class Spinner extends LitElement {
   }
 }
 
-customElements.define('hatio-spinner', Spinner)
+customElements.define('grist-spinner', Spinner)

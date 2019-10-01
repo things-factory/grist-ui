@@ -25,6 +25,7 @@ function calcScrollPos(parent, child) {
 class DataGridBody extends LitElement {
   static get properties() {
     return {
+      config: Object,
       columns: Array,
       data: Object,
       focused: Object,

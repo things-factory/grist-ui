@@ -19,7 +19,7 @@ export async function dataGridBodyKeydownHandler(e) {
   var keyCode = e.keyCode
   var { row = 0, column = 0 } = this.focused || {}
   var { records = [] } = this.data || {}
-  var maxrow = records.length
+  var maxrow = this.config.rows.appendable ? records.length : records.length - 1
   var maxcolumn = (this.columns || []).filter(column => !column.hidden).length - 1
 
   if (this.editTarget) {

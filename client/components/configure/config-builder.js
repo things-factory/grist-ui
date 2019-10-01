@@ -1,14 +1,19 @@
-import './column-builder'
 import { buildColumn } from './column-builder'
-import { buildRows } from './rows-builder'
+import { buildRowsOptions } from './rows-option-builder'
+import { buildListOptions } from './list-option-builder'
+import { buildGridOptions } from './grid-option-builder'
+import { buildRecordViewOptions } from './record-view-option-builder'
 
 export const buildConfig = config => {
-  var { columns = [], rows = {}, pagination = {} } = config
+  var { columns = [], rows = {}, pagination = {}, list = {}, grid = {}, recordView = {} } = config
 
   return {
     ...config,
     columns: columns.map(column => buildColumn(column)),
-    rows: buildRows(rows),
-    pagination
+    rows: buildRowsOptions(rows),
+    pagination,
+    list: buildListOptions(list),
+    grid: buildGridOptions(grid),
+    recordView: buildRecordViewOptions(recordView)
   }
 }

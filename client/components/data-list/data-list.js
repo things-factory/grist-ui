@@ -217,7 +217,11 @@ class DataList extends LitElement {
           e.stopPropagation()
         }}
       >
-        <mwc-fab mini icon="add" title="create"></mwc-fab>
+        ${this.config.rows.appendable
+          ? html`
+              <mwc-fab mini icon="add" title="create"></mwc-fab>
+            `
+          : html``}
       </a>
     `
   }
