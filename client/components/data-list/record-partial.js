@@ -44,11 +44,34 @@ export class RecordPartial extends LitElement {
           flex-direction: row;
           align-items: center;
           border-bottom: var(--data-list-item-border-bottom);
+          position: relative;
+        }
+        :host::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 0;
+
+          width: 0px;
+          height: 0px;
+          border-top: var(--grid-record-dirty-border-top);
+          border-right: var(--grid-record-dirty-border-left);
         }
 
         :host > * {
           margin: var(--data-list-item-margin);
           zoom: 1.4;
+        }
+
+        :host [dirty] {
+          position: absolute;
+          margin: 0;
+          height: 20px;
+          font: var(--grid-record-dirty-icon-font);
+          text-indent: 1px;
+          left: 0;
+          top: 0;
+          color: #fff;
         }
 
         [content] {
@@ -172,6 +195,7 @@ export class RecordPartial extends LitElement {
     var gutters = (this.config.columns || []).filter(column => column.type == 'gutter' && column.forList)
 
     return html`
+      <mwc-icon dirty>remove</mwc-icon>
       ${gutters.map(
         gutter =>
           html`
