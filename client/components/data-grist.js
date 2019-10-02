@@ -120,7 +120,7 @@ export class DataGrist extends LitElement {
       <grist-spinner ?show=${this._showSpinner}></grist-spinner>
       ${oops
         ? html`
-            <oops-note icon="list" title="EMPTY" description="AHHAHAHAHA"></oops-note>
+            <oops-note icon="list" title="EMPTY LIST" description="There are no records to be shown"></oops-note>
           `
         : html``}
     `

@@ -1,7 +1,9 @@
 import { LitElement, html, css } from 'lit-element'
-import { longpressable } from '@things-factory/shell'
+// import { longpressable } from '@things-factory/shell'
 import { openPopup } from '@things-factory/layout-base'
 import '@material/mwc-icon'
+
+import { recordPartialClickHandler } from './event-handlers/record-partial-click-handler'
 
 import './data-list-gutter'
 import '../record-view'
@@ -143,9 +145,11 @@ export class RecordPartial extends LitElement {
     // longpressable(this.shadowRoot.querySelector('[content]'))
     // this.shadowRoot.addEventListener('long-press', e => {
 
-    this.shadowRoot.querySelector('[content]').addEventListener('click', e => {
-      this.popupRecordView()
-    })
+    this.shadowRoot.addEventListener('click', recordPartialClickHandler.bind(this))
+
+    // this.shadowRoot.querySelector('[content]').addEventListener('click', e => {
+    //   this.popupRecordView()
+    // })
   }
 
   updated(changes) {
