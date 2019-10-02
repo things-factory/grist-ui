@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit-element'
+import '@material/mwc-icon'
 
 import './record-view-body'
 
@@ -61,11 +62,35 @@ export class RecordView extends LitElement {
     return html`
       <record-view-body .columns=${this.columns} .record=${this.record} .rowIndex=${this.rowIndex}> </record-view-body>
       <div footer>
-        <button><mwc-icon>refresh</mwc-icon>Reset</button>
-        <button><mwc-icon>clear</mwc-icon>Cancel</button>
-        <button ok><mwc-icon>radio_button_unchecked</mwc-icon>OK</button>
+        <button @click=${this.onReset.bind(this)}><mwc-icon>refresh</mwc-icon>Reset</button>
+        <button @click=${this.onCancel.bind(this)}><mwc-icon>clear</mwc-icon>Cancel</button>
+        <button @click=${this.onOK.bind(this)} ok><mwc-icon>radio_button_unchecked</mwc-icon>OK</button>
       </div>
     `
+  }
+
+  onReset() {
+    this.dispatchEvent(
+      new CustomEvent('reset', {
+        detail: this.record
+      })
+    )
+  }
+
+  onCancel() {
+    this.dispatchEvent(
+      new CustomEvent('cancel', {
+        detail: this.record
+      })
+    )
+  }
+
+  onOK() {
+    this.dispatchEvent(
+      new CustomEvent('ok', {
+        detail: this.record
+      })
+    )
   }
 }
 

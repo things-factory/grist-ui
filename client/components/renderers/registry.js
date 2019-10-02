@@ -3,17 +3,23 @@ import { TextRenderer } from './text-renderer'
 import { PasswordRenderer } from './password-renderer'
 import { DateRenderer } from './date-renderer'
 import { ColorRenderer } from './color-renderer'
-import { ProgressRenderer } from './progress-render'
+import { ProgressRenderer } from './progress-renderer'
 import { LinkRenderer } from './link-renderer'
 
 var RENDERERS = {
   string: TextRenderer,
+  text: TextRenderer,
+  email: TextRenderer,
+  tel: TextRenderer,
   password: PasswordRenderer,
   integer: TextRenderer,
   float: TextRenderer,
   number: TextRenderer,
   select: TextRenderer,
   boolean: BooleanRenderer,
+  checkbox: BooleanRenderer,
+  month: TextRenderer,
+  week: TextRenderer,
   date: DateRenderer,
   time: DateRenderer,
   datetime: DateRenderer,
@@ -35,5 +41,5 @@ export function getRenderer(type) {
     return type
   }
 
-  return RENDERERS[type] || TextRenderer
+  return RENDERERS[type || 'text'] || TextRenderer
 }

@@ -87,10 +87,7 @@ class DataGrid extends LitElement {
         added.forEach(record => (record['__selected__'] = true))
       }
 
-      this.data = {
-        ...this.data,
-        records: [...records]
-      }
+      this.requestUpdate()
     })
 
     /* field change processing */
@@ -102,47 +99,60 @@ class DataGrid extends LitElement {
         return
       }
 
-      // TODO 오브젝트나 배열 타입인 경우 deepCompare 후에 변경 적용 여부를 결정한다.
-
-      /* 빈 그리드로 시작한 경우, data 설정이 되어있지 않을 수 있다. */
-      var records = this.data.records || []
-
-      var beforeRecord = records[row]
-      var afterRecord = beforeRecord
-        ? {
-            __dirty__: 'M',
-            ...beforeRecord,
-            [column.name]: after
-          }
-        : {
-            __dirty__: '+',
-            [column.name]: after
-          }
-
-      if (beforeRecord) {
-        records.splice(row, 1, afterRecord)
-      } else {
-        records.push(afterRecord)
+      var validation = column.validation
+      if (validation && typeof (validation == 'function')) {
+        if (!validation.call(this, after, before, record, column)) {
+          return
+        }
       }
 
-      this.data = {
-        ...this.data,
-        records: [...records]
-      }
-
-      this.dispatchEvent(
-        new CustomEvent('record-change', {
-          bubbles: true,
-          composed: true,
-          detail: {
-            before: beforeRecord,
-            after: afterRecord,
-            column,
-            row
-          }
-        })
-      )
+      this.onRecordChanged({ [column.name]: after }, row, column)
     })
+
+    /* record reset processing */
+    this.addEventListener('record-reset', e => {
+      var { record, row } = e.detail
+
+      this.onRecordChanged(record['__origin__'], row, null)
+    })
+  }
+
+  onRecordChanged(recordData, row, column /* TODO column should be removed */) {
+    // TODO 오브젝트나 배열 타입인 경우 deepCompare 후에 변경 적용 여부를 결정한다.
+
+    /* 빈 그리드로 시작한 경우, data 설정이 되어있지 않을 수 있다. */
+    var records = this.data.records || []
+
+    var beforeRecord = records[row]
+    var afterRecord = beforeRecord
+      ? {
+          __dirty__: 'M',
+          ...beforeRecord,
+          ...recordData
+        }
+      : {
+          __dirty__: '+',
+          ...recordData
+        }
+
+    if (beforeRecord) {
+      records.splice(row, 1, afterRecord)
+    } else {
+      records.push(afterRecord)
+    }
+
+    this.dispatchEvent(
+      new CustomEvent('record-change', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          before: beforeRecord,
+          after: afterRecord,
+          column,
+          row
+        }
+      })
+    )
   }
 
   updated(changes) {

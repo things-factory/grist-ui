@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit-element'
+import '@material/mwc-icon'
 
 import '../data-grid/data-grid-field'
 
@@ -21,6 +22,7 @@ export class RecordViewBody extends LitElement {
 
       label {
         position: relative;
+        text-transform: capitalize;
 
         padding: var(--record-view-item-padding);
         border-bottom: var(--record-view-border-bottom);
@@ -136,7 +138,7 @@ export class RecordViewBody extends LitElement {
   }
 
   _renderLabel(column) {
-    var { renderer, translation } = column.header
+    var { renderer } = column.header
     var title = renderer.call(this, column)
 
     return html`

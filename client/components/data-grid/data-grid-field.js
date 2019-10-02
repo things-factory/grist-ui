@@ -53,6 +53,7 @@ class DataGridField extends LitElement {
         * {
           flex: 1;
           margin: 0;
+          text-align: var(--data-grid-field-text-align);
         }
 
         *[center] {
@@ -120,6 +121,7 @@ class DataGridField extends LitElement {
             break
         }
         this.style.setProperty('--data-grid-field-justify-content', justify)
+        this.style.setProperty('--data-grid-field-text-align', align)
       }
     }
   }

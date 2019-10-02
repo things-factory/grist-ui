@@ -7,12 +7,12 @@ const OPTIONS = {
 }
 
 export const DateRenderer = (value, column, record, rowIndex, field) => {
-  if (value === null) {
+  if (!value) {
     return ''
   }
 
   var options = column.record.options || OPTIONS
   var formatter = new Intl.DateTimeFormat(navigator.language, options)
 
-  return formatter.format(new Date(value))
+  return formatter.format(new Date(Number(value)))
 }

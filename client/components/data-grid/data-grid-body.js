@@ -130,17 +130,19 @@ class DataGridBody extends LitElement {
     }
   }
 
-  updated(changes) {
-    if (changes.has('columns')) {
-      this.focused = null
+  shouldUpdate(changes) {
+    if (!changes.has('editTarget')) {
+      /*
+       * 큰 변화에 대해서는 실제 update가 발생되기 전에 editTarget을 초기화한다.
+       */
+      this.editTarget = null
     }
 
-    if (changes.has('focused')) {
-      // var { row, column } = this.focused
-      // if(row == this.records.length + 1) {
-      //   this.records
-      // }
+    return super.shouldUpdate(changes)
+  }
 
+  updated(changes) {
+    if (changes.has('focused')) {
       let element = this.shadowRoot.querySelector('[focused]')
       if (!element) {
         return

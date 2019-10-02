@@ -116,7 +116,7 @@ class DataGridHeader extends LitElement {
   }
 
   _renderHeader(column) {
-    var { renderer, translation } = column.header
+    var { renderer } = column.header
     var title = renderer.call(this, column)
 
     return html`
@@ -140,18 +140,18 @@ class DataGridHeader extends LitElement {
       var rank = sorters.indexOf(sorter) + 1
       return sorter.desc
         ? html`
-            &#9650;<sub>${rank}</sub>
+            &#9660;<sub>${rank}</sub>
           `
         : html`
-            &#9660;<sub>${rank}</sub>
+            &#9650;<sub>${rank}</sub>
           `
     } else {
       return sorter.desc
         ? html`
-            &#9650;
+            &#9660;
           `
         : html`
-            &#9660;
+            &#9650;
           `
     }
   }

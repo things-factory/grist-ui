@@ -1,9 +1,13 @@
 import {
   TextInput,
+  EmailInput,
+  TelInput,
   PasswordInput,
   NumberInput,
   Select,
   CheckboxInput,
+  MonthInput,
+  WeekInput,
   DateInput,
   TimeInput,
   DateTimeInput,
@@ -12,16 +16,24 @@ import {
 
 var EDITORS = {
   string: TextInput,
+  text: TextInput,
+  email: EmailInput,
+  tel: TelInput,
   password: PasswordInput,
   integer: NumberInput,
   float: NumberInput,
-  progress: NumberInput,
+  number: NumberInput,
   select: Select,
   boolean: CheckboxInput,
+  checkbox: CheckboxInput,
+  month: MonthInput,
+  week: WeekInput,
   date: DateInput,
   time: TimeInput,
   datetime: DateTimeInput,
-  color: ColorInput
+  color: ColorInput,
+  progress: NumberInput,
+  link: TextInput
 }
 
 export function registerEditor(type, editor) {
@@ -38,7 +50,7 @@ export function getEditor(type) {
   }
 
   return function(value, column, record, rowIndex, field) {
-    var clazz = EDITORS[type] || TextInput
+    var clazz = EDITORS[type || 'text'] || TextInput
 
     var element = new clazz()
 

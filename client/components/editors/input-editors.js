@@ -152,6 +152,24 @@ export class TextInput extends InputEditor {
 }
 customElements.define('text-input', TextInput)
 
+export class EmailInput extends InputEditor {
+  get editorTemplate() {
+    return html`
+      <input type="email" .value=${this.value} />
+    `
+  }
+}
+customElements.define('email-input', EmailInput)
+
+export class TelInput extends InputEditor {
+  get editorTemplate() {
+    return html`
+      <input type="tel" .value=${this.value} />
+    `
+  }
+}
+customElements.define('tel-input', TelInput)
+
 export class NumberInput extends InputEditor {
   formatFromEditor(e) {
     let value = e.target.value
@@ -167,8 +185,10 @@ export class NumberInput extends InputEditor {
   }
 
   get editorTemplate() {
+    var { min = -Infinity, max = Infinity } = this.column.record.options || {}
+
     return html`
-      <input type="number" .value=${this.value} />
+      <input type="number" .value=${this.value} .min=${Number(min)} .max=${Number(max)} />
     `
   }
 }
@@ -191,6 +211,24 @@ export class DateInput extends InputEditor {
   }
 }
 customElements.define('date-input', DateInput)
+
+export class MonthInput extends InputEditor {
+  get editorTemplate() {
+    return html`
+      <input type="month" .value=${this.value} />
+    `
+  }
+}
+customElements.define('month-input', MonthInput)
+
+export class WeekInput extends InputEditor {
+  get editorTemplate() {
+    return html`
+      <input type="week" .value=${this.value} />
+    `
+  }
+}
+customElements.define('week-input', WeekInput)
 
 export class TimeInput extends InputEditor {
   get editorTemplate() {

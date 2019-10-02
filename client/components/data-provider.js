@@ -82,6 +82,8 @@ export class DataProvider {
         delete record['__dirty__']
       }
     }
+
+    this.grist.refresh()
   }
 
   onRecordChange(e) {
@@ -101,11 +103,23 @@ export class DataProvider {
   }
 
   get fetchHandler() {
-    return this._fetchHandler || NOOP
+    if (!this._fetchHandlerWrap) {
+      this._fetchHandlerWrap = async (...args) => {
+        try {
+          this.grist.showSpinner()
+          return await (this._fetchHandler || NOOP)(...args)
+        } finally {
+          this.grist.hideSpinner()
+        }
+      }
+    }
+
+    return this._fetchHandlerWrap
   }
 
   set fetchHandler(fetchHandler) {
     this._fetchHandler = fetchHandler
+    delete this._fetchHandlerWrap
   }
 
   get editHandler() {
@@ -182,6 +196,10 @@ export class DataProvider {
       return await this.fetch({ page: maxpage, limit })
     }
     // CONFIRM-ME 위 코드에 대한 설명이 필요함!!!.
+
+    // page와 limit이 없는 경우 records 검사 전에 초기화
+    this.page = this.page || page
+    this.limit = this.limit || limit
 
     if (!records) {
       return

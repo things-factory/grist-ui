@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit-element'
 import { longpressable } from '@things-factory/shell'
 import { openPopup } from '@things-factory/layout-base'
+import '@material/mwc-icon'
 
 import './data-list-gutter'
 import '../record-view'
@@ -43,11 +44,35 @@ export class RecordPartial extends LitElement {
           flex-direction: row;
           align-items: center;
           border-bottom: var(--data-list-item-border-bottom);
+          position: relative;
+        }
+
+        :host([dirty])::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 0;
+
+          width: 0px;
+          height: 0px;
+          border-top: var(--grid-record-dirty-border-top);
+          border-right: var(--grid-record-dirty-border-left);
         }
 
         :host > * {
           margin: var(--data-list-item-margin);
           zoom: 1.4;
+        }
+
+        :host [dirty] {
+          position: absolute;
+          margin: 0;
+          height: 20px;
+          font: var(--grid-record-dirty-icon-font);
+          text-indent: 1px;
+          left: 0;
+          top: 0;
+          color: #fff;
         }
 
         [content] {
@@ -63,7 +88,6 @@ export class RecordPartial extends LitElement {
         .name {
           font: var(--data-list-item-name-font);
           color: var(--data-list-item-name-color);
-          text-transform: capitalize;
         }
 
         .desc {
@@ -82,6 +106,10 @@ export class RecordPartial extends LitElement {
         }
       `
     ]
+  }
+
+  attributeChangedCallback(name, oldval, newval) {
+    super.attributeChangedCallback(name, oldval, newval)
   }
 
   onFieldChange(e) {
@@ -112,18 +140,11 @@ export class RecordPartial extends LitElement {
 
   firstUpdated() {
     /* long-press */
-    longpressable(this.shadowRoot.querySelector('[content]'))
+    // longpressable(this.shadowRoot.querySelector('[content]'))
+    // this.shadowRoot.addEventListener('long-press', e => {
 
-    this.shadowRoot.addEventListener('long-press', e => {
-      var popup = openPopup(this.recordView, {
-        backdrop: true,
-        size: 'large',
-        title: this.record['name']
-      })
-
-      popup.onclosed = () => {
-        delete this._recordView
-      }
+    this.shadowRoot.querySelector('[content]').addEventListener('click', e => {
+      this.popupRecordView()
     })
   }
 
@@ -137,9 +158,30 @@ export class RecordPartial extends LitElement {
     var record = this.record || {}
     var rowIndex = this.rowIndex
 
-    var gutters = (this.config.columns || []).filter(column => column.type == 'gutter')
+    var gutters = (this.config.columns || []).filter(column => column.type == 'gutter' && column.forList)
+
+    if (this.hasAttribute('dirty')) {
+      var dirtyIcon
+
+      switch (this.record['__dirty__']) {
+        case 'M':
+          dirtyIcon = 'done'
+          break
+        case '+':
+          dirtyIcon = 'add'
+          break
+        case '-':
+          dirtyIcon = 'remove'
+          break
+      }
+    }
 
     return html`
+      ${dirtyIcon
+        ? html`
+            <mwc-icon dirty>${dirtyIcon}</mwc-icon>
+          `
+        : html``}
       ${gutters.map(
         gutter =>
           html`
@@ -165,6 +207,49 @@ export class RecordPartial extends LitElement {
           : ``}
       </div>
     `
+  }
+
+  popupRecordView() {
+    var popup = openPopup(this.recordView, {
+      backdrop: true,
+      size: 'large',
+      title: this.record['name']
+    })
+
+    this.recordView.addEventListener('reset', () => {
+      this.dispatchEvent(
+        new CustomEvent('record-reset', {
+          bubbles: true,
+          composed: true,
+          detail: {
+            record: this.record,
+            row: this.rowIndex
+          }
+        })
+      )
+    })
+
+    this.recordView.addEventListener('cancel', () => {
+      this.dispatchEvent(
+        new CustomEvent('record-reset', {
+          bubbles: true,
+          composed: true,
+          detail: {
+            record: this.record,
+            row: this.rowIndex
+          }
+        })
+      )
+      popup.close()
+    })
+
+    this.recordView.addEventListener('ok', () => {
+      popup.close()
+    })
+
+    popup.onclosed = () => {
+      delete this._recordView
+    }
   }
 }
 

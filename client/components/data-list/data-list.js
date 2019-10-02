@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit-element'
 import '@material/mwc-fab'
+import '@material/mwc-icon'
 import './record-partial'
 
 import { dataListClickHandler } from './event-handlers/data-list-click-handler'
@@ -94,10 +95,7 @@ class DataList extends LitElement {
         added.forEach(record => (record['__selected__'] = true))
       }
 
-      this.data = {
-        ...this.data,
-        records: [...records]
-      }
+      this.requestUpdate()
     })
 
     /* field change processing */
@@ -109,51 +107,64 @@ class DataList extends LitElement {
         return
       }
 
-      // TODO 오브젝트나 배열 타입인 경우 deepCompare 후에 변경 적용 여부를 결정한다.
-
-      /* 빈 그리드로 시작한 경우, data 설정이 되어있지 않을 수 있다. */
-      var records = this.data.records || []
-
-      var beforeRecord = records[row]
-      var afterRecord = beforeRecord
-        ? {
-            __dirty__: 'M',
-            ...beforeRecord,
-            [column.name]: after
-          }
-        : {
-            __dirty__: '+',
-            [column.name]: after
-          }
-
-      if (beforeRecord) {
-        records.splice(row, 1, afterRecord)
-      } else {
-        records.push(afterRecord)
+      var validation = column.validation
+      if (validation && typeof (validation == 'function')) {
+        if (!validation.call(this, after, before, record, column)) {
+          return
+        }
       }
 
-      this.data = {
-        ...this.data,
-        records: [...records]
-      }
+      this.onRecordChanged({ [column.name]: after }, row, column)
+    })
 
-      this.dispatchEvent(
-        new CustomEvent('record-change', {
-          bubbles: true,
-          composed: true,
-          detail: {
-            before: beforeRecord,
-            after: afterRecord,
-            column,
-            row
-          }
-        })
-      )
+    /* record reset processing */
+    this.addEventListener('record-reset', e => {
+      var { record, row } = e.detail
+
+      this.onRecordChanged(record['__origin__'], row, null)
     })
 
     this.shadowRoot.addEventListener('click', dataListClickHandler.bind(this))
 
     this.shadowRoot.addEventListener('dblclick', dataListDblclickHandler.bind(this))
+  }
+
+  onRecordChanged(recordData, row, column /* TODO column should be removed */) {
+    // TODO 오브젝트나 배열 타입인 경우 deepCompare 후에 변경 적용 여부를 결정한다.
+
+    /* 빈 그리드로 시작한 경우, data 설정이 되어있지 않을 수 있다. */
+    var records = this.data.records || []
+
+    var beforeRecord = records[row]
+    var afterRecord = beforeRecord
+      ? {
+          __dirty__: 'M',
+          ...beforeRecord,
+          ...recordData
+        }
+      : {
+          __dirty__: '+',
+          ...recordData
+        }
+
+    if (beforeRecord) {
+      records.splice(row, 1, afterRecord)
+    } else {
+      records.push(afterRecord)
+    }
+
+    this.dispatchEvent(
+      new CustomEvent('record-change', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          before: beforeRecord,
+          after: afterRecord,
+          column,
+          row
+        }
+      })
+    )
   }
 
   updated(changes) {
@@ -173,6 +184,11 @@ class DataList extends LitElement {
   render() {
     var records = this._records || []
 
+    /* 이 경우는 새로운 레코드를 생성할 때, 가상의 빈 레코드를 추가해주는 작업이다. */
+    if (this._wannaCreateNewRecord) {
+      records = [...records, { __dirty__: '+' }]
+    }
+
     return html`
       ${records.map(
         (record, rowIndex) => html`
@@ -181,6 +197,7 @@ class DataList extends LitElement {
             .record=${record}
             .rowIndex=${rowIndex}
             ?selected-row=${record['__selected__']}
+            ?dirty=${record['__dirty__']}
           ></record-partial>
         `
       )}
@@ -194,13 +211,17 @@ class DataList extends LitElement {
         id="create"
         href="#"
         @click=${e => {
-          // this.onCreateClick()
-          console.log('create new record...')
+          this.createNewRecord()
+
           e.preventDefault()
           e.stopPropagation()
         }}
       >
-        <mwc-fab mini icon="add" title="create"></mwc-fab>
+        ${this.config.rows.appendable
+          ? html`
+              <mwc-fab mini icon="add" title="create"></mwc-fab>
+            `
+          : html``}
       </a>
     `
   }
@@ -209,6 +230,19 @@ class DataList extends LitElement {
     this.scrollTop = 0
 
     e.stopPropagation()
+  }
+
+  async createNewRecord() {
+    this._wannaCreateNewRecord = true
+
+    await this.requestUpdate()
+
+    var newRecord = this.shadowRoot.querySelector('record-partial:last-of-type')
+    if (newRecord) {
+      newRecord.popupRecordView()
+    }
+
+    this._wannaCreateNewRecord = false
   }
 }
 
