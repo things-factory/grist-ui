@@ -110,6 +110,11 @@ export class DataGrist extends LitElement {
     var oops = !this._showSpinner && (!this._data || !this._data.records || this._data.records.length == 0)
 
     return html`
+      ${oops
+        ? html`
+            <oops-note icon="list" title="EMPTY LIST" description="There are no records to be shown"></oops-note>
+          `
+        : html``}
       ${this.mode == 'GRID'
         ? html`
             <data-grid id="grist" .config=${this._config} .data=${this._data}> </data-grid>
@@ -118,11 +123,6 @@ export class DataGrist extends LitElement {
             <data-list id="grist" .config=${this._config} .data=${this._data}> </data-list>
           `}
       <grist-spinner ?show=${this._showSpinner}></grist-spinner>
-      ${oops
-        ? html`
-            <oops-note icon="list" title="EMPTY LIST" description="There are no records to be shown"></oops-note>
-          `
-        : html``}
     `
   }
 
