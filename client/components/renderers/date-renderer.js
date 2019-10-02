@@ -2,17 +2,12 @@
 const OPTIONS = {
   year: 'numeric',
   month: 'numeric',
-  day: 'numeric',
-  hour: 'numeric',
-  minute: 'numeric',
-  second: 'numeric',
-  hour12: false
+  day: 'numeric'
   // timeZone: 'America/Los_Angeles'
 }
 
 export const DateRenderer = (value, column, record, rowIndex, field) => {
-  value = Number(value)
-  if (value === null || isNaN(Number(value))) {
+  if (value === null) {
     return ''
   }
 
