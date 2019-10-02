@@ -10,7 +10,7 @@ export function recordPartialClickHandler(e) {
   var target = e.target
   var { column, record, rowIndex, columnIndex } = target
 
-  if (column) {
+  if (column && column.type == 'gutter') {
     /* Gutter가 클릭된 경우 */
     /* do column click handler */
     var { click } = column.handlers

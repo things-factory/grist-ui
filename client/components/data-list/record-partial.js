@@ -6,6 +6,7 @@ import '@material/mwc-icon'
 import { recordPartialClickHandler } from './event-handlers/record-partial-click-handler'
 
 import './data-list-gutter'
+import './data-list-field'
 import '../record-view'
 
 // TODO 로케일 설정에 따라서 포맷이 바뀌도록 해야한다.
@@ -83,16 +84,18 @@ export class RecordPartial extends LitElement {
           zoom: 1;
         }
 
-        [content] div {
+        data-list-field {
           padding-top: 3px;
+          font: var(--data-list-item-etc-font);
+          color: var(--data-list-item-etc-color);
         }
 
-        .name {
+        data-list-field[name] {
           font: var(--data-list-item-name-font);
           color: var(--data-list-item-name-color);
         }
 
-        .desc {
+        data-list-field[desc] {
           font: var(--data-list-item-disc-font);
           color: var(--data-list-item-disc-color);
         }
@@ -161,8 +164,11 @@ export class RecordPartial extends LitElement {
   render() {
     var record = this.record || {}
     var rowIndex = this.rowIndex
+    var { columns, list } = this.config
+    var { fields } = list
 
-    var gutters = (this.config.columns || []).filter(column => column.type == 'gutter' && column.forList)
+    var displayColumns = fields.map(field => columns.find(column => column.name == field))
+    var gutters = (columns || []).filter(column => column.type == 'gutter' && column.forList)
 
     if (this.hasAttribute('dirty')) {
       var dirtyIcon
@@ -199,16 +205,19 @@ export class RecordPartial extends LitElement {
       )}
 
       <div content>
-        <div class="name">${record.name}</div>
-        <div class="desc">${record.description}</div>
-        ${record.updatedAt
-          ? html`
-              <div class="update-info">
-                <mwc-icon>access_time</mwc-icon> Updated At : ${formatter.format(new Date(Number(record.updatedAt)))} /
-                ${record.updaterId}
-              </div>
+        ${displayColumns.map(
+          (column, idx) =>
+            html`
+              <data-list-field
+                .rowIndex=${rowIndex}
+                .column=${column}
+                .record=${record}
+                .value=${record[column.name]}
+                ?name=${idx == 0}
+                ?desc=${idx == 1}
+              ></data-list-field>
             `
-          : ``}
+        )}
       </div>
     `
   }
