@@ -8,7 +8,7 @@ import './grist-spinner'
 
 import { DataProvider } from './data-provider'
 
-import { pulltorefresh } from '@things-factory/shell'
+import { pulltorefresh, OopsNote } from '@things-factory/shell'
 
 const DEFAULT_DATA = {
   page: 1,
@@ -53,6 +53,14 @@ export class DataGrist extends LitElement {
 
         grist-spinner[show] {
           display: block;
+        }
+
+        oops-note {
+          display: block;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
         }
       `
     ]
@@ -99,6 +107,8 @@ export class DataGrist extends LitElement {
   }
 
   render() {
+    var oops = !this._showSpinner && (!this._data || !this._data.records || this._data.records.length == 0)
+
     return html`
       ${this.mode == 'GRID'
         ? html`
@@ -108,6 +118,11 @@ export class DataGrist extends LitElement {
             <data-list id="grist" .config=${this._config} .data=${this._data}> </data-list>
           `}
       <grist-spinner ?show=${this._showSpinner}></grist-spinner>
+      ${oops
+        ? html`
+            <oops-note icon="list" title="EMPTY" description="AHHAHAHAHA"></oops-note>
+          `
+        : html``}
     `
   }
 
