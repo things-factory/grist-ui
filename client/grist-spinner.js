@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit-element'
 
-import spinner from '../../assets/images/spinner.png'
+import spinner from '../assets/images/spinner.png'
 const BACKGROUND = `url(${spinner}) 0 0 no-repeat`
 
 export class Spinner extends LitElement {

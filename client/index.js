@@ -1,7 +1,7 @@
-export * from './components/data-grist'
+export * from './data-grist'
 
-export * from './components/editors'
-export * from './components/renderers'
-export * from './components/handlers'
-export * from './components/formatters'
-export * from './components/gutters'
+export * from './editors'
+export * from './renderers'
+export * from './handlers'
+export * from './formatters'
+export * from './gutters'
