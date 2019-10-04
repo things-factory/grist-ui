@@ -27,6 +27,7 @@ export class DataGrist extends LitElement {
           box-sizing: border-box;
           background-color: var(--grist-background-color);
           padding: var(--grist-padding);
+          min-height: 120px;
 
           overflow: hidden;
 
