@@ -4,11 +4,10 @@ import { buildConfig } from './configure/config-builder'
 
 import './data-grid/data-grid'
 import './data-list/data-list'
-import './grist-spinner'
 
 import { DataProvider } from './data-provider'
 
-import { pulltorefresh, OopsNote } from '@things-factory/shell'
+import { pulltorefresh } from '@things-factory/shell'
 
 const DEFAULT_DATA = {
   page: 1,
@@ -44,7 +43,7 @@ export class DataGrist extends LitElement {
           overflow-y: auto;
         }
 
-        grist-spinner {
+        oops-spinner {
           display: none;
           position: absolute;
           left: 50%;
@@ -52,7 +51,7 @@ export class DataGrist extends LitElement {
           transform: translate(-50%, -50%);
         }
 
-        grist-spinner[show] {
+        oops-spinner[show] {
           display: block;
         }
 
@@ -123,7 +122,7 @@ export class DataGrist extends LitElement {
         : html`
             <data-list id="grist" .config=${this._config} .data=${this._data}> </data-list>
           `}
-      <grist-spinner ?show=${this._showSpinner}></grist-spinner>
+      <oops-spinner ?show=${this._showSpinner}></oops-spinner>
     `
   }
 
