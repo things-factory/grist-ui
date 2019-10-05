@@ -127,6 +127,12 @@ export class DataGrist extends LitElement {
   }
 
   async fetch(reset = true) {
+    if (!this._config) {
+      /* avoid to be here */
+      console.warn('grid is not configured yet.')
+      return
+    }
+
     if (reset) {
       /*
        * scroll 의 현재위치에 의해서 scroll 이벤트가 발생할 수 있으므로, 이를 방지하기 위해서 스크롤의 위치를 TOP으로 옮긴다.
