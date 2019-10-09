@@ -4,6 +4,7 @@ import { openPopup } from '@things-factory/layout-base'
 import '@material/mwc-icon'
 
 import { recordPartialClickHandler } from './event-handlers/record-partial-click-handler'
+// import { recordPartialLongPressHandler } from './event-handlers/record-partial-long-press-handler'
 
 import './data-list-gutter'
 import './data-list-field'
@@ -48,6 +49,7 @@ export class RecordPartial extends LitElement {
           align-items: center;
           border-bottom: var(--data-list-item-border-bottom);
           position: relative;
+          min-height: 42px;
         }
 
         :host([dirty])::before {
@@ -144,15 +146,14 @@ export class RecordPartial extends LitElement {
   }
 
   firstUpdated() {
-    /* long-press */
+    /* 
+      long-press 
+      TODO. performance를 확인한 후에 활성화하자.
+    */
     // longpressable(this.shadowRoot.querySelector('[content]'))
-    // this.shadowRoot.addEventListener('long-press', e => {
 
+    // this.shadowRoot.addEventListener('long-press', recordPartialLongPressHandler.bind(this))
     this.shadowRoot.addEventListener('click', recordPartialClickHandler.bind(this))
-
-    // this.shadowRoot.querySelector('[content]').addEventListener('click', e => {
-    //   this.popupRecordView()
-    // })
   }
 
   updated(changes) {

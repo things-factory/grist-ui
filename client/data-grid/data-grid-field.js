@@ -32,6 +32,8 @@ class DataGridField extends LitElement {
 
           font-size: var(--grid-record-wide-fontsize);
           text-overflow: ellipsis;
+
+          min-height: 19px;
         }
 
         :host([editing]) {
