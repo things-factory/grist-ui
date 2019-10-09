@@ -11,7 +11,7 @@ export async function dataListDblclickHandler(e) {
   var { record, rowIndex } = target
 
   /* do rows dblclick handler */
-  var { click: rowsDblclick } = this.config.rows.handlers
-  var columns = this.config.columns
-  rowsDblclick && rowsDblclick(columns, this.data, null /* column */, record, rowIndex, target)
+  // var { click: rowsDblclick } = this.config.rows.handlers
+  // var columns = this.config.columns
+  // rowsDblclick && rowsDblclick(columns, this.data, null /* column */, record, rowIndex, target)
 }

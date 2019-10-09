@@ -124,21 +124,64 @@ class DataGrid extends LitElement {
     var records = this.data.records || []
 
     var beforeRecord = records[row]
-    var afterRecord = beforeRecord
-      ? {
-          __dirty__: 'M',
-          ...beforeRecord,
-          ...recordData
+    var afterRecord
+    var wantToDelete = false
+    var wantToAppend = false
+
+    if (!recordData) {
+      if (!beforeRecord) {
+        /* recordData가 없고, beforeRecord도 없다면, 레코드 생성 중에 리셋된 경우이므로 아무것도 하지 않는다. */
+        this.requestUpdate()
+        return
+      } else {
+        /*
+         * beforeRecord가 있는데, 빈데이타로 업데이트하고자 한다면,
+         * 삭제하고자 하는 의도로 이해된다. (주의 필요)
+         */
+        if (beforeRecord['__dirty__'] == '+') {
+          wantToDelete = true
+        } else {
+          afterRecord = {
+            ...beforeRecord,
+            __dirty__: '-'
+          }
         }
-      : {
-          __dirty__: '+',
-          ...recordData
+      }
+    } else {
+      if (!beforeRecord) {
+        /* 기존 레코드가 없는 경우에는 새로운 레코드가 생성된다 */
+        afterRecord = {
+          ...recordData,
+          __dirty__: '+'
         }
 
-    if (beforeRecord) {
-      records.splice(row, 1, afterRecord)
-    } else {
+        wantToAppend = true
+      } else {
+        let beforeDirty = beforeRecord['__dirty__']
+        if (beforeDirty == '+') {
+          /* 기존에 새로 생성된 레코드가 있었으며 계속 수정중이다. */
+          afterRecord = {
+            ...beforeRecord,
+            ...recordData,
+            __dirty__: '+'
+          }
+        } else {
+          /* 기존에 레코드가 있었으며 계속 수정중이다. */
+          afterRecord = {
+            ...beforeRecord,
+            ...recordData,
+            __dirty__: 'M'
+          }
+        }
+      }
+    }
+
+    if (wantToAppend) {
       records.push(afterRecord)
+    } else if (wantToDelete) {
+      records.splice(row, 1)
+    } else {
+      records.splice(row, 1, afterRecord)
     }
 
     this.dispatchEvent(

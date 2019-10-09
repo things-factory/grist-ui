@@ -11,7 +11,7 @@ export function dataListClickHandler(e) {
   var { record, rowIndex } = target
 
   /* do rows click handler */
-  var { click: rowsClick } = this.config.rows.handlers
-  var columns = this.config.columns
-  rowsClick && rowsClick(columns, this.data, null /* column */, record, rowIndex, target)
+  // var { click: rowsClick } = this.config.rows.handlers
+  // var columns = this.config.columns
+  // rowsClick && rowsClick(columns, this.data, null /* column */, record, rowIndex, target)
 }

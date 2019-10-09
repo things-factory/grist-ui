@@ -45,8 +45,12 @@ class DataGridBody extends LitElement {
     var data = this.data || {}
     var { records = [] } = data
 
-    /* 이 경우는 맨 아래 레코드보다 아래로 내려왔을 때, 가상의 빈 레코드를 추가해주는 작업이다. */
-    if (focusedRow == records.length) {
+    /*
+     * 레코드를 추가할 수 있는 경우에는 항상 추가 레코드를 보여준다.
+     * 만약, 이전 방식처럼, 커서를 옮겨야만 새로운 레코드가 보이게 하고 싶다면, 조건부를 다음의 코드로 대체한다.
+     * -- if (focusedRow == records.length)
+     */
+    if (this.config.rows.appendable) {
       records = [...records, { __dirty__: '+' }]
     }
 
