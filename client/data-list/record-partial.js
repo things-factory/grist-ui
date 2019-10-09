@@ -50,6 +50,7 @@ export class RecordPartial extends LitElement {
           align-items: center;
           border-bottom: var(--data-list-item-border-bottom);
           position: relative;
+          min-height: 42px;
         }
 
         :host([dirty])::before {
