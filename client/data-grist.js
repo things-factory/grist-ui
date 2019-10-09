@@ -217,6 +217,51 @@ export class DataGrist extends LitElement {
     return records.filter(record => record['__dirty__'])
   }
 
+  exportPatchList({ flagName = 'patchFlag', addedFlag = '+', deletedFlag = '-', modifiedFlag = 'M', idField = 'id' }) {
+    let dirtyRecords = this.dirtyRecords
+    if (!dirtyRecords || dirtyRecords.length == 0) {
+      return []
+    }
+
+    return dirtyRecords.map(record => {
+      let flag = record.__dirty__
+
+      let patch = {
+        [flagName]: flag == 'M' ? modifiedFlag : flag == '+' ? addedFlag : deletedFlag
+      }
+
+      if (idField in record && record[idField]) {
+        patch[idField] = record[idField]
+      }
+
+      for (let key in record.__dirtyfields__) {
+        patch[key] = record[key]
+      }
+      return patch
+    })
+  }
+
+  exportRecords({ ifSelectedOnly = true, includeHiddenField = true } = {}) {
+    let records = ifSelectedOnly ? this.selected : this.data.records
+
+    if (ifSelectedOnly && (!records || records.length == 0)) {
+      records = this.data.records
+    }
+
+    let columns = this._config.columns.filter(column => column.type !== 'gutter')
+    if (!includeHiddenField) {
+      columns = columns.filter(column => !column.hidden)
+    }
+    let columnNames = columns.map(column => column.name)
+
+    return records.map(item => {
+      return columnNames.reduce((record, name) => {
+        record[name] = item[name]
+        return record
+      }, {})
+    })
+  }
+
   get selected() {
     var { records = [] } = this.grist.data || {}
     return records.filter(record => record['__selected__'])
