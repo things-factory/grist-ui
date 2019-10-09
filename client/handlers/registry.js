@@ -2,8 +2,6 @@ import { RecordViewHandler } from './record-view-handler'
 import { SelectRow } from './select-row'
 import { SelectRowToggle } from './select-row-toggle'
 
-const NOOP = () => {}
-
 var HANDLERS = {
   'record-view': RecordViewHandler,
   'select-row': SelectRow,
@@ -23,5 +21,5 @@ export function getHandler(type) {
     return type
   }
 
-  return HANDLERS[type] || NOOP
+  return HANDLERS[type]
 }

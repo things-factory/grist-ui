@@ -18,7 +18,12 @@ export function recordPartialClickHandler(e) {
 
     return
   } else {
-    /* content 가 클릭된 경우 - 레코드뷰 팝업을 실행한다. */
-    this.popupRecordView()
+    var { click: rowsClick } = this.config.rows.handlers
+    if (rowsClick) {
+      rowsClick(this.columns, this.data, column, record, rowIndex, target)
+    } else {
+      /* content 가 클릭된 경우 - 레코드뷰 팝업을 실행한다. */
+      this.popupRecordView()
+    }
   }
 }
