@@ -3,9 +3,10 @@ import { buildRowsOptions } from './rows-option-builder'
 import { buildListOptions } from './list-option-builder'
 import { buildGridOptions } from './grid-option-builder'
 import { buildRecordViewOptions } from './record-view-option-builder'
+import { buildImexOptions } from './imex-option-builder'
 
 export const buildConfig = config => {
-  var { columns = [], rows = {}, pagination = {}, list = {}, grid = {}, recordView = {} } = config
+  var { columns = [], rows = {}, pagination = {}, list = {}, grid = {}, recordView = {}, imex = {} } = config
 
   return {
     ...config,
@@ -14,6 +15,7 @@ export const buildConfig = config => {
     pagination,
     list: buildListOptions(list),
     grid: buildGridOptions(grid),
-    recordView: buildRecordViewOptions(recordView)
+    recordView: buildRecordViewOptions(recordView),
+    imex: buildImexOptions(imex)
   }
 }
