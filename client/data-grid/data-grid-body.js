@@ -50,7 +50,7 @@ class DataGridBody extends LitElement {
      * 만약, 이전 방식처럼, 커서를 옮겨야만 새로운 레코드가 보이게 하고 싶다면, 조건부를 다음의 코드로 대체한다.
      * -- if (focusedRow == records.length)
      */
-    if (this.config.rows.appendable) {
+    if (this.config && this.config.rows.appendable) {
       records = [...records, { __dirty__: '+' }]
     }
 
