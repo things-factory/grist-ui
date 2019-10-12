@@ -10,7 +10,7 @@ export const buildColumn = column => {
     compiled = generateGutterColumn(column)
   }
 
-  var { header = {}, record = {}, handlers = {} } = compiled
+  var { header = {}, record = {}, handlers = {}, width = 0 } = compiled
 
   /* header */
 

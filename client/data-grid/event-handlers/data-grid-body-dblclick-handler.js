@@ -30,6 +30,6 @@ export async function dataGridBodyDblclickHandler(e) {
   dblclick && dblclick(this.columns, this.data, column, record, rowIndex, target)
 
   /* do rows dblclick handler */
-  var { click: rowsDblclick } = this.config.rows.handlers
+  var { dblclick: rowsDblclick } = this.config.rows.handlers
   rowsDblclick && rowsDblclick(this.columns, this.data, column, record, rowIndex, target)
 }
