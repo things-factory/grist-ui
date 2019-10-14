@@ -14,7 +14,7 @@ export class GutterSequence {
             var lastIndex = 100
           }
 
-          return `${String(lastIndex).length}ch`
+          return `${Math.max(String(lastIndex).length, 2)}ch`
         },
         resizable: false,
         sortable: false,
