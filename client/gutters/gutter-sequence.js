@@ -8,12 +8,13 @@ export class GutterSequence {
         getterType: 'sequence',
         width: function(column) {
           if (this.data) {
-            var { limit = 0, page = 1, total = 0, records = [] } = this.data || {}
+            var { limit = 0, page = 1, records = [] } = this.data || {}
             var lastIndex = (page - 1) * limit + records.length
           } else {
             var lastIndex = 100
           }
-          return `${Math.max(20, String(lastIndex).length * 11)}px`
+
+          return `${String(lastIndex).length}ch`
         },
         resizable: false,
         sortable: false,
