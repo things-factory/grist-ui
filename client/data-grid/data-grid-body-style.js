@@ -30,4 +30,10 @@ export const dataGridBodyStyle = css`
   :host > [editing] {
     background-color: var(--grid-record-editor-background-color, transparent);
   }
+
+  @media print {
+    :host {
+      grid-template-columns: var(--grid-template-print-columns);
+    }
+  }
 `

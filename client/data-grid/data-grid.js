@@ -33,6 +33,12 @@ class DataGrid extends LitElement {
         data-grid-body {
           flex: 1;
         }
+
+        @media print {
+          :host {
+            zoom: 80%;
+          }
+        }
       `
     ]
   }
@@ -230,6 +236,7 @@ class DataGrid extends LitElement {
       .join(' ')
 
     this.style.setProperty('--grid-template-columns', this._widths)
+    this.style.setProperty('--grid-template-print-columns', this._widths.replace(/px/gi, 'fr'))
   }
 
   render() {
