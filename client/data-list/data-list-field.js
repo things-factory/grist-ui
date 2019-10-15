@@ -44,6 +44,12 @@ class DataListField extends LitElement {
         input[type='radio'] {
           zoom: var(--grist-input-zoom);
         }
+
+        @media only screen and (max-width: 460px) {
+          *[center] {
+            margin: initial;
+          }
+        }
       `
     ]
   }
