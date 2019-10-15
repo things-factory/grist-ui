@@ -227,6 +227,7 @@ class DataList extends LitElement {
         (record, rowIndex) => html`
           <record-partial
             .config=${this.config}
+            .data=${this.data}
             .record=${record}
             .rowIndex=${rowIndex}
             ?selected-row=${record['__selected__']}

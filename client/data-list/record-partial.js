@@ -29,6 +29,7 @@ export class RecordPartial extends LitElement {
   static get properties() {
     return {
       config: Object,
+      data: Object,
       record: Object,
       rowIndex: Number,
       selectedRow: {
