@@ -227,10 +227,19 @@ export class RecordPartial extends LitElement {
   }
 
   popupRecordView() {
+    var titleField = this.config.list.fields[0] || 'name'
+    var title = this.record[titleField]
+
+    /* field가 오브젝트형인 경우에는 렌더러를 타이틀로 사용한다. */
+    if (typeof title == 'object') {
+      var column = this.config.columns.find(column => column.name == titleField)
+      title = column.record.renderer(title, column, this.record, this.rowIndex, this /* cautious */)
+    }
+
     var popup = openPopup(this.recordView, {
       backdrop: true,
       size: 'large',
-      title: this.record[this.config.list.fields[0] || 'name']
+      title
     })
 
     this.recordView.addEventListener('reset', () => {
