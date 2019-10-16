@@ -171,7 +171,7 @@ export class RecordPartial extends LitElement {
     var { columns, list } = this.config
     var { fields } = list
 
-    var displayColumns = fields.map(field => columns.find(column => column.name == field))
+    var displayColumns = fields.map(field => columns.find(column => column.name == field)).filter(column => column)
     var gutters = (columns || []).filter(column => column.type == 'gutter' && column.forList)
 
     if (this.hasAttribute('dirty')) {
