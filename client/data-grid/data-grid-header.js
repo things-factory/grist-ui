@@ -63,6 +63,12 @@ class DataGridHeader extends LitElement {
         span[splitter] {
           cursor: col-resize;
         }
+
+        @media print {
+          :host {
+            grid-template-columns: var(--grid-template-print-columns);
+          }
+        }
       `
     ]
   }
