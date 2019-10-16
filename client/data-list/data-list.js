@@ -218,7 +218,7 @@ class DataList extends LitElement {
   render() {
     var records = this._records || []
 
-    if (this.config.rows.appendable) {
+    if (this.config && this.config.rows.appendable) {
       records = [...records, { __dirty__: '+' }]
     }
 

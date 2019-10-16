@@ -230,7 +230,7 @@ export class RecordPartial extends LitElement {
     var popup = openPopup(this.recordView, {
       backdrop: true,
       size: 'large',
-      title: this.record['name']
+      title: this.record[this.config.list.fields[0] || 'name']
     })
 
     this.recordView.addEventListener('reset', () => {
