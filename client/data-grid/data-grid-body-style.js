@@ -35,5 +35,21 @@ export const dataGridBodyStyle = css`
     :host {
       grid-template-columns: var(--grid-template-print-columns);
     }
+    :host > [focused] {
+      border: none;
+    }
+
+    :host > [selected-row] {
+      background-color: transparent;
+    }
+
+    :host > [focused-row] {
+      background-color: transparent;
+      color: initial;
+    }
+
+    :host > [editing] {
+      background-color: transparent;
+    }
   }
 `

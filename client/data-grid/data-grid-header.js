@@ -63,6 +63,10 @@ class DataGridHeader extends LitElement {
         span[splitter] {
           cursor: col-resize;
         }
+        input[type='checkbox'],
+        input[type='radio'] {
+          zoom: var(--grist-input-zoom);
+        }
 
         @media print {
           :host {

@@ -14,7 +14,7 @@ body {
 
   --grist-input-zoom: 1;
   --grist-input-progress-border: 1px solid rgba(255, 255, 255, 0.5);
-  --grist-input-progress-background: rgba(0, 0, 0, 0.1);
+  --grist-input-progress-background: rgba(121, 110, 110, 0.1);
   --grist-input-progress-bar-background: #4ac5fd;
   --grist-input-progress-bar-color: #fff;
 
@@ -80,6 +80,8 @@ body {
     --grist-padding: 0;
     --grist-input-zoom: 1.4;
 
+    --data-list-item-margin: 5px 10px;
+
     --record-view-footer-height: 50px;
     --record-view-footer-button-height: var(--record-view-footer-height);
     --record-view-footer-iconbutton-size: 35px;
@@ -93,10 +95,17 @@ body {
     --grist-padding: 0;
     --grist-input-zoom: 1.4;
 
+    --data-list-item-margin: 5px 10px;
+
     --record-view-footer-height: 50px;
     --record-view-footer-button-height: var(--record-view-footer-height);
     --record-view-footer-iconbutton-size: 35px;
     --record-view-footer-iconbutton-margin: -2px;
     --record-view-footer-iconbutton-display: block;
+  }
+}
+@media print {
+  body {
+    --grist-input-zoom: 0.7;
   }
 }

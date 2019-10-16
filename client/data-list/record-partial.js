@@ -54,6 +54,10 @@ export class RecordPartial extends LitElement {
           min-height: 42px;
         }
 
+        data-list-gutter {
+          flex: 0 0 14px;
+        }
+
         :host([dirty])::before {
           content: '';
           position: absolute;
