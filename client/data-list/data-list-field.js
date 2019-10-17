@@ -27,7 +27,6 @@ class DataListField extends LitElement {
           padding: 1px 7px 1px 0;
 
           font: inherit;
-          text-overflow: ellipsis;
         }
 
         * {
