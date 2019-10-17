@@ -22,8 +22,9 @@ class DataListField extends LitElement {
           justify-content: flex-start;
           position: relative;
 
-          white-space: unset;
+          white-space: normal;
           overflow: hidden;
+          padding: 1px 7px 1px 0;
 
           font: inherit;
           text-overflow: ellipsis;
