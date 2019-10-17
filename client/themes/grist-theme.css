@@ -80,8 +80,6 @@ body {
     --grist-padding: 0;
     --grist-input-zoom: 1.4;
 
-    --data-list-item-margin: 5px 10px;
-
     --record-view-footer-height: 50px;
     --record-view-footer-button-height: var(--record-view-footer-height);
     --record-view-footer-iconbutton-size: 35px;
@@ -94,8 +92,6 @@ body {
   body {
     --grist-padding: 0;
     --grist-input-zoom: 1.4;
-
-    --data-list-item-margin: 5px 10px;
 
     --record-view-footer-height: 50px;
     --record-view-footer-button-height: var(--record-view-footer-height);
