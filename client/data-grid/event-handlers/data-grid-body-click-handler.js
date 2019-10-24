@@ -23,6 +23,8 @@ export function dataGridBodyClickHandler(e) {
       }
 
       this.editTarget = null
+    } else {
+      this.requestUpdate()
     }
   } else {
     console.error('should not be here.')
