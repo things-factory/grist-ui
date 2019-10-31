@@ -44,6 +44,10 @@ export function unregisterEditor(type) {
   delete EDITORS[type]
 }
 
+export function getEditors() {
+  return { ...EDITORS }
+}
+
 export function getEditor(type) {
   if (typeof type == 'function') {
     return type

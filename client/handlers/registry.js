@@ -16,6 +16,10 @@ export function unregisterHandler(type) {
   delete HANDLERS[type]
 }
 
+export function getHandlers() {
+  return { ...HANDLERS }
+}
+
 export function getHandler(type) {
   if (typeof type == 'function') {
     return type

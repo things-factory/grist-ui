@@ -18,6 +18,10 @@ export function unregisterFormatter(type) {
   delete FORMATTERS[type]
 }
 
+export function getFormatters() {
+  return { ...FORMATTERS }
+}
+
 export function getFormatter(type) {
   if (typeof type == 'function') {
     return type

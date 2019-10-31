@@ -18,6 +18,10 @@ export function unregisterGutter(name) {
   delete GUTTERS[name]
 }
 
+export function getGutters() {
+  return { ...GUTTERS }
+}
+
 export const generateGutterColumn = config => {
   var clazz = GUTTERS[config.gutterName]
 

@@ -36,6 +36,10 @@ export function unregisterRenderer(type) {
   delete RENDERERS[type]
 }
 
+export function getRenderers() {
+  return { ...RENDERERS }
+}
+
 export function getRenderer(type) {
   if (typeof type == 'function') {
     return type
