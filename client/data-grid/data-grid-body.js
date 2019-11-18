@@ -70,6 +70,7 @@ class DataGridBody extends LitElement {
                 .columnIndex=${idxColumn}
                 .column=${column}
                 .record=${record}
+                ?gutter=${column.type == 'gutter'}
                 ?odd=${attrOdd}
                 ?focused-row=${attrFocusedRow}
                 ?selected-row=${attrSelected}

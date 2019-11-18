@@ -36,6 +36,10 @@ class DataGridField extends LitElement {
           min-height: 19px;
         }
 
+        :host([gutter]) * {
+          cursor: default;
+        }
+
         :host([editing]) {
           padding: 0;
         }
