@@ -1,0 +1,23 @@
+body {
+  --report-background-color: var(--main-section-background-color);
+  --report-padding: 15px;
+  --report-title-margin: 0 0 0 10px;
+  --report-title-border: none;
+  --report-title-color: var(--secondary-color);
+  --report-title-icon-color: var(--primary-color);
+  --report-title-icon-margin: 0 3px 2px 0;
+  --report-title-icon-size: 14px;
+  --report-title-with-grid-padding: 0;
+
+  --report-header-background-color: rgba(18, 105, 105, 0.05);
+  --report-header-border-color: rgba(18, 105, 105, 0.3);
+  --report-record-background-color: #fff;
+  --report-record-odd-background-color: #f6f6f6;
+  --report-header-color: var(--secondary-text-color);
+  --report-header-font: normal 1em/1.5 var(--theme-font);
+  --report-header-fontsize: 13px;
+  --report-record-wide-fontsize: 13px;
+  --report-record-focused-background-color: var(--primary-color);
+  --report-record-focused-color: #fff;
+  --report-record-focused-border: 1px dashed rgba(0, 0, 0, 0.5);
+}

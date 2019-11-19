@@ -129,7 +129,7 @@ export class DataGrist extends LitElement {
   async fetch(reset = true) {
     if (!this._config) {
       /* avoid to be here */
-      console.warn('grid is not configured yet.')
+      console.warn('grist is not configured yet.')
       return
     }
 

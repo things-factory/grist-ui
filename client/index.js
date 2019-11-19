@@ -1,4 +1,5 @@
 export * from './data-grist'
+export * from './data-report'
 
 export * from './editors'
 export * from './renderers'
