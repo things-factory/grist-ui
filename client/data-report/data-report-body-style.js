@@ -19,10 +19,6 @@ export const dataReportBodyStyle = css`
     color: var(--report-record-focused-color);
   }
 
-  :host > [totalized] {
-    background-color: lightgray;
-  }
-
   @media print {
     :host {
       grid-template-columns: var(--report-template-print-columns);
