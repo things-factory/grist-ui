@@ -177,31 +177,181 @@ export class DataReport extends LitElement {
 
   refresh() {
     this.requestUpdate()
-    /* FIXME - this.requestUpdate()로 대체 */
-    /* update _data property intentionally */
-    // this._data = {
-    //   ...this._data
-    // }
   }
 
   reset() {
     var { limit = DEFAULT_DATA.limit, page = DEFAULT_DATA.page, total = DEFAULT_DATA.total, records = [] } = this.data
 
-    /* 원본 데이타를 남기고, 복사본(_data)을 사용한다. */
-    records = records.map((record, idx) => {
-      return {
-        ...record,
-        __seq__: (page - 1) * limit + idx + 1,
-        __origin__: record
-      }
-    })
-
     this._data = {
       limit,
       page,
       total,
-      records
+      records: this.sortByGroups(records).map((record, idx) => {
+        return {
+          ...record,
+          __seq__: (page - 1) * limit + idx + 1
+        }
+      })
     }
+
+    console.log(this._data.records)
+  }
+
+  sortByGroups(records) {
+    var { groups, totals } = this._config.rows
+    var { columns } = this._config
+
+    /* 원본 데이타를 그룹 설정에 따라서 소팅한다. */
+    var sortedRecords = records.sort((r1, r2) => {
+      for (let group of groups) {
+        let v1 = r1[group]
+        let v2 = r2[group]
+        if (v1 === v2) {
+          continue
+        }
+        return v1 > v2 ? 1 : -1
+      }
+
+      return 0
+    })
+
+    var getColumnIndex = name => columns.filter(column => !column.hidden).findIndex(column => column.name == name)
+
+    /* 그룹 토털 레코드를 추가한다. */
+    var groupFieldsForTotalRecord = ['*' /* for total */, ...groups]
+    let lastGroupValues
+    let reportRecords = []
+    let totalicRecords = sortedRecords[0]
+      ? (function() {
+          /* 처음 만드는 total records */
+          let record = sortedRecords[0]
+          let totalBase = totals.reduce((base, field) => {
+            base[field] = record[field]
+            return base
+          }, {})
+          let groupBase = {}
+
+          return groupFieldsForTotalRecord.map((group, idx) => {
+            groupBase[group] = record[group]
+            console.log(group, idx, groupFieldsForTotalRecord.length - idx)
+
+            return {
+              ...totalBase,
+              ...groupBase,
+              [group]: record[group],
+              '*': {
+                group,
+                value: `${group} total`,
+                count: 1,
+                row: 1,
+                rowspan: 1,
+                column:
+                  group !== '*' ? getColumnIndex(group) + 1 : 2 /* todo fix 2 to 1 .. 그룹을 맨 왼쪽으로 보내야 함. */,
+                colspan:
+                  group !== '*' ? groupFieldsForTotalRecord.length - idx : groupFieldsForTotalRecord.length - idx - 1
+              }
+            }
+          })
+        })()
+      : [
+          {
+            '*': {
+              group: '*',
+              count: 0,
+              row: 1,
+              rowspan: 1,
+              column: 1,
+              colspan: 0
+            }
+          }
+        ]
+
+    var row = 0
+
+    for (let record of sortedRecords) {
+      let groupValues = groups.reduce((base, group) => {
+        base[group] = record[group]
+        return base
+      }, {})
+      let isSameGroupRecord = true
+      let totalsStack = []
+      let groupBase = {}
+
+      row++
+
+      if (lastGroupValues) {
+        for (let idx in groupFieldsForTotalRecord) {
+          let group = groupFieldsForTotalRecord[idx]
+          let totalRecord = totalicRecords[idx]
+
+          groupBase[group] = record[group]
+
+          if (group == '*' || (isSameGroupRecord && groupValues[group] === lastGroupValues[group])) {
+            for (let field of totals) {
+              totalRecord[field] += record[field]
+            }
+            totalRecord['*'].count++
+            totalRecord['*'].rowspan++
+
+            continue
+          }
+          isSameGroupRecord = false
+          // row++
+
+          /* TODO 역순으로 들어가야 한다. */
+          totalsStack.push({
+            idx,
+            record: totals.reduce(
+              (sum, field) => {
+                sum[field] = record[field]
+                return sum
+              },
+              {
+                ...groupBase,
+                [group]: record[group],
+                '*': {
+                  group,
+                  value: `${group} total`,
+                  count: 1,
+                  row,
+                  rowspan: 1,
+                  column: getColumnIndex(group) + 1,
+                  colspan: totalicRecords[idx]['*'].colspan
+                }
+              }
+            )
+          })
+        }
+
+        totalsStack
+          .reverse()
+          .map(({ record, idx }) => {
+            reportRecords.push(totalicRecords[idx])
+            totalicRecords[idx] = null
+            totalicRecords.forEach(record => record && record['*'].rowspan++)
+            row++
+
+            return { record, idx }
+          })
+          .forEach(({ record, idx }) => {
+            record['*'].row = row
+            totalicRecords[idx] = record
+          })
+      }
+
+      reportRecords.push(record)
+
+      lastGroupValues = groupValues
+    }
+
+    /* 마지막 남은 토탈 레코드들을 추가한다. */
+    var poped
+    while ((poped = totalicRecords.pop())) {
+      reportRecords.push(poped)
+      totalicRecords.forEach(record => record['*'].rowspan++)
+    }
+
+    return reportRecords
   }
 }
 
