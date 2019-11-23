@@ -45,6 +45,9 @@ class DataReportBody extends LitElement {
       return sum
     }, {})
 
+    var getColumnIndex = name => this.columns.filter(column => !column.hidden).findIndex(column => column.name == name)
+    var getColumn = name => this.columns.find(column => column.name == name)
+
     var { row: focusedRow = 0, column: focusedColumn = 0 } = this.focused || {}
 
     var columns = (this.columns || []).filter(column => !column.hidden && !groups[column.name])
@@ -54,75 +57,68 @@ class DataReportBody extends LitElement {
     return html`
       ${records.map((record, idxRow) => {
         var attrFocusedRow = idxRow === focusedRow
-
-        var $groups = []
-        for (let group in groups) {
-          var [groupname, begin, span, value, column] = groups[group]
-          if (idxRow == 0) {
-            groups[group] = [group, 1, 1, record[group], column, record]
-          } else if (value !== record[group]) {
-            $groups.push([group, begin, span, value, column, record])
-            groups[group] = [group, idxRow + 1, 1, record[group], column, record]
-          } else {
-            groups[group] = [group, begin, span + 1, record[group], column, record]
-          }
-        }
+        var totalic = record['*']
+        var totalicColumn = totalic && getColumn(totalic.group)
 
         return html`
-          ${columns.map(
-            (column, idxColumn) => html`
+          ${columns.map(column => {
+            let columnIndex = getColumnIndex(column.name)
+            return html`
               <data-report-field
                 .data=${data}
                 .rowIndex=${idxRow}
-                .columnIndex=${idxColumn}
+                .columnIndex=${columnIndex}
                 .column=${column}
                 .record=${record}
                 ?gutter=${column.type == 'gutter'}
                 ?focused-row=${attrFocusedRow}
-                ?focused=${idxRow === focusedRow && idxColumn === focusedColumn}
+                ?focused=${attrFocusedRow && columnIndex === focusedColumn}
+                ?totalized=${totalic}
                 .value=${record[column.name]}
               ></data-report-field>
             `
-          )}
+          })}
           <data-report-field
             .data=${data}
             .rowIndex=${idxRow}
             .record=${record}
             ?focused-row=${attrFocusedRow}
+            ?totalized=${totalic}
           ></data-report-field>
 
-          ${$groups.map(
-            ([group, begin, span, value, column, record]) => html`
-              <data-report-field
-                .data=${data}
-                .rowIndex=${begin - 1}
-                .columnIndex=${5}
-                .column=${column}
-                .record=${record}
-                ?focused-row=${begin <= focusedRow + 1 && begin + span - 1 > focusedRow}
-                ?focused=${begin - 1 === focusedRow && 5 === focusedColumn}
-                .value=${value}
-                style="grid-column-start: 6;grid-column-end: span 1;grid-row-start: ${begin}; grid-row-end: span ${span};"
-              ></data-report-field>
-            `
-          )}
-          ${idxRow + 1 == records.length
-            ? Object.values(groups).map(
-                ([group, begin, span, value, column, record]) => html`
-                  <data-report-field
-                    .data=${data}
-                    .rowIndex=${begin - 1}
-                    .columnIndex=${5}
-                    .column=${column}
-                    .record=${record}
-                    ?focused-row=${begin <= focusedRow + 1}
-                    ?focused=${begin - 1 === focusedRow && 5 === focusedColumn}
-                    .value=${value}
-                    style="grid-column-start: 6;grid-column-end: span 1;grid-row-start: ${begin}; grid-row-end: span ${span};"
-                  ></data-report-field>
-                `
-              )
-            : html``}
+          ${!totalic
+            ? html``
+            : html`
+                ${totalic.group == '*'
+                  ? html``
+                  : html`
+                      <data-report-field
+                        .data=${data}
+                        .rowIndex=${totalic.row - 1}
+                        .columnIndex=${totalic.column - 1}
+                        .column=${totalicColumn}
+                        .record=${record}
+                        ?focused-row=${totalic.row - 1 <= focusedRow && totalic.row - 1 + totalic.rowspan > focusedRow}
+                        ?focused=${totalic.row - 1 === focusedRow && totalic.column - 1 === focusedColumn}
+                        ?totalized=${false}
+                        .value=${record[totalic.group]}
+                        style="grid-area: ${totalic.row} / ${totalic.column} / span ${totalic.rowspan} / span 1;"
+                      ></data-report-field>
+                    `}
+                <data-report-field
+                  .data=${data}
+                  .rowIndex=${idxRow}
+                  .columnIndex=${totalic.column - 1}
+                  .column=${totalicColumn}
+                  .record=${record}
+                  ?focused-row=${attrFocusedRow}
+                  ?focused=${idxRow === focusedRow && totalic.column - 1 === focusedColumn}
+                  ?totalized=${false}
+                  .value=${totalic.value}
+                  style="grid-area: ${totalic.row +
+                    totalic.rowspan} / ${totalic.column} / span 1 / span ${totalic.colspan};"
+                ></data-report-field>
+              `}
         `
       })}
     `

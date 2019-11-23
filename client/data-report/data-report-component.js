@@ -98,6 +98,8 @@ class DataReportComponent extends LitElement {
 
     this.style.setProperty('--report-template-columns', this._widths)
     this.style.setProperty('--report-template-print-columns', this._widths.replace(/px/gi, 'fr'))
+
+    console.log('columns', this._widths)
   }
 
   render() {
