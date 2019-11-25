@@ -64,7 +64,6 @@ export class DataReport extends LitElement {
     return {
       config: Object,
       data: Object,
-      selectedRecords: Array,
       fetchHandler: Object,
       fetchOptions: Object,
       _data: Object,
