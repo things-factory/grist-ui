@@ -39,18 +39,13 @@ class DataReportBody extends LitElement {
   render() {
     var { rows } = this.config
     var { groups } = rows
-    groups = groups.reduce((sum, group) => {
-      let column = this.columns.find(column => column.name == group)
-      sum[group] = [group, 0, 0, null, column, null]
-      return sum
-    }, {})
 
     var getColumnIndex = name => this.columns.filter(column => !column.hidden).findIndex(column => column.name == name)
     var getColumn = name => this.columns.find(column => column.name == name)
 
     var { row: focusedRow = 0, column: focusedColumn = 0 } = this.focused || {}
 
-    var columns = (this.columns || []).filter(column => !column.hidden && !groups[column.name])
+    var columns = (this.columns || []).filter(column => !column.hidden && groups.indexOf(column.name) == -1)
     var data = this.data || {}
     var { records = [] } = data
 
@@ -58,7 +53,7 @@ class DataReportBody extends LitElement {
       ${records.map((record, idxRow) => {
         var attrFocusedRow = idxRow === focusedRow
         var totalic = record['*']
-        var totalicColumn = totalic && getColumn(totalic.group)
+        var totalicColumn = totalic && (totalic.group == '*' ? getColumn(groups[0]) : getColumn(totalic.group))
 
         return html`
           ${columns.map(column => {
@@ -100,7 +95,7 @@ class DataReportBody extends LitElement {
                         .record=${record}
                         ?focused-row=${totalic.row - 1 <= focusedRow && totalic.row - 1 + totalic.rowspan > focusedRow}
                         ?focused=${totalic.row - 1 === focusedRow && totalic.column - 1 === focusedColumn}
-                        ?totalized=${false}
+                        ?grouped=${true}
                         .value=${record[totalic.group]}
                         style="grid-area: ${totalic.row} / ${totalic.column} / span ${totalic.rowspan} / span 1;"
                       ></data-report-field>
@@ -113,7 +108,7 @@ class DataReportBody extends LitElement {
                   .record=${record}
                   ?focused-row=${attrFocusedRow}
                   ?focused=${idxRow === focusedRow && totalic.column - 1 === focusedColumn}
-                  ?totalized=${false}
+                  ?grouped=${true}
                   .value=${totalic.value}
                   style="grid-area: ${totalic.row +
                     totalic.rowspan} / ${totalic.column} / span 1 / span ${totalic.colspan};"

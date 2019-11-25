@@ -194,7 +194,7 @@ export class DataReport extends LitElement {
       })
     }
 
-    console.log(this._data.records)
+    // console.log(this._data.records)
   }
 
   sortByGroups(records) {
@@ -233,7 +233,6 @@ export class DataReport extends LitElement {
 
           return groupFieldsForTotalRecord.map((group, idx) => {
             groupBase[group] = record[group]
-            console.log(group, idx, groupFieldsForTotalRecord.length - idx)
 
             return {
               ...totalBase,
@@ -246,9 +245,10 @@ export class DataReport extends LitElement {
                 row: 1,
                 rowspan: 1,
                 column:
-                  group !== '*' ? getColumnIndex(group) + 1 : 2 /* todo fix 2 to 1 .. 그룹을 맨 왼쪽으로 보내야 함. */,
-                colspan:
-                  group !== '*' ? groupFieldsForTotalRecord.length - idx : groupFieldsForTotalRecord.length - idx - 1
+                  group !== '*'
+                    ? getColumnIndex(group) + 1
+                    : getColumnIndex(groups[0]) + 1 /* grand total 은 첫번째 그룹 컬럼을 사용한다. */,
+                colspan: group !== '*' ? groupFieldsForTotalRecord.length - idx : groupFieldsForTotalRecord.length - 1
               }
             }
           })
@@ -296,9 +296,7 @@ export class DataReport extends LitElement {
             continue
           }
           isSameGroupRecord = false
-          // row++
 
-          /* TODO 역순으로 들어가야 한다. */
           totalsStack.push({
             idx,
             record: totals.reduce(

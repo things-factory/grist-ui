@@ -23,6 +23,12 @@ export const dataReportBodyStyle = css`
     background-color: lightgray;
   }
 
+  :host > [grouped] {
+    background-color: lightgray;
+    color: black;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
   @media print {
     :host {
       grid-template-columns: var(--report-template-print-columns);
