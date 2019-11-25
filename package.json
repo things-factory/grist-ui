@@ -1,6 +1,6 @@
 {
   "name": "@things-factory/grist-ui",
-  "version": "1.0.0-alpha.4",
+  "version": "0.9.35",
   "main": "dist-server/index.js",
   "browser": "client/index.js",
   "things-factory": true,
@@ -24,13 +24,13 @@
   },
   "dependencies": {
     "@material/mwc-icon": "^0.8.0",
-    "@things-factory/layout-base": "^1.0.0-alpha.1",
-    "@things-factory/shell": "^1.0.0-alpha.1"
+    "@things-factory/layout-base": "^0.9.0",
+    "@things-factory/shell": "^0.9.0"
   },
   "devDependencies": {
-    "@things-factory/board-test": "^1.0.0-alpha.1",
-    "@things-factory/grist-test": "^1.0.0-alpha.1",
-    "@things-factory/opa-app": "^1.0.0-alpha.1",
-    "@things-factory/opa-test": "^1.0.0-alpha.1"
+    "@things-factory/board-test": "^0.9.0",
+    "@things-factory/grist-test": "^0.9.0",
+    "@things-factory/opa-app": "^0.9.0",
+    "@things-factory/opa-test": "^0.9.0"
   }
 }
