@@ -45,7 +45,7 @@ class DataReportBody extends LitElement {
 
     var { row: focusedRow = 0, column: focusedColumn = 0 } = this.focused || {}
 
-    var columns = (this.columns || []).filter(column => !column.hidden && groups.indexOf(column.name) == -1)
+    var columns = (this.columns || []).filter(column => !column.hidden && groups.map(group=>group.column).indexOf(column.name) == -1)
     var data = this.data || {}
     var { records = [] } = data
 
@@ -53,7 +53,7 @@ class DataReportBody extends LitElement {
       ${records.map((record, idxRow) => {
         var attrFocusedRow = idxRow === focusedRow
         var totalic = record['*']
-        var totalicColumn = totalic && (totalic.group == '*' ? getColumn(groups[0]) : getColumn(totalic.group))
+        var totalicColumn = totalic && (totalic.group == '*' ? getColumn(groups[0].column) : getColumn(totalic.group))
 
         return html`
           ${columns.map(column => {

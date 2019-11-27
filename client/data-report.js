@@ -203,8 +203,8 @@ export class DataReport extends LitElement {
     /* 원본 데이타를 그룹 설정에 따라서 소팅한다. */
     var sortedRecords = records.sort((r1, r2) => {
       for (let group of groups) {
-        let v1 = r1[group]
-        let v2 = r2[group]
+        let v1 = r1[group.column]
+        let v2 = r2[group.column]
         if (v1 === v2) {
           continue
         }
@@ -217,7 +217,7 @@ export class DataReport extends LitElement {
     var getColumnIndex = name => columns.filter(column => !column.hidden).findIndex(column => column.name == name)
 
     /* 그룹 토털 레코드를 추가한다. */
-    var groupFieldsForTotalRecord = ['*' /* for total */, ...groups]
+    var groupFieldsForTotalRecord = [{column:'*', name:'*'} /* for total */, ...groups]
     let lastGroupValues
     let reportRecords = []
     let totalicRecords = sortedRecords[0]
@@ -231,23 +231,23 @@ export class DataReport extends LitElement {
           let groupBase = {}
 
           return groupFieldsForTotalRecord.map((group, idx) => {
-            groupBase[group] = record[group]
+            groupBase[group.column] = record[group.column]
 
             return {
               ...totalBase,
               ...groupBase,
-              [group]: record[group],
+              [group.column]: record[group.column],
               '*': {
-                group,
-                value: `${group} total`,
+                group: group.column,
+                value: `${group.name} total`,
                 count: 1,
                 row: 1,
                 rowspan: 1,
                 column:
-                  group !== '*'
-                    ? getColumnIndex(group) + 1
-                    : getColumnIndex(groups[0]) + 1 /* grand total 은 첫번째 그룹 컬럼을 사용한다. */,
-                colspan: group !== '*' ? groupFieldsForTotalRecord.length - idx : groupFieldsForTotalRecord.length - 1
+                  group.column !== '*'
+                    ? getColumnIndex(group.column) + 1
+                    : getColumnIndex(groups[0].column) + 1 /* grand total 은 첫번째 그룹 컬럼을 사용한다. */,
+                colspan: group.column !== '*' ? groupFieldsForTotalRecord.length - idx : groupFieldsForTotalRecord.length - 1
               }
             }
           })
@@ -269,7 +269,7 @@ export class DataReport extends LitElement {
 
     for (let record of sortedRecords) {
       let groupValues = groups.reduce((base, group) => {
-        base[group] = record[group]
+        base[group.column] = record[group.column]
         return base
       }, {})
       let isSameGroupRecord = true
@@ -283,9 +283,9 @@ export class DataReport extends LitElement {
           let group = groupFieldsForTotalRecord[idx]
           let totalRecord = totalicRecords[idx]
 
-          groupBase[group] = record[group]
+          groupBase[group.column] = record[group.column]
 
-          if (group == '*' || (isSameGroupRecord && groupValues[group] === lastGroupValues[group])) {
+          if (group.column == '*' || (isSameGroupRecord && groupValues[group.column] === lastGroupValues[group.column])) {
             for (let field of totals) {
               totalRecord[field] += record[field]
             }
@@ -305,14 +305,14 @@ export class DataReport extends LitElement {
               },
               {
                 ...groupBase,
-                [group]: record[group],
+                [group.column]: record[group.column],
                 '*': {
-                  group,
-                  value: `${group} total`,
+                  group: group.column,
+                  value: `${group.name} total`,
                   count: 1,
                   row,
                   rowspan: 1,
-                  column: getColumnIndex(group) + 1,
+                  column: getColumnIndex(group.column) + 1,
                   colspan: totalicRecords[idx]['*'].colspan
                 }
               }
@@ -347,7 +347,7 @@ export class DataReport extends LitElement {
       reportRecords.push(poped)
       totalicRecords.forEach(record => record['*'].rowspan++)
     }
-
+    
     return reportRecords
   }
 }
