@@ -25,7 +25,7 @@ class DataReportField extends LitElement {
           white-space: nowrap;
           overflow: hidden;
           background-color: var(--report-record-background-color, white);
-          padding: 7px 0px;
+          padding: var(--report-record-field-padding);
           border: 1px solid transparent;
           border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
