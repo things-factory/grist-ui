@@ -26,7 +26,7 @@ class DataReportComponent extends LitElement {
           overflow: hidden;
 
           border: 1px solid var(--report-header-border-color);
-          border-radius: 4px;
+          border-radius: var(--report-component-border-radius);
         }
 
         data-report-body {

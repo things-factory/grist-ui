@@ -24,10 +24,10 @@ class DataReportField extends LitElement {
 
           white-space: nowrap;
           overflow: hidden;
-          background-color: var(--report-record-background-color, white);
+          background-color: var(--report-record-background-color);
           padding: var(--report-record-field-padding);
           border: 1px solid transparent;
-          border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+          border-bottom: var(--report-record-field-border-bottom);
 
           font-size: var(--report-record-wide-fontsize);
           text-overflow: ellipsis;

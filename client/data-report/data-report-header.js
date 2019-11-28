@@ -28,15 +28,13 @@ class DataReportHeader extends LitElement {
           overflow: hidden;
           background-color: var(--report-header-background-color, gray);
           border: 1px solid var(--report-header-border-color);
-          border-width: 1px 0;
-          border-left: 1px solid rgba(255, 255, 255, 0.6);
-          border-right: 1px solid rgba(0, 0, 0, 0.1);
-          padding: 5px 0;
+          border-width: 1px 1px 1px 0;
+          padding: var(--report-header-padding);
 
           text-overflow: ellipsis;
           text-align: center;
           font-size: var(--report-header-fontsize, 1em);
-          color: var(--report-header-color, white);
+          color: var(--report-header-color);
         }
 
         span {
