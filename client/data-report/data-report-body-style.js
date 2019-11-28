@@ -16,19 +16,23 @@ export const dataReportBodyStyle = css`
 
   :host > [focused-row] {
     background-color: var(--report-record-focused-background-color);
-    color: var(--report-record-focused-color);
   }
 
   :host > [totalized] {
-    background-color: rgba(115, 188, 28, 0.1);
-    font-weight: 700;
+    background-color: var(--report-totalized-background-color);
+    border-bottom: var(--report-totalized-border-bottom);
     color: var(--report-totalized-color);
+
+    font-weight: 700;
   }
 
   :host > [grouped] {
     background-color: #607d8bbf;
-    color: #fff;
-    border-right: 1px solid rgba(0, 0, 0, 0.3);
+    border-right: var(--report-grouped-border);
+    border-bottom: var(--report-grouped-border);
+    color: var(--report-grouped-color);
+
+    font-weight: 600;
   }
 
   @media print {

@@ -28,9 +28,9 @@
     "@things-factory/shell": "^1.0.0-alpha.1"
   },
   "devDependencies": {
-    "@things-factory/board-test": "^0.9.0",
-    "@things-factory/grist-test": "^0.9.0",
-    "@things-factory/opa-app": "^0.9.0",
-    "@things-factory/opa-test": "^0.9.0"
+    "@things-factory/board-test": "^1.0.0-alpha.1",
+    "@things-factory/grist-test": "^1.0.0-alpha.1",
+    "@things-factory/opa-app": "^1.0.0-alpha.1",
+    "@things-factory/opa-test": "^1.0.0-alpha.1"
   }
 }

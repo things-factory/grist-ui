@@ -17,8 +17,14 @@ body {
   --report-header-font: normal 1em/1.5 var(--theme-font);
   --report-header-fontsize: 13px;
   --report-record-wide-fontsize: 13px;
-  --report-record-focused-background-color: var(--primary-color);
-  --report-record-focused-color: #fff;
+  --report-record-focused-background-color: #ffde3b47;
   --report-record-focused-border: 1px dashed rgba(0, 0, 0, 0.5);
+
+  --report-totalized-background-color: #efefef;
+  --report-totalized-border-bottom: 2px solid rgba(0, 0, 0, 0.15);
   --report-totalized-color: var(--secondary-text-color);
+
+  --report-grouped-background-color: #607d8bbf;
+  --report-grouped-border: 1px solid rgba(0, 0, 0, 0.3);
+  --report-grouped-color: #fff;
 }
