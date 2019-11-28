@@ -20,4 +20,5 @@ body {
   --report-record-focused-background-color: var(--primary-color);
   --report-record-focused-color: #fff;
   --report-record-focused-border: 1px dashed rgba(0, 0, 0, 0.5);
+  --report-totalized-color: var(--secondary-text-color);
 }

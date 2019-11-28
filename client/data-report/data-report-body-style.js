@@ -20,13 +20,15 @@ export const dataReportBodyStyle = css`
   }
 
   :host > [totalized] {
-    background-color: lightgray;
+    background-color: rgba(115, 188, 28, 0.1);
+    font-weight: 700;
+    color: var(--report-totalized-color);
   }
 
   :host > [grouped] {
-    background-color: lightgray;
-    color: black;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: #607d8bbf;
+    color: #fff;
+    border-right: 1px solid rgba(0, 0, 0, 0.3);
   }
 
   @media print {
