@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit-element'
 
 import { buildConfig } from './configure/config-builder'
+import { buildColumn } from './configure/column-builder'
 
 import './data-report/data-report-component'
 
@@ -217,7 +218,17 @@ export class DataReport extends LitElement {
     var getColumnIndex = name => columns.filter(column => !column.hidden).findIndex(column => column.name == name)
 
     /* 그룹 토털 레코드를 추가한다. */
-    var groupFieldsForTotalRecord = [{column:'*', name:'*'} /* for total */, ...groups]
+    var groupFieldsForTotalRecord = [{ column: '*', title: 'grand total', align: 'right' } /* for total */, ...groups]
+    groupFieldsForTotalRecord = groupFieldsForTotalRecord.map(group => {
+      return {
+        ...group,
+        titleColumn: buildColumn({
+          record: {
+            align: group.align || 'right'
+          }
+        })
+      }
+    })
     let lastGroupValues
     let reportRecords = []
     let totalicRecords = sortedRecords[0]
@@ -238,16 +249,19 @@ export class DataReport extends LitElement {
               ...groupBase,
               [group.column]: record[group.column],
               '*': {
-                group: group.column,
-                value: `${group.name} total`,
-                count: 1,
+                titleColumn: group.titleColumn,
+                value: group.title,
+                groupName: group.column,
+                /* 이 레코드 그룹에 해당하는 첫번째 레코드의 행 번호(1 부터 시작하는 번호임.) - grid layout의 row 지정에 사용됨. */
                 row: 1,
                 rowspan: 1,
+                /* 이 레코드 그룹의 컬럼에 해당하는 열 번호(1 부터 시작하는 번호임.) - grid layout의 column 지정에 사용됨. */
                 column:
                   group.column !== '*'
                     ? getColumnIndex(group.column) + 1
                     : getColumnIndex(groups[0].column) + 1 /* grand total 은 첫번째 그룹 컬럼을 사용한다. */,
-                colspan: group.column !== '*' ? groupFieldsForTotalRecord.length - idx : groupFieldsForTotalRecord.length - 1
+                colspan:
+                  group.column !== '*' ? groupFieldsForTotalRecord.length - idx : groupFieldsForTotalRecord.length - 1
               }
             }
           })
@@ -255,8 +269,9 @@ export class DataReport extends LitElement {
       : [
           {
             '*': {
-              group: '*',
-              count: 0,
+              titleColumn: groupFieldsForTotalRecord[0].titleColumn,
+              value: 'grand total',
+              groupName: '*',
               row: 1,
               rowspan: 1,
               column: 1,
@@ -285,11 +300,13 @@ export class DataReport extends LitElement {
 
           groupBase[group.column] = record[group.column]
 
-          if (group.column == '*' || (isSameGroupRecord && groupValues[group.column] === lastGroupValues[group.column])) {
+          if (
+            group.column == '*' ||
+            (isSameGroupRecord && groupValues[group.column] === lastGroupValues[group.column])
+          ) {
             for (let field of totals) {
               totalRecord[field] += record[field]
             }
-            totalRecord['*'].count++
             totalRecord['*'].rowspan++
 
             continue
@@ -307,9 +324,9 @@ export class DataReport extends LitElement {
                 ...groupBase,
                 [group.column]: record[group.column],
                 '*': {
-                  group: group.column,
-                  value: `${group.name} total`,
-                  count: 1,
+                  titleColumn: group.titleColumn,
+                  groupName: group.column,
+                  value: group.title,
                   row,
                   rowspan: 1,
                   column: getColumnIndex(group.column) + 1,
@@ -325,8 +342,11 @@ export class DataReport extends LitElement {
           .map(({ record, idx }) => {
             reportRecords.push(totalicRecords[idx])
             totalicRecords[idx] = null
-            totalicRecords.forEach(record => record && record['*'].rowspan++)
-            row++
+
+            if (record['*'].value) {
+              totalicRecords.forEach(record => record && record['*'].rowspan++)
+              row++
+            }
 
             return { record, idx }
           })
@@ -345,9 +365,11 @@ export class DataReport extends LitElement {
     var poped
     while ((poped = totalicRecords.pop())) {
       reportRecords.push(poped)
-      totalicRecords.forEach(record => record['*'].rowspan++)
+      if (poped['*'].value) {
+        totalicRecords.forEach(record => record['*'].rowspan++)
+      }
     }
-    
+
     return reportRecords
   }
 }
