@@ -235,11 +235,7 @@ export class DataGrist extends LitElement {
       }
 
       for (let key in record.__dirtyfields__) {
-        const data = record[key]
-        patch[key] =
-          !Array.isArray(data) && typeof data === 'object'
-            ? { id: data.id, name: data.name || '', description: data.description || '' }
-            : data
+        patch[key] = record[key]
       }
       return patch
     })
