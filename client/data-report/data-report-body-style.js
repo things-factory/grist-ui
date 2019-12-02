@@ -20,14 +20,15 @@ export const dataReportBodyStyle = css`
 
   :host > [totalized] {
     background-color: var(--report-totalized-background-color);
-    border-bottom: var(--report-totalized-border-bottom);
+    border-top: var(--report-totalized-border);
+    border-bottom: var(--report-totalized-border);
     color: var(--report-totalized-color);
 
     font-weight: 700;
   }
 
   :host > [grouped] {
-    background-color: #607d8bbf;
+    background-color: var(--report-grouped-background-color);
     border-right: var(--report-grouped-border);
     border-bottom: var(--report-grouped-border);
     color: var(--report-grouped-color);
@@ -37,15 +38,21 @@ export const dataReportBodyStyle = css`
 
   @media print {
     :host {
+      -webkit-print-color-adjust: exact;
       grid-template-columns: var(--report-template-print-columns);
     }
     :host > [focused] {
-      border: none;
+      border-width: 0 1px 1px 0;
+      border-right: var(--report-grouped-border);
+      border-bottom: var(--report-grouped-border);
     }
 
     :host > [focused-row] {
-      background-color: transparent;
-      color: initial;
+      background-color: initial;
+      color: #000;
+    }
+    :host > [grouped] {
+      background-color: var(--report-grouped-background-color);
     }
   }
 `
