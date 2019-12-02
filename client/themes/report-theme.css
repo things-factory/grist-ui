@@ -34,8 +34,12 @@ body {
   --report-grouped-border: 1px solid rgba(0, 0, 0, 0.2);
   --report-grouped-color: #fff;
 }
+
 @media print {
   body {
+    --report-header-padding: 5px 5px;
+    --report-record-field-padding: 5px 5px;
+
     --report-record-field-padding: 4px 1px;
     --report-record-wide-fontsize: 10px;
     --report-grouped-background-color: #d7d7d7;
