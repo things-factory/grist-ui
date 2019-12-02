@@ -37,10 +37,8 @@ body {
 
 @media print {
   body {
-    --report-header-padding: 5px 5px;
-    --report-record-field-padding: 5px 5px;
-
-    --report-record-field-padding: 4px 1px;
+    --report-header-padding: 5px;
+    --report-record-field-padding: 5px;
     --report-record-wide-fontsize: 10px;
     --report-grouped-background-color: #d7d7d7;
     --report-grouped-color: #000;
