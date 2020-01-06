@@ -197,23 +197,9 @@ export class DataReport extends LitElement {
     // console.log(this._data.records)
   }
 
-  sortByGroups(records) {
+  sortByGroups(sortedRecords) {
     var { groups, totals } = this._config.rows
     var { columns } = this._config
-
-    /* 원본 데이타를 그룹 설정에 따라서 소팅한다. */
-    var sortedRecords = records.sort((r1, r2) => {
-      for (let group of groups) {
-        let v1 = r1[group.column]
-        let v2 = r2[group.column]
-        if (v1 === v2) {
-          continue
-        }
-        return v1 > v2 ? 1 : -1
-      }
-
-      return 0
-    })
 
     var getColumnIndex = name => columns.filter(column => !column.hidden).findIndex(column => column.name == name)
 
