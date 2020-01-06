@@ -1,6 +1,6 @@
 {
   "name": "@things-factory/grist-ui",
-  "version": "1.0.0-alpha.13",
+  "version": "2.0.0",
   "main": "dist-server/index.js",
   "browser": "client/index.js",
   "things-factory": true,
@@ -23,13 +23,13 @@
     "migration:revert": "node ./node_modules/typeorm/cli.js migration:revert"
   },
   "dependencies": {
-    "@things-factory/layout-base": "^0.9.0",
-    "@things-factory/shell": "^0.9.0"
+    "@things-factory/layout-base": "^2.0.0",
+    "@things-factory/shell": "^2.0.0"
   },
   "devDependencies": {
-    "@things-factory/board-test": "^0.9.0",
-    "@things-factory/grist-test": "^0.9.0",
-    "@things-factory/opa-app": "^0.9.0",
-    "@things-factory/opa-test": "^0.9.0"
+    "@things-factory/board-test": "^2.0.0",
+    "@things-factory/grist-test": "^2.0.0",
+    "@things-factory/opa-app": "^2.0.0",
+    "@things-factory/opa-test": "^2.0.0"
   }
 }
