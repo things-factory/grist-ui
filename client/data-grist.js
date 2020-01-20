@@ -1,13 +1,9 @@
-import { LitElement, html, css } from 'lit-element'
-
+import { pulltorefresh } from '@things-factory/utils'
+import { css, html, LitElement } from 'lit-element'
 import { buildConfig } from './configure/config-builder'
-
 import './data-grid/data-grid'
 import './data-list/data-list'
-
 import { DataProvider } from './data-provider'
-
-import { pulltorefresh } from '@things-factory/shell'
 
 const DEFAULT_DATA = {
   page: 1,

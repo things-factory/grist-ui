@@ -1,6 +1,5 @@
 import { LitElement, html, css } from 'lit-element'
-// import { longpressable } from '@things-factory/shell'
-import { openPopup } from '@things-factory/layout-base'
+// import { longpressable } from '@things-factory/utils'
 import '@material/mwc-icon'
 
 import { recordPartialClickHandler } from './event-handlers/record-partial-click-handler'
@@ -152,8 +151,8 @@ export class RecordPartial extends LitElement {
   }
 
   firstUpdated() {
-    /* 
-      long-press 
+    /*
+      long-press
       TODO. performance를 확인한 후에 활성화하자.
     */
     // longpressable(this.shadowRoot.querySelector('[content]'))
@@ -240,46 +239,56 @@ export class RecordPartial extends LitElement {
       title = column.record.renderer(title, column, this.record, this.rowIndex, this /* cautious */)
     }
 
-    var popup = openPopup(this.recordView, {
-      backdrop: true,
-      size: 'large',
-      title
-    })
+    document.dispatchEvent(
+      new CustomEvent('open-popup', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          template: this.recordView,
+          options: {
+            backdrop: true,
+            size: 'large',
+            title
+          },
+          callback: popup => {
+            this.recordView.addEventListener('reset', () => {
+              this.dispatchEvent(
+                new CustomEvent('record-reset', {
+                  bubbles: true,
+                  composed: true,
+                  detail: {
+                    record: this.record,
+                    row: this.rowIndex
+                  }
+                })
+              )
+            })
 
-    this.recordView.addEventListener('reset', () => {
-      this.dispatchEvent(
-        new CustomEvent('record-reset', {
-          bubbles: true,
-          composed: true,
-          detail: {
-            record: this.record,
-            row: this.rowIndex
+            this.recordView.addEventListener('cancel', () => {
+              this.dispatchEvent(
+                new CustomEvent('record-reset', {
+                  bubbles: true,
+                  composed: true,
+                  detail: {
+                    record: this.record,
+                    row: this.rowIndex
+                  }
+                })
+              )
+              popup.close()
+            })
+
+            this.recordView.addEventListener('ok', () => {
+              popup.close()
+            })
+
+            popup.onclosed = () => {
+              delete this._recordView
+            }
           }
-        })
-      )
-    })
-
-    this.recordView.addEventListener('cancel', () => {
-      this.dispatchEvent(
-        new CustomEvent('record-reset', {
-          bubbles: true,
-          composed: true,
-          detail: {
-            record: this.record,
-            row: this.rowIndex
-          }
-        })
-      )
-      popup.close()
-    })
-
-    this.recordView.addEventListener('ok', () => {
-      popup.close()
-    })
-
-    popup.onclosed = () => {
-      delete this._recordView
-    }
+        }
+      })
+    )
   }
 }
 

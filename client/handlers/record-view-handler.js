@@ -1,5 +1,4 @@
 import { html } from 'lit-html'
-import { openPopup } from '@things-factory/layout-base'
 import '../record-view/record-view'
 
 /*
@@ -8,42 +7,48 @@ import '../record-view/record-view'
  */
 
 export const RecordViewHandler = function(columns, data, column, record, rowIndex, field) {
-  var popup = openPopup(
-    html`
-      <record-view
-        .field=${field}
-        .columns=${columns}
-        .column=${column}
-        .record=${record}
-        .rowIndex=${rowIndex}
-        @reset=${e => {
-          field.dispatchEvent(
-            new CustomEvent('record-reset', {
-              bubbles: true,
-              composed: true,
-              detail: record
-            })
-          )
-        }}
-        @cancel=${e => {
-          field.dispatchEvent(
-            new CustomEvent('record-reset', {
-              bubbles: true,
-              composed: true,
-              detail: record
-            })
-          )
-          popup.close()
-        }}
-        @ok=${e => {
-          popup.close()
-        }}
-      ></record-view>
-    `,
-    {
-      backdrop: true,
-      size: 'large',
-      title: record['name']
-    }
+  document.dispatchEvent(
+    new CustomEvent('open-popup', {
+      bubbles: true,
+      composed: true,
+      detail: {
+        template: html`
+          <record-view
+            .field=${field}
+            .columns=${columns}
+            .column=${column}
+            .record=${record}
+            .rowIndex=${rowIndex}
+            @reset=${e => {
+              field.dispatchEvent(
+                new CustomEvent('record-reset', {
+                  bubbles: true,
+                  composed: true,
+                  detail: record
+                })
+              )
+            }}
+            @cancel=${e => {
+              field.dispatchEvent(
+                new CustomEvent('record-reset', {
+                  bubbles: true,
+                  composed: true,
+                  detail: record
+                })
+              )
+              popup.close()
+            }}
+            @ok=${e => {
+              popup.close()
+            }}
+          ></record-view>
+        `
+      },
+      options: {
+        backdrop: true,
+        size: 'large',
+        title: record['name']
+      }
+    })
   )
 }

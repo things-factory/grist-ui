@@ -1,5 +1,5 @@
 import { LitElement, html, css } from 'lit-element'
-import { ScrollbarStyles } from '@things-factory/shell'
+import { ScrollbarStyles } from '@things-factory/styles'
 
 import './data-report-header'
 import './data-report-body'
