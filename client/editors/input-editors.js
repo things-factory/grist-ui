@@ -290,7 +290,7 @@ customElements.define('checkbox-input', CheckboxInput)
 
 export class Select extends InputEditor {
   get editorTemplate() {
-    var { options = [] } = this.column.record || {}
+    var { options = [] } = this.column.record
     options = options.map(option => {
       if (typeof option == 'string') {
         return {
