@@ -20,6 +20,12 @@ export const dataGridBodyStyle = css`
 
   :host > [selected-row] {
     background-color: var(--grid-record-selected-background-color);
+    color: var(--grid-record-selected-color);
+  }
+
+  :host > [emphasized-row] {
+    background-color: var(--grid-record-emphasized-background-color);
+    color: var(--grid-record-emphasized-color);
   }
 
   :host > [focused-row] {
@@ -41,6 +47,11 @@ export const dataGridBodyStyle = css`
 
     :host > [selected-row] {
       background-color: transparent;
+    }
+
+    :host > [emphasized-row] {
+      background-color: transparent;
+      color: initial;
     }
 
     :host > [focused-row] {

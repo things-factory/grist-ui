@@ -8,6 +8,8 @@ import { dataGridBodyDblclickHandler } from './event-handlers/data-grid-body-dbl
 
 import { dataGridBodyStyle } from './data-grid-body-style'
 
+const NOOP = () => {}
+
 function calcScrollPos(parent, child) {
   /* getBoundingClientRect는 safari에서 스크롤 상태에서 다른 브라우저와는 다른 값을 리턴함 - 사파리는 약간 이상 작동함. */
   var { top: ct, left: cl, right: cr, bottom: cb } = child.getBoundingClientRect()
@@ -44,13 +46,18 @@ class DataGridBody extends LitElement {
     var columns = (this.columns || []).filter(column => !column.hidden)
     var data = this.data || {}
     var { records = [] } = data
+    var { appendable, classifier } = (this.config && this.config.rows) || {}
+
+    if (typeof classifier !== 'function') {
+      classifier = NOOP
+    }
 
     /*
      * 레코드를 추가할 수 있는 경우에는 항상 추가 레코드를 보여준다.
      * 만약, 이전 방식처럼, 커서를 옮겨야만 새로운 레코드가 보이게 하고 싶다면, 조건부를 다음의 코드로 대체한다.
      * -- if (focusedRow == records.length)
      */
-    if (this.config && this.config.rows.appendable) {
+    if (appendable) {
       records = [...records, { __dirty__: '+' }]
     }
 
@@ -60,6 +67,7 @@ class DataGridBody extends LitElement {
         var attrSelected = record['__selected__']
         var attrOdd = idxRow % 2
         var dirtyFields = record['__dirtyfields__'] || {}
+        var { emphasized } = classifier.call(null, record, idxRow) || {}
 
         return html`
           ${columns.map(
@@ -74,6 +82,7 @@ class DataGridBody extends LitElement {
                 ?odd=${attrOdd}
                 ?focused-row=${attrFocusedRow}
                 ?selected-row=${attrSelected}
+                ?emphasized-row=${!!emphasized}
                 ?focused=${idxRow === focusedRow && idxColumn === focusedColumn}
                 ?editing=${idxRow === editingRow && idxColumn === editingColumn}
                 .value=${record[column.name]}
@@ -88,6 +97,7 @@ class DataGridBody extends LitElement {
             ?odd=${attrOdd}
             ?focused-row=${attrFocusedRow}
             ?selected-row=${attrSelected}
+            ?emphasized-row=${!!emphasized}
           ></data-grid-field>
         `
       })}

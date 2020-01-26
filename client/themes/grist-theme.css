@@ -29,7 +29,10 @@ body {
   --grid-record-wide-fontsize: 13px;
   --grid-record-selected-background-color: rgba(115, 188, 28, 0.2);
   --grid-record-focused-background-color: var(--primary-color);
+  --grid-record-emphasized-background-color: var(--grid-record-selected-background-color);
+  --grid-record-selected-color: black;
   --grid-record-focused-color: #fff;
+  --grid-record-emphasized-color: var(--grid-record-selected-color);
   --grid-record-focused-border: 1px dashed rgba(0, 0, 0, 0.5);
   --grid-record-dirty-border-top: 24px solid #95d40f;
   --grid-record-dirty-border-left: 24px solid transparent;
