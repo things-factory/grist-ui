@@ -22,7 +22,7 @@ body {
   --grid-header-border-color: rgba(18, 105, 105, 0.3);
   --grid-record-background-color: #fff;
   --grid-record-odd-background-color: #f6f6f6;
-  --grid-footer-background-color: rgba(34, 166, 167, 0.7);
+  --grid-footer-background-color: rgba(var(--primary-color-rgb), 0.7);
   --grid-header-color: var(--secondary-text-color);
   --grid-header-font: normal 1em/1.5 var(--theme-font);
   --grid-header-fontsize: 13px;
