@@ -81,7 +81,6 @@ body {
 @media only screen and (max-width: 460px) {
   body {
     --grist-padding: 0;
-    --grist-input-zoom: 1.4;
 
     --record-view-footer-height: 50px;
     --record-view-footer-button-height: var(--record-view-footer-height);
@@ -94,7 +93,6 @@ body {
 @media (min-width: 461px) and (max-width: 1024px) {
   body {
     --grist-padding: 0;
-    --grist-input-zoom: 1.4;
 
     --record-view-footer-height: 50px;
     --record-view-footer-button-height: var(--record-view-footer-height);
