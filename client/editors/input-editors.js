@@ -304,10 +304,10 @@ export class Select extends InputEditor {
     return html`
       <select>
         ${options.map(
-          option => html`
-            <option ?selected=${option.value == this.value}>${option.display}</option>
+      option => html`
+            <option ?selected=${option.value == this.value} value = ${option.value}>${option.display}</option>
           `
-        )}
+    )}
       </select>
     `
   }

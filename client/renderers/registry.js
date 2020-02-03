@@ -5,6 +5,7 @@ import { DateRenderer } from './date-renderer'
 import { ColorRenderer } from './color-renderer'
 import { ProgressRenderer } from './progress-renderer'
 import { LinkRenderer } from './link-renderer'
+import { SelectRenderer } from './select-renderer'
 
 var RENDERERS = {
   string: TextRenderer,
@@ -15,7 +16,7 @@ var RENDERERS = {
   integer: TextRenderer,
   float: TextRenderer,
   number: TextRenderer,
-  select: TextRenderer,
+  select: SelectRenderer,
   boolean: BooleanRenderer,
   checkbox: BooleanRenderer,
   month: TextRenderer,
