@@ -30,7 +30,6 @@
     "@things-factory/board-test": "^2.0.0",
     "@things-factory/grist-test": "^2.0.0",
     "@things-factory/opa-app": "^2.0.0",
-    "@things-factory/opa-test": "^2.0.0",
-    "@things-factory/shell": "^2.0.0"
+    "@things-factory/opa-test": "^2.0.0"
   }
 }
