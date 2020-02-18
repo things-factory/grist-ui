@@ -115,6 +115,12 @@ class DataGrid extends LitElement {
       this.onRecordChanged({ [column.name]: after }, row, column)
     })
 
+    this.addEventListener('focus-change', e => {
+      this.focused = e.detail
+      this.focus()
+      this.requestUpdate()
+    })
+
     /* record reset processing */
     this.addEventListener('record-reset', e => {
       var { record, row } = e.detail
@@ -257,7 +263,7 @@ class DataGrid extends LitElement {
         }}
       ></data-grid-header>
 
-      <data-grid-body .config=${this.config} .columns=${columns} .data=${data}></data-grid-body>
+      <data-grid-body .config=${this.config} .columns=${columns} .data=${data} .focused=${this.focused}></data-grid-body>
 
       ${paginatable
         ? html`
