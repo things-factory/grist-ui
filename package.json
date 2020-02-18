@@ -1,6 +1,6 @@
 {
   "name": "@things-factory/grist-ui",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "main": "dist-server/index.js",
   "browser": "client/index.js",
   "things-factory": true,
@@ -27,7 +27,7 @@
     "@things-factory/utils": "^0.0.6"
   },
   "devDependencies": {
-    "@things-factory/grist-test": "^2.0.0",
-    "@things-factory/board-app": "^2.0.0"
+    "@things-factory/board-app": "^2.0.0",
+    "@things-factory/grist-test": "^2.0.0"
   }
 }
