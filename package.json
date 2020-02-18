@@ -27,9 +27,7 @@
     "@things-factory/utils": "^0.0.6"
   },
   "devDependencies": {
-    "@things-factory/board-test": "^2.0.0",
     "@things-factory/grist-test": "^2.0.0",
-    "@things-factory/opa-app": "^2.0.0",
-    "@things-factory/opa-test": "^2.0.0"
+    "@things-factory/board-app": "^2.0.0"
   }
 }
