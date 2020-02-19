@@ -101,7 +101,7 @@ class DataGridHeader extends LitElement {
       ${columns.map((column, idx) =>
         !column.hidden
           ? html`
-              <div @dragstart=${e => this._dragStart(e, idx)}>
+              <div>
                 <span title @click=${e => this._changeSort(column)}>${this._renderHeader(column)} </span>
 
                 ${column.sortable
@@ -113,7 +113,7 @@ class DataGridHeader extends LitElement {
                   : html``}
                 ${column.resizable !== false
                   ? html`
-                      <span splitter draggable="true">&nbsp;</span>
+                      <span splitter draggable="false" @mousedown=${e => this._mousedown(e, idx)}>&nbsp;</span>
                     `
                   : html``}
               </div>
@@ -200,6 +200,11 @@ class DataGridHeader extends LitElement {
     )
   }
 
+  _accumalate(x) {
+    this._lastAccVal = (this._lastAccVal ?? 0) + x
+    return this._lastAccVal
+  }
+
   _notifyWidthChange(idx, width) {
     if (!this.throttledNotifier) {
       this.throttledNotifier = throttle(function(idx, width) {
@@ -213,20 +218,24 @@ class DataGridHeader extends LitElement {
             }
           })
         )
+
+        this._lastAccVal = 0
       }, 100)
     }
 
     this.throttledNotifier(idx, width)
   }
 
-  _dragStart(e, idx) {
-    var target = e.currentTarget
-    var startX = e.offsetX
+  _mousedown(e, idx) {
+    e.stopPropagation()
+    e.preventDefault()
 
-    var dragHandler = (e => {
+    var mousemoveHandler = (e => {
+      e.stopPropagation()
+      e.preventDefault()
       let column = this.columns[idx]
 
-      let width = Math.max(0, Number(column.width) + e.offsetX - startX)
+      let width = Math.max(0, Number(column.width) + this._accumalate(e.movementX))
       if (width == 0) {
         /* CLARIFY-ME 왜 마지막 이벤트의 offsetX로 음수 값이 오는가 */
         return
@@ -235,15 +244,15 @@ class DataGridHeader extends LitElement {
       this._notifyWidthChange(idx, width)
     }).bind(this)
 
-    var dragEndHandler = (e => {
-      target.removeEventListener('drag', dragHandler)
-      target.removeEventListener('dragend', dragEndHandler)
+    var mouseupHandler = (e => {
+      document.removeEventListener('mousemove', mousemoveHandler)
+      document.removeEventListener('mouseup', mouseupHandler)
 
-      dragHandler(e)
+      mousemoveHandler(e)
     }).bind(this)
 
-    target.addEventListener('drag', dragHandler)
-    target.addEventListener('dragend', dragEndHandler)
+    document.addEventListener('mousemove', mousemoveHandler)
+    document.addEventListener('mouseup', mouseupHandler)
   }
 }
 
