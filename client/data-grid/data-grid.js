@@ -93,7 +93,8 @@ class DataGrid extends LitElement {
         added.forEach(record => (record['__selected__'] = true))
       }
 
-      this.requestUpdate()
+      this.header.requestUpdate()
+      this.body.requestUpdate()
     })
 
     /* field change processing */
@@ -263,7 +264,12 @@ class DataGrid extends LitElement {
         }}
       ></data-grid-header>
 
-      <data-grid-body .config=${this.config} .columns=${columns} .data=${data} .focused=${this.focused}></data-grid-body>
+      <data-grid-body
+        .config=${this.config}
+        .columns=${columns}
+        .data=${data}
+        .focused=${this.focused}
+      ></data-grid-body>
 
       ${paginatable
         ? html`
