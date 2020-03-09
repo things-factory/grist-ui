@@ -26,8 +26,6 @@ function _onMousemove(e) {
     return
   }
 
-  console.log(columnIndex)
-
   // if (!isNaN(rowIndex) && !isNaN(columnIndex)) {
   //   if (!this.focused || rowIndex !== this.focused.row || columnIndex !== this.focused.column) {
   //     this.focused = {
