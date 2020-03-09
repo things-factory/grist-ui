@@ -5,6 +5,7 @@ import './data-grid-field'
 import { dataGridBodyKeydownHandler } from './event-handlers/data-grid-body-keydown-handler'
 import { dataGridBodyClickHandler } from './event-handlers/data-grid-body-click-handler'
 import { dataGridBodyDblclickHandler } from './event-handlers/data-grid-body-dblclick-handler'
+import { dataGridBodyDragHandler } from './event-handlers/data-grid-body-drag-handler'
 
 import { dataGridBodyStyle } from './data-grid-body-style'
 
@@ -130,6 +131,8 @@ class DataGridBody extends LitElement {
     this.shadowRoot.addEventListener('click', dataGridBodyClickHandler.bind(this))
 
     this.shadowRoot.addEventListener('dblclick', dataGridBodyDblclickHandler.bind(this))
+
+    this.shadowRoot.addEventListener('mousedown', dataGridBodyDragHandler.bind(this))
   }
 
   startEditTarget(row, column) {
