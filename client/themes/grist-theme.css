@@ -51,7 +51,7 @@ body {
   --data-list-item-name-color: var(--secondary-color);
   --data-list-item-disc-font: normal 0.8em/0.8em var(--theme-font);
   --data-list-item-disc-color: var(--secondary-text-color);
-  --data-list-item-etc-font: normal 0.7em/0.7em var(--theme-font);
+  --data-list-item-etc-font: normal 0.7em/1em var(--theme-font);
   --data-list-item-etc-color: #585858;
   --data-list-item-icon-font: normal 1em/1em;
   --data-list-item-icon-color: var(--secondary-text-color);
