@@ -77,9 +77,14 @@ class DataGrid extends LitElement {
     this.addEventListener('select-record-change', e => {
       var { records: selectedRecords, added = [], removed = [] } = e.detail
       var { records } = this.data
+      var { selectable } = this.config.rows
 
       if (!records) {
         return
+      }
+
+      if (selectable && !selectable.multiple) {
+        records.forEach(record => (record['__selected__'] = false))
       }
 
       if (selectedRecords) {
@@ -268,11 +273,7 @@ class DataGrid extends LitElement {
         .focused=${this.focused}
       ></data-grid-body>
 
-      ${paginatable
-        ? html`
-            <data-grid-footer .config=${this.config} .data=${data}></data-grid-footer>
-          `
-        : html``}
+      ${paginatable ? html` <data-grid-footer .config=${this.config} .data=${data}></data-grid-footer> ` : html``}
     `
   }
 
