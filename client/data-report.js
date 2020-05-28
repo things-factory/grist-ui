@@ -292,6 +292,12 @@ export class DataReport extends LitElement {
 
             continue
           }
+
+          /* to avoid from floating point calculation problem */
+          totals.forEach(field => {
+            totalRecord[field] = Math.round(totalRecord[field] * 100) / 100
+          })
+
           isSameGroupRecord = false
 
           totalsStack.push({
@@ -346,9 +352,9 @@ export class DataReport extends LitElement {
     var poped
     while ((poped = totalicRecords.pop())) {
       /* to avoid from floating point calculation problem */
-      for (let field of totals) {
+      totals.forEach(field => {
         poped[field] = Math.round(poped[field] * 100) / 100
-      }
+      })
 
       reportRecords.push(poped)
       if (poped['*'].value) {
