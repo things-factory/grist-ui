@@ -99,9 +99,7 @@ export class DataReport extends LitElement {
 
     return html`
       ${oops
-        ? html`
-            <oops-note icon="list" title="EMPTY LIST" description="There are no records to be shown"></oops-note>
-          `
+        ? html` <oops-note icon="list" title="EMPTY LIST" description="There are no records to be shown"></oops-note> `
         : html``}
 
       <data-report-component id="report" .config=${this._config} .data=${this._data}> </data-report-component>
@@ -214,7 +212,7 @@ export class DataReport extends LitElement {
     let lastGroupValues
     let reportRecords = []
     let totalicRecords = sortedRecords[0]
-      ? (function() {
+      ? (function () {
           /* 처음 만드는 total records */
           let record = sortedRecords[0]
           let totalBase = totals.reduce((base, field) => {
@@ -289,6 +287,7 @@ export class DataReport extends LitElement {
             for (let field of totals) {
               totalRecord[field] += record[field]
             }
+
             totalRecord['*'].rowspan++
 
             continue
@@ -346,6 +345,11 @@ export class DataReport extends LitElement {
     /* 마지막 남은 토탈 레코드들을 추가한다. */
     var poped
     while ((poped = totalicRecords.pop())) {
+      /* to avoid from floating point calculation problem */
+      for (let field of totals) {
+        poped[field] = Math.round(poped[field] * 100) / 100
+      }
+
       reportRecords.push(poped)
       if (poped['*'].value) {
         totalicRecords.forEach(record => record['*'].rowspan++)
