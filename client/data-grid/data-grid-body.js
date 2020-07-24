@@ -1,4 +1,5 @@
 import { LitElement, html } from 'lit-element'
+import _ from 'underscore'
 
 import './data-grid-field'
 
@@ -9,6 +10,18 @@ import { dataGridBodyDblclickHandler } from './event-handlers/data-grid-body-dbl
 import { dataGridBodyStyle } from './data-grid-body-style'
 
 const NOOP = () => {}
+
+/* Represents the delay (in milliseconds) between data updates */
+const THRESHOLD = 300
+/* 
+  Represents how much extra data should be rendered before
+  and after the visibile rows to avoid showing empty rows
+  when scrolling. This number is multiplied by the number
+  of visible rows.
+*/
+const DATA_PADDING = 3
+const ROW_HEIGHT = 40
+const GAP_SIZE = 1
 
 function calcScrollPos(parent, child) {
   /* getBoundingClientRect는 safari에서 스크롤 상태에서 다른 브라우저와는 다른 값을 리턴함 - 사파리는 약간 이상 작동함. */
@@ -24,6 +37,16 @@ function calcScrollPos(parent, child) {
   }
 }
 
+const debounce = _.debounce((scrollTop, clientHeight, self) => {
+  const maxVisibleRows = Math.ceil(clientHeight / (ROW_HEIGHT + GAP_SIZE))
+  const from = Math.max(0, Math.floor(scrollTop / (ROW_HEIGHT + GAP_SIZE)) - maxVisibleRows * DATA_PADDING)
+  const to = Math.min(self.data.records.length, from + maxVisibleRows * (DATA_PADDING * 2 + 1))
+
+  self.from = from
+  self.to = to
+  console.log('scroll...', from, to)
+}, THRESHOLD)
+
 class DataGridBody extends LitElement {
   static get properties() {
     return {
@@ -31,12 +54,20 @@ class DataGridBody extends LitElement {
       columns: Array,
       data: Object,
       focused: Object,
-      editTarget: Object
+      editTarget: Object,
+      from: Number,
+      to: Number
     }
   }
 
   static get styles() {
     return [dataGridBodyStyle]
+  }
+
+  handleOnScroll(e) {
+    const { scrollTop, clientHeight } = e.target
+    console.log('scroll....,,,,')
+    debounce(scrollTop, clientHeight, this)
   }
 
   render() {
@@ -105,6 +136,8 @@ class DataGridBody extends LitElement {
   }
 
   firstUpdated() {
+    this.addEventListener('scroll', this.handleOnScroll.bind(this))
+
     /* focus() 를 받을 수 있도록 함. */
     this.setAttribute('tabindex', '-1')
 
