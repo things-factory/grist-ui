@@ -37,17 +37,16 @@ function calcScrollPos(parent, child) {
   }
 }
 
-const debounce = _.debounce((scrollTop, clientHeight, self) => {
-  const maxVisibleRows = Math.ceil(clientHeight / (ROW_HEIGHT + GAP_SIZE))
-  const from = Math.max(0, Math.floor(scrollTop / (ROW_HEIGHT + GAP_SIZE)) - maxVisibleRows * DATA_PADDING)
-  const to = Math.min(self.data.records.length, from + maxVisibleRows * (DATA_PADDING * 2 + 1))
-
-  self.from = from
-  self.to = to
-  console.log('scroll...', from, to)
-}, THRESHOLD)
-
 class DataGridBody extends LitElement {
+  debounce = _.debounce((scrollTop, clientHeight) => {
+    const maxVisibleRows = Math.ceil(clientHeight / (ROW_HEIGHT + GAP_SIZE))
+    const from = Math.max(0, Math.floor(scrollTop / (ROW_HEIGHT + GAP_SIZE)) - maxVisibleRows * DATA_PADDING)
+    const to = Math.min(this.data.records.length, from + maxVisibleRows * (DATA_PADDING * 2 + 1))
+
+    this.from = from
+    this.to = to
+  }, THRESHOLD)
+
   static get properties() {
     return {
       config: Object,
@@ -66,8 +65,11 @@ class DataGridBody extends LitElement {
 
   handleOnScroll(e) {
     const { scrollTop, clientHeight } = e.target
-    console.log('scroll....,,,,')
-    debounce(scrollTop, clientHeight, this)
+    this.debounce(scrollTop, clientHeight)
+  }
+
+  renderOptimisticRow() {
+    return
   }
 
   render() {
