@@ -228,11 +228,13 @@ class DataGrid extends LitElement {
         var { records: newrecords = [] } = this.data
 
         var oldrecord = oldrecords[row]
-        var newrecord = newrecords.find(
-          record =>
-            /* TODO keyfields를 정의하고, keyfields의 동일성으로 확정해야 한다. */
-            ('id' in oldrecord && record.id == oldrecord.id) || ('name' in oldrecord && record.name == oldrecord.name)
-        )
+        var newrecord =
+          oldrecord &&
+          newrecords.find(
+            record =>
+              /* TODO keyfields를 정의하고, keyfields의 동일성으로 확정해야 한다. */
+              ('id' in oldrecord && record.id == oldrecord.id) || ('name' in oldrecord && record.name == oldrecord.name)
+          )
 
         this.focused = {
           row: newrecord ? newrecords.indexOf(newrecord) : row,
