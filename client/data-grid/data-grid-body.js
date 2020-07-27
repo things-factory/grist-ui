@@ -11,14 +11,7 @@ import { dataGridBodyStyle } from './data-grid-body-style'
 
 const NOOP = () => {}
 
-/* Represents the delay (in milliseconds) between data updates */
 const THRESHOLD = 300
-/* 
-  Represents how much extra data should be rendered before
-  and after the visibile rows to avoid showing empty rows
-  when scrolling. This number is multiplied by the number
-  of visible rows.
-*/
 const DATA_PADDING = 3
 const ROW_HEIGHT = 40
 const GAP_SIZE = 1
@@ -68,9 +61,10 @@ class DataGridBody extends LitElement {
     this.debounce(scrollTop, clientHeight)
   }
 
-  renderOptimisticRow() {
-    return
-  }
+  // issue #13
+  // renderOptimisticRow() {
+  //   return
+  // }
 
   render() {
     var { row: focusedRow = 0, column: focusedColumn = 0 } = this.focused || {}
@@ -138,7 +132,8 @@ class DataGridBody extends LitElement {
   }
 
   firstUpdated() {
-    this.addEventListener('scroll', this.handleOnScroll.bind(this))
+    // TODO issue #13
+    // this.addEventListener('scroll', this.handleOnScroll.bind(this))
 
     /* focus() 를 받을 수 있도록 함. */
     this.setAttribute('tabindex', '-1')
