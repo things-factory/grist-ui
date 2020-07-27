@@ -11,10 +11,16 @@ export function dataGridBodyClickHandler(e) {
   var { column, record, rowIndex, columnIndex } = target
 
   if (!this.focused || rowIndex !== this.focused.row || columnIndex !== this.focused.column) {
-    this.focused = {
-      row: rowIndex,
-      column: columnIndex
-    }
+    this.dispatchEvent(
+      new CustomEvent('focus-change', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          row: rowIndex,
+          column: columnIndex
+        }
+      })
+    )
 
     this.editTarget = null
   }

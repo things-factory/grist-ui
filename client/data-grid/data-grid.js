@@ -12,7 +12,8 @@ class DataGrid extends LitElement {
   static get properties() {
     return {
       config: Object,
-      data: Object
+      data: Object,
+      focused: Object
     }
   }
 
@@ -220,7 +221,27 @@ class DataGrid extends LitElement {
        * data의 변동에 대해서도 다시 계산되어야 한다.
        */
       this.calculateWidths(this.config && this.config.columns)
+
+      if (this.focused && 'row' in this.focused) {
+        var { row = 0, column = 0 } = this.focused
+        var { records: oldrecords = [] } = changes.get('data')
+        var { records: newrecords = [] } = this.data
+
+        var oldrecord = oldrecords[row]
+        var newrecord = newrecords.find(
+          record =>
+            /* TODO keyfields를 정의하고, keyfields의 동일성으로 확정해야 한다. */
+            ('id' in oldrecord && record.id == oldrecord.id) || ('name' in oldrecord && record.name == oldrecord.name)
+        )
+
+        this.focused = {
+          row: newrecord ? newrecords.indexOf(newrecord) : row,
+          column
+        }
+      }
     }
+
+    this.focus()
   }
 
   calculateWidths(columns) {
