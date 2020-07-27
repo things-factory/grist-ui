@@ -1,6 +1,6 @@
 {
   "name": "@things-factory/grist-ui",
-  "version": "2.0.15",
+  "version": "3.0.0-beta.1",
   "main": "dist-server/index.js",
   "browser": "client/index.js",
   "things-factory": true,
