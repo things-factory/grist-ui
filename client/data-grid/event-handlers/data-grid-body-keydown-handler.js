@@ -85,7 +85,8 @@ export async function dataGridBodyKeydownHandler(e) {
       default:
         if (
           (keyCode > 47 && keyCode < 58) || // number keys
-          (keyCode == 32 || keyCode == 13) || // spacebar & return key(s) (if you want to allow carriage returns)
+          keyCode == 32 ||
+          keyCode == 13 || // spacebar & return key(s) (if you want to allow carriage returns)
           (keyCode > 64 && keyCode < 91) || // letter keys
           (keyCode > 95 && keyCode < 112) || // numpad keys
           (keyCode > 185 && keyCode < 193) || // ;=,-./` (in order)
@@ -98,7 +99,7 @@ export async function dataGridBodyKeydownHandler(e) {
   }
 
   if (!this.focused || this.focused.row !== row || this.focused.column !== column) {
-    this.focused = { row, column }
+    this.dispatchEvent(new CustomEvent('focus-change', { bubbles: true, composed: true, detail: { row, column } }))
   }
 
   /* arrow key에 의한 scrollbar의 자동 움직임을 하지 못하도록 한다. */

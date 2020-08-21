@@ -52,6 +52,6 @@ export const DateRenderer = (value, column, record, rowIndex, field) => {
     case 'date':
       return formatter.format(new Date(value))
     case 'time':
-      return formatter.format(new Date(typeof value == 'string' ? getsec(value) * 1000 : value))
+      return value
   }
 }

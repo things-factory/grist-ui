@@ -1,4 +1,5 @@
 import { LitElement, html } from 'lit-element'
+import _ from 'underscore'
 
 import './data-grid-field'
 
@@ -9,6 +10,11 @@ import { dataGridBodyDblclickHandler } from './event-handlers/data-grid-body-dbl
 import { dataGridBodyStyle } from './data-grid-body-style'
 
 const NOOP = () => {}
+
+const THRESHOLD = 300
+const DATA_PADDING = 3
+const ROW_HEIGHT = 40
+const GAP_SIZE = 1
 
 function calcScrollPos(parent, child) {
   /* getBoundingClientRect는 safari에서 스크롤 상태에서 다른 브라우저와는 다른 값을 리턴함 - 사파리는 약간 이상 작동함. */
@@ -25,19 +31,40 @@ function calcScrollPos(parent, child) {
 }
 
 class DataGridBody extends LitElement {
+  debounce = _.debounce((scrollTop, clientHeight) => {
+    const maxVisibleRows = Math.ceil(clientHeight / (ROW_HEIGHT + GAP_SIZE))
+    const from = Math.max(0, Math.floor(scrollTop / (ROW_HEIGHT + GAP_SIZE)) - maxVisibleRows * DATA_PADDING)
+    const to = Math.min(this.data.records.length, from + maxVisibleRows * (DATA_PADDING * 2 + 1))
+
+    this.from = from
+    this.to = to
+  }, THRESHOLD)
+
   static get properties() {
     return {
       config: Object,
       columns: Array,
       data: Object,
       focused: Object,
-      editTarget: Object
+      editTarget: Object,
+      from: Number,
+      to: Number
     }
   }
 
   static get styles() {
     return [dataGridBodyStyle]
   }
+
+  handleOnScroll(e) {
+    const { scrollTop, clientHeight } = e.target
+    this.debounce(scrollTop, clientHeight)
+  }
+
+  // issue #13
+  // renderOptimisticRow() {
+  //   return
+  // }
 
   render() {
     var { row: focusedRow = 0, column: focusedColumn = 0 } = this.focused || {}
@@ -105,6 +132,9 @@ class DataGridBody extends LitElement {
   }
 
   firstUpdated() {
+    // TODO issue #13
+    // this.addEventListener('scroll', this.handleOnScroll.bind(this))
+
     /* focus() 를 받을 수 있도록 함. */
     this.setAttribute('tabindex', '-1')
 
