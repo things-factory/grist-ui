@@ -6,7 +6,7 @@ const DATETIME_OPTIONS = {
   hour: 'numeric',
   minute: 'numeric',
   second: 'numeric',
-  hour12: false
+  hourCycle: 'h23'
 }
 
 const DATE_OPTIONS = {
