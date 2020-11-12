@@ -145,27 +145,21 @@ customElements.define('input-editor', InputEditor)
 
 export class TextInput extends InputEditor {
   get editorTemplate() {
-    return html`
-      <input type="text" .value=${this.value} />
-    `
+    return html` <input type="text" .value=${this.value} /> `
   }
 }
 customElements.define('text-input', TextInput)
 
 export class EmailInput extends InputEditor {
   get editorTemplate() {
-    return html`
-      <input type="email" .value=${this.value} />
-    `
+    return html` <input type="email" .value=${this.value} /> `
   }
 }
 customElements.define('email-input', EmailInput)
 
 export class TelInput extends InputEditor {
   get editorTemplate() {
-    return html`
-      <input type="tel" .value=${this.value} />
-    `
+    return html` <input type="tel" .value=${this.value} /> `
   }
 }
 customElements.define('tel-input', TelInput)
@@ -187,54 +181,42 @@ export class NumberInput extends InputEditor {
   get editorTemplate() {
     var { min = -Infinity, max = Infinity } = this.column.record.options || {}
 
-    return html`
-      <input type="number" .value=${this.value} .min=${Number(min)} .max=${Number(max)} />
-    `
+    return html` <input type="number" .value=${this.value} .min=${Number(min)} .max=${Number(max)} /> `
   }
 }
 customElements.define('number-input', NumberInput)
 
 export class PasswordInput extends InputEditor {
   get editorTemplate() {
-    return html`
-      <input type="password" .value=${this.value} />
-    `
+    return html` <input type="password" .value=${this.value} /> `
   }
 }
 customElements.define('password-input', PasswordInput)
 
 export class DateInput extends InputEditor {
   get editorTemplate() {
-    return html`
-      <input type="date" .value=${this.value} />
-    `
+    return html` <input type="date" .value=${this.value} /> `
   }
 }
 customElements.define('date-input', DateInput)
 
 export class MonthInput extends InputEditor {
   get editorTemplate() {
-    return html`
-      <input type="month" .value=${this.value} />
-    `
+    return html` <input type="month" .value=${this.value} /> `
   }
 }
 customElements.define('month-input', MonthInput)
 
 export class WeekInput extends InputEditor {
   get editorTemplate() {
-    return html`
-      <input type="week" .value=${this.value} />
-    `
+    return html` <input type="week" .value=${this.value} /> `
   }
 }
 customElements.define('week-input', WeekInput)
 
 export class TimeInput extends InputEditor {
   get editorTemplate() {
-    return html`
-      <input type="time" .value=${this.value} />
-    `
+    return html` <input type="time" .value=${this.value} /> `
   }
 }
 customElements.define('time-input', TimeInput)
@@ -259,18 +241,14 @@ export class DateTimeInput extends InputEditor {
   }
 
   get editorTemplate() {
-    return html`
-      <input type="datetime-local" .value=${this.value} />
-    `
+    return html` <input type="datetime-local" .value=${this.value} /> `
   }
 }
 customElements.define('datetime-input', DateTimeInput)
 
 export class ColorInput extends InputEditor {
   get editorTemplate() {
-    return html`
-      <input type="color" .value=${this.value} />
-    `
+    return html` <input type="color" .value=${this.value} /> `
   }
 }
 customElements.define('color-input', ColorInput)
@@ -281,33 +259,39 @@ export class CheckboxInput extends InputEditor {
   }
 
   get editorTemplate() {
-    return html`
-      <input type="checkbox" .checked=${!!this.value} />
-    `
+    return html` <input type="checkbox" .checked=${!!this.value} /> `
   }
 }
 customElements.define('checkbox-input', CheckboxInput)
 
 export class Select extends InputEditor {
   get editorTemplate() {
-    var { options = [] } = this.column.record
+    var rowOptionField = this.record[this.column.record.rowOptionField]
+    var { options = [] } = rowOptionField ? rowOptionField : this.column.record
     options = options.map(option => {
-      if (typeof option == 'string') {
-        return {
-          display: option,
-          value: option
-        }
+      switch (typeof option) {
+        case 'string':
+          return {
+            display: option,
+            value: option
+          }
+        case 'object':
+          return {
+            display: option.display,
+            value: option.value
+          }
+        default:
+          return option
       }
-      return option
     })
 
     return html`
       <select>
         ${options.map(
-      option => html`
-            <option ?selected=${option.value == this.value} value = ${option.value}>${option.display}</option>
+          option => html`
+            <option ?selected=${option.value == this.value} value=${option.value}>${option.display}</option>
           `
-    )}
+        )}
       </select>
     `
   }
